@@ -2,27 +2,24 @@
 <%
     //boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     //User loggedUser = (User) request.getAttribute("loggedUser");
-    //String applicationMessage = (String) request.getAttribute("applicationMessage");
-    //String menuActiveLink = "Home";
+    String applicationMessage = (String) request.getAttribute("applicationMessage");
+    String menuActiveLink = "Home";
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Include headhtml</title>
+    <%@include file="/include/htmlHead.inc"%>
 </head>
 <body>
-Include header
+    <%@include file="/include/header.inc"%>
 
 <main>
 
-    Clicca sulla voce "Rubrica" del men&ugrave; per gestire i tuoi contatti.
-
-    Benvenuto.
-    Fai il logon per gestire la tua rubrica.
 
 </main>
 </body>
 
-Include Footer
+<%@include file="/include/footer.inc"%>
+
 </html>
