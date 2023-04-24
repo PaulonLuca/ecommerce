@@ -25,14 +25,14 @@ body {
     color: #666666;
     font-family: "Trebuchet MS",Arial,Helvetica,sans-serif;
     font-size: 1em;
-    width:980px;
+    /*width:980px;*/
     margin:0 auto;
-    box-shadow:0 0 0 2px #222222;
+    /*box-shadow:0 0 0 2px #222222;*/
 }
 
 /* Header Section */
 header {
-    background: #a32900;
+    background: rgb(218,238,225);
     padding-top: 10px;
 }
 
@@ -41,7 +41,7 @@ header {
     padding-left: 14px;
     font-size: 2.2em;
     font-weight: 900;
-    color: white;
+    color: rgb(27,169,111);
 }
 
 /* Navigation Menu */
@@ -56,8 +56,8 @@ header nav ul {
 
 header nav ul > li {
     float:left;
-    border-top:solid 1px #daa999;
-    background: linear-gradient(#daa999, #EDD4CC);
+    border-top:solid 1px rgb(40,42,53);
+    background: rgb(40,42,53);
 }
 
 header nav ul > li > a {
@@ -72,11 +72,11 @@ header nav ul > li > a {
 }
 
 header nav ul > li:hover, nav ul > li.active {
-    border-top:solid 1px #210800;
-    background: linear-gradient(#621900, #822100);
+    border-top:solid 1px ;
+    background: rgb(20,20,20);
 }
 header nav ul > li:hover > a {
-    color:#f9dcb4;
+    color:rgb(218,238,225);
 }
 
 /* Login Section */
@@ -87,17 +87,17 @@ header nav ul > li:hover > a {
 }
 
 #login label[for="username"], #login label[for="password"] {
-    color:#fff;;
+    color:rgb(40,42,53);
     float:left;
     padding:6px 12px 0px 7px;
     font-size: 11px;
 }
 
-#login form input[type="text"], #login form input[type="password"] {
+#login form input[type="text"], #login form input[type="password"]{
     float:left;
     height:18px;
     width:125px;
-    border: 1px solid #A32900;
+    border: 1px solid rgb(27,169,111);;
     border-radius: 4px;
     margin-top: 2px;
     font-size: 11px;
@@ -109,7 +109,7 @@ header nav ul > li:hover > a {
 
 
 #login form input[type="submit"] {
-    background-color:#A32900;
+    background-color:rgb(27,169,111);;
     color: #FFFFFF;
     border: 0;
     cursor:pointer;
@@ -138,7 +138,7 @@ main {
 
 .button {
     padding: 5px 10px;
-    background-color: #a3271f;
+    background-color:rgb(27,169,111);
     color: #ffffff;
     border-radius: 8px;
     cursor: pointer;
@@ -160,4 +160,56 @@ footer a{
 
 footer #privacy {
     float:right;
+}
+
+
+
+/* The dropdown container */
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+    font-size: 14px;
+    text-transform:uppercase;
+    width:100px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 4px 0 5px;
+    background-color: inherit;
+    font-family: inherit; /* Important for vertical align on mobile phones */
+    margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
 }

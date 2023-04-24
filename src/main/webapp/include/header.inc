@@ -21,7 +21,7 @@
 <header class="clearfix"><!-- Defining the header section of the page -->
 
   <h1 class="logo"><!-- Defining the logo element -->
-    Ecommerce
+    E-commerce
   </h1>
 
   <form name="logoutForm" action="Dispatcher" method="post">
@@ -33,24 +33,33 @@
       <li <%=menuActiveLink.equals("Home")?"class=\"active\"":""%>>
         <a href="Dispatcher?controllerAction=HomeManagement.view">Home</a>
       </li>
-      <li <%=menuActiveLink.equals("Marca")?"class=\"active\"":""%>>
-        <select>
-            <option>Apple </option>
-            <option>Asus </option>
-        </select>
+      <li> <div class="dropdown">
+              <button class="dropbtn">Categoria
+                <i class="fa fa-caret-down"></i>
+              </button>
+              <div class="dropdown-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+              </div>
+            </div>
       </li>
 
-      <li <%=menuActiveLink.equals("Marca")?"class=\"active\"":""%>>
-        <select>
-            <option>TV </option>
-            <option>Telefoni </option>
-        </select>
+      <li> <div class="dropdown">
+              <button class="dropbtn">Marca
+                <i class="fa fa-caret-down"></i>
+              </button>
+              <div class="dropdown-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+              </div>
+            </div>
       </li>
-
 
       <%--if (loggedOn) {--%>
-        <li <%=menuActiveLink.equals("Ecommerce")?"class=\"active\"":""%>>
-          <a href="Dispatcher?controllerAction=AddressBookManagement.view">Ecommerce</a>
+        <li <%=menuActiveLink.equals("Ordini")?"class=\"active\"":""%>>
+          <a href="Dispatcher?controllerAction=AddressBookManagement.view">Ordini</a>
         </li>
         <li><a href="javascript:logoutForm.submit()">Logout</a></li>
       <%--}--%>

@@ -2,7 +2,7 @@
 
 <!-- Linking styles -->
 <link rel="stylesheet" href="css/ecommerce.css" type="text/css" media="screen">
-<title>Rubrica: <%=menuActiveLink%></title>
+<title>Ecommerce: <%=menuActiveLink%></title>
 <script>
   var applicationMessage;
   <%if (applicationMessage != null) {%>
