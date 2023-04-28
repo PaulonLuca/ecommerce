@@ -1,5 +1,7 @@
 package com.unife.ecommerce.model.mo;
 
+import java.util.ArrayList;
+
 public class Utente {
     private Long idUtente;
     private String nome;
@@ -15,9 +17,10 @@ public class Utente {
     private String civico;
     private String cap;
     //(0,n) lista degli indirizzi di spedizione dell'utente
-    private IndirizzoSpedizione[] indirizziSped;
+    private ArrayList<IndirizzoSpedizione> indirizziSped;
     //(0,n) lista degli ordini fatti dall'utente
-    private Ordine[] ordini;
+    private ArrayList<Ordine> ordini;
+    private boolean deleted;
 
     public Long getIdUtente() { return idUtente;}
 
@@ -71,11 +74,16 @@ public class Utente {
 
     public void setCap(String cap) {this.cap = cap;}
 
-    public Ordine[] getOrdini() { return ordini;}
 
-    public void setOrdini(Ordine[] ordini) { this.ordini = ordini; }
+    public ArrayList<IndirizzoSpedizione> getIndirizziSped() {  return indirizziSped;}
 
-    public IndirizzoSpedizione[] getIndirizziSped() {return indirizziSped;}
+    public void setIndirizziSped(ArrayList<IndirizzoSpedizione> indirizziSped) {    this.indirizziSped = indirizziSped;}
 
-    public void setIndirizziSped(IndirizzoSpedizione[] indirizziSped) {this.indirizziSped = indirizziSped;}
+    public ArrayList<Ordine> getOrdini() {  return ordini;}
+
+    public void setOrdini(ArrayList<Ordine> ordini) {   this.ordini = ordini;}
+
+    public boolean isDeleted() {    return deleted;}
+
+    public void setDeleted(boolean deleted) {   this.deleted = deleted;}
 }

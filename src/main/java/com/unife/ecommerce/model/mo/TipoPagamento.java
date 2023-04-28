@@ -1,10 +1,13 @@
 package com.unife.ecommerce.model.mo;
 
+import java.util.ArrayList;
+
 public class TipoPagamento {
     private Long idTipoPag;
     private String nomeTipoPag;
     //(0,n) array di pagamenti di questo tipo
-    private Pagamento[] pagamenti;
+    private ArrayList<Pagamento> pagamenti;
+    private boolean deleted;
 
     public Long getIdTipoPag() { return idTipoPag;}
 
@@ -14,7 +17,11 @@ public class TipoPagamento {
 
     public void setNomeTipoPag(String nomeTipoPag) { this.nomeTipoPag = nomeTipoPag; }
 
-    public Pagamento[] getPagamenti() {return pagamenti;}
+    public ArrayList<Pagamento> getPagamenti() {    return pagamenti;   }
 
-    public void setPagamenti(Pagamento[] pagamenti) {this.pagamenti = pagamenti;}
+    public void setPagamenti(ArrayList<Pagamento> pagamenti) {  this.pagamenti = pagamenti; }
+
+    public boolean isDeleted() {    return deleted; }
+
+    public void setDeleted(boolean deleted) {   this.deleted = deleted; }
 }

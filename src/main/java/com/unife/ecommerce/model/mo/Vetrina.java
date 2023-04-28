@@ -3,8 +3,7 @@ package com.unife.ecommerce.model.mo;
 public class Vetrina {
     private Long idVetrina;
     private String nomeVetrina;
-    //(0,n) array di prodotti nella vetrina con lo sconto
-    //ArrayList<Prod, int>  <----DA FARE
+    private int sconto;
 
     public Long getIdVetrina() { return idVetrina;}
 
@@ -13,4 +12,8 @@ public class Vetrina {
     public String getNomeVetrina() { return nomeVetrina; }
 
     public void setNomeVetrina(String nomeVetrina) { this.nomeVetrina = nomeVetrina; }
+
+    public int getSconto() {    return sconto;}
+
+    public void setSconto(int sconto) { this.sconto = sconto;   }
 }

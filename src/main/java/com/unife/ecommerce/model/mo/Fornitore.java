@@ -1,10 +1,13 @@
 package com.unife.ecommerce.model.mo;
 
+import java.util.ArrayList;
+
 public class Fornitore {
     private Long idFornitore;
     private String nomeFornitore;
     //(0,n) Array di proddoti forniti da questo fornitore
-    private Prodotto[] prodotti;
+    private ArrayList<Prodotto> prodotti;
+    private boolean deleted;
 
     public Long getIdFornitore() { return idFornitore; }
 
@@ -14,7 +17,11 @@ public class Fornitore {
 
     public void setNomeFornitore(String nomeFornitore) { this.nomeFornitore = nomeFornitore; }
 
-    public Prodotto[] getProdotti() {return prodotti;}
+    public ArrayList<Prodotto> getProdotti() { return prodotti; }
 
-    public void setProdotti(Prodotto[] prodotti) { this.prodotti = prodotti;}
+    public void setProdotti(ArrayList<Prodotto> prodotti) { this.prodotti = prodotti; }
+
+    public boolean isDeleted() { return deleted; }
+
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 }

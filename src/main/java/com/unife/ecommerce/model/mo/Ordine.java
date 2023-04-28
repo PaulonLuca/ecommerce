@@ -1,6 +1,7 @@
 package com.unife.ecommerce.model.mo;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Ordine {
     private Long idOrd;
@@ -17,7 +18,8 @@ public class Ordine {
     private IndirizzoSpedizione indSped;
 
     //(1,n) array di prodotti con la loro quantità
-    //ArrayList<Prodotto,int>
+    private ArrayList<ProdottoQty> prodQty; //pensa a soluzione migliore
+    private boolean deleted;
 
     public Long getIdOrd() { return idOrd;}
 
@@ -46,4 +48,12 @@ public class Ordine {
     public IndirizzoSpedizione getIndSped() { return indSped;}
 
     public void setIndSped(IndirizzoSpedizione indSped) { this.indSped = indSped;}
+
+    public ArrayList<ProdottoQty> getProdQty() {    return prodQty; }
+
+    public void setProdQty(ArrayList<ProdottoQty> prodQty) {    this.prodQty = prodQty; }
+
+    public boolean isDeleted() {    return deleted; }
+
+    public void setDeleted(boolean deleted) {   this.deleted = deleted; }
 }

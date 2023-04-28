@@ -11,6 +11,7 @@ public class Spedizione {
     private double speseEpr;
     //(1,1) la spedizione ha un solo ordine
     private Ordine ordine;
+    private boolean deleted;
 
     public Long getIdSped() { return idSped; }
 
@@ -35,4 +36,8 @@ public class Spedizione {
     public Ordine getOrdine() { return ordine;}
 
     public void setOrdine(Ordine ordine) { this.ordine = ordine;}
+
+    public boolean isDeleted() {    return deleted; }
+
+    public void setDeleted(boolean deleted) {   this.deleted = deleted; }
 }

@@ -16,10 +16,9 @@ public class Prodotto {
     private Marca marca;
     //(1,1) un prodotto ha un fornitore
     private Fornitore forn;
-    //(0,n) un prodotto puù stare in n vetrine promozionali
-    //ArrayList di coppie vetrina-sconto<--------DA FARE
     //(0,n) un prodotto ha una lista di ordini in cui è inserito con la rispettiva quantità
-    //ArrayList<Ordine,qty>
+    private ArrayList<OrdineQty> ordQty;
+    private boolean deleted;
 
     public Long getIdProd() { return idProd;}
 
@@ -61,8 +60,14 @@ public class Prodotto {
 
     public void setForn(Fornitore forn) {this.forn = forn;}
 
-    //(0,n) un prodotto puù stare in n vetrine promozionali
-    //ArrayList di coppie vetrina-sconto
+    public ArrayList<OrdineQty> getOrdQty() {   return ordQty;  }
+
+    public void setOrdQty(ArrayList<OrdineQty> ordQty) {    this.ordQty = ordQty;}
+
+    public boolean isDeleted() {    return deleted;}
+
+    public void setDeleted(boolean deleted) {   this.deleted = deleted; }
+
 }
 
 

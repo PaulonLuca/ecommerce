@@ -1,12 +1,15 @@
 package com.unife.ecommerce.model.mo;
 
+import java.util.ArrayList;
+
 public class Categoria {
     private Long idCat;
     private String nomeCat;
     //(0,n) array di cataloghi in cui è presente una certa cetagoria
-    private Catalogo[] cataloghi;
+    private ArrayList<Catalogo> cataloghi;
     //(0,n) array di prodotti di con questa categoria
-    private Prodotto[] prodotti;
+    private ArrayList<Prodotto> prodotti;
+    private boolean deleted;
 
     public Long getIdCat() { return idCat; }
 
@@ -16,7 +19,15 @@ public class Categoria {
 
     public void setNomeCat(String nomeCat) { this.nomeCat = nomeCat;}
 
-    public Prodotto[] getProdotti() {return prodotti;}
+    public ArrayList<Catalogo> getCataloghi() { return cataloghi; }
 
-    public void setProdotti(Prodotto[] prodotti) { this.prodotti = prodotti;}
+    public void setCataloghi(ArrayList<Catalogo> cataloghi) { this.cataloghi = cataloghi; }
+
+    public ArrayList<Prodotto> getProdotti() { return prodotti; }
+
+    public void setProdotti(ArrayList<Prodotto> prodotti) { this.prodotti = prodotti; }
+
+    public boolean isDeleted() { return deleted; }
+
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 }

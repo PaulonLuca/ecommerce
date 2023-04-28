@@ -1,7 +1,7 @@
-
+<%@ page import="com.unife.ecommerce.model.mo.Utente" %>
 <%
-    //boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
-    //User loggedUser = (User) request.getAttribute("loggedUser");
+    boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
+    Utente loggedUser = (Utente) request.getAttribute("loggedUser");
     String applicationMessage = (String) request.getAttribute("applicationMessage");
     String menuActiveLink = "Home";
 %>

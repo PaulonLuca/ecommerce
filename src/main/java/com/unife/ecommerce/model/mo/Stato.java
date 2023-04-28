@@ -1,10 +1,13 @@
 package com.unife.ecommerce.model.mo;
 
+import java.util.ArrayList;
+
 public class Stato {
     private Long idStato;
     private String nomeStato;
     //(0,n) lista degli ordini che si trovano in questo stato
-    Ordine[] ordini;
+    private ArrayList<Ordine> ordini;
+    private boolean deleted;
 
     public Long getIdStato() { return idStato; }
 
@@ -13,4 +16,12 @@ public class Stato {
     public String getNomeStato() { return nomeStato; }
 
     public void setNomeStato(String nomeStato) { this.nomeStato = nomeStato; }
+
+    public ArrayList<Ordine> getOrdini() {  return ordini;  }
+
+    public void setOrdini(ArrayList<Ordine> ordini) {   this.ordini = ordini;   }
+
+    public boolean isDeleted() {    return deleted; }
+
+    public void setDeleted(boolean deleted) {   this.deleted = deleted; }
 }

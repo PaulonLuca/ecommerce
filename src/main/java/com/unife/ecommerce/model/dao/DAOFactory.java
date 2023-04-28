@@ -16,7 +16,7 @@ public abstract class DAOFactory {
     public abstract void rollbackTransaction();
     public abstract void closeTransaction();
 
-    //public abstract UserDAO getUserDAO();
+    public abstract UserDAO getUserDAO();
 
     //public abstract ContactDAO getContactDAO();
 

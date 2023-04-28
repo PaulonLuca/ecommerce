@@ -1,5 +1,7 @@
 package com.unife.ecommerce.model.mo;
 
+import java.util.ArrayList;
+
 public class IndirizzoSpedizione {
     private Long idIndSped;
     private String citta;
@@ -9,7 +11,8 @@ public class IndirizzoSpedizione {
     //(1,1) utente a cui è associato l'indirizzo di spedizione
     private Utente utente;
     //(0,n) ordini con quest'indirizzo di spedizione
-    private Ordine[] ordini;
+    private ArrayList<Ordine> ordini;
+    private boolean deleted;
 
     public Long getIdIndSped() { return idIndSped;}
 
@@ -35,7 +38,11 @@ public class IndirizzoSpedizione {
 
     public void setUtente(Utente utente) { this.utente = utente;}
 
-    public Ordine[] getOrdini() { return ordini;}
+    public ArrayList<Ordine> getOrdini() { return ordini; }
 
-    public void setOrdini(Ordine[] ordini) { this.ordini = ordini;}
+    public void setOrdini(ArrayList<Ordine> ordini) { this.ordini = ordini; }
+
+    public boolean isDeleted() { return deleted; }
+
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 }

@@ -57,16 +57,16 @@
             </div>
       </li>
 
-      <%--if (loggedOn) {--%>
+      <%if (loggedOn) {%>
         <li <%=menuActiveLink.equals("Ordini")?"class=\"active\"":""%>>
           <a href="Dispatcher?controllerAction=AddressBookManagement.view">Ordini</a>
         </li>
         <li><a href="javascript:logoutForm.submit()">Logout</a></li>
-      <%--}--%>
+      <%}%>
     </ul>
   </nav>
 
-  <%--if (!loggedOn) {--%>
+  <%if (!loggedOn) {%>
     <section id="login" class="clearfix">
       <form name="logonForm" action="Dispatcher" method="post">
         <label for="username">Utente</label>
@@ -77,6 +77,8 @@
         <input type="submit" value="Ok">
       </form>
     </section>
-  <%--}--%>
+  <% }else { %>
+    <%= loggedUser.getUsername() %>
+  <% } %>
 
 </header>

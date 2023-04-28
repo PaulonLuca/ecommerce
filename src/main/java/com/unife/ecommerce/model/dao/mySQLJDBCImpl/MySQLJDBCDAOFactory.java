@@ -5,9 +5,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
+import com.unife.ecommerce.model.dao.UserDAO;
 import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.model.dao.DAOFactory;
-//import com.isw.es_07_rubrica.model.dao.UserDAO;
 //import com.isw.es_07_rubrica.model.dao.ContactDAO;
 
 import com.unife.ecommerce.services.config.Configuration;
@@ -67,12 +67,11 @@ public class MySQLJDBCDAOFactory extends DAOFactory {
     }
 
     //CREARE un metodo per ogni implemantazione di un dao per mysql
-    /*
-    @Override
-    public UserDAO getUserDAO() {
-        return new UserDAOMySQLJDBCImpl(connection);
-    }
 
+    @Override
+    public UserDAO getUserDAO() {   return new UserDAOMySQLJDBCImpl(connection);    }
+
+    /*
     @Override
     public ContactDAO getContactDAO() {
         return new ContactDAOMySQLJDBCImpl(connection);
