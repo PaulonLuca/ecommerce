@@ -61,7 +61,7 @@ public class HomeManagement {
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory = null;
         Utente loggedUser;
-        String applicationMessage = null;
+        String applicationMessage = "Benvenuto, inizia ad acquistare i tuoi prodotti";
 
         Logger logger = LogService.getApplicationLogger();
 
@@ -93,7 +93,7 @@ public class HomeManagement {
                 loggedUser=null;
             } else {
                 loggedUser = sessionUserDAO.create(user.getIdUtente(),user.getNome(),user.getCognome(),user.getEmail(),user.getUsername(),
-                        null,user.getTel(),user.getCitta(),user.getVia(),user.getCivico(),user.getCap(),user.isAdmin(),false,false);
+                        null,null,null,null,null,null,user.isAdmin(),false,false);//<--hard coded
             }
 
             daoFactory.commitTransaction();
@@ -127,6 +127,7 @@ public class HomeManagement {
     public static void logout(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
+        String applicationMessage = "Logout avvenuto con successo";
 
         Logger logger = LogService.getApplicationLogger();
 
@@ -146,6 +147,7 @@ public class HomeManagement {
 
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
+            request.setAttribute("applicationMessage", applicationMessage);
             request.setAttribute("viewUrl", "homeManagement/view");
 
         } catch (Exception e) {
@@ -162,5 +164,12 @@ public class HomeManagement {
             } catch (Throwable t) {
             }
         }
+    }
+
+    public static void registrationView(HttpServletRequest request, HttpServletResponse response){
+        request.setAttribute("loggedOn",false);
+        request.setAttribute("loggedUser", null);
+        request.setAttribute("applicationMessage", "Registrati");
+        request.setAttribute("viewUrl", "homeManagement/registrazione");
     }
 }

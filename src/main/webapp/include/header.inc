@@ -28,6 +28,10 @@
     <input type="hidden" name="controllerAction" value="HomeManagement.logout"/>
   </form>
 
+  <form name="registrationForm" action="Dispatcher" method="post">
+      <input type="hidden" name="controllerAction" value="HomeManagement.registrationView"/>
+  </form>
+
   <nav><!-- Defining the navigation menu -->
     <ul>
       <li <%=menuActiveLink.equals("Home")?"class=\"active\"":""%>>
@@ -61,8 +65,13 @@
         <li <%=menuActiveLink.equals("Ordini")?"class=\"active\"":""%>>
           <a href="Dispatcher?controllerAction=AddressBookManagement.view">Ordini</a>
         </li>
-        <li><a href="javascript:logoutForm.submit()">Logout</a></li>
-      <%}%>
+        <li ><a href="javascript:logoutForm.submit()">Logout</a></li>
+
+      <%} else {%>
+        <li <%=menuActiveLink.equals("Registrazione")?"class=\"active\"":""%>>
+            <a href="javascript:registrationForm.submit()">Registrati</a>
+        </li>
+      <% }%>
     </ul>
   </nav>
 
@@ -78,7 +87,7 @@
       </form>
     </section>
   <% }else { %>
-    <%= loggedUser.getUsername() %>
+    Username: <%=loggedUser.getUsername() %>
   <% } %>
 
 </header>

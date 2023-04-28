@@ -1,5 +1,6 @@
 package com.unife.ecommerce.model.dao;
 
+import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Utente;
 
 public interface UserDAO
@@ -19,7 +20,7 @@ public interface UserDAO
             String cap,
             boolean isAdmin,
             boolean isLocked,
-            boolean deleted);
+            boolean deleted) throws DuplicatedObjectException;
 
     public void update(Utente user);
 
