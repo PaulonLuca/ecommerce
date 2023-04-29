@@ -3,6 +3,7 @@ package com.unife.ecommerce.model.dao;
 import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Utente;
 
+//Interfaccia implementata sui Cookies ed in MySQL
 public interface UserDAO
 {
     //nella creazione isAdmin, isLocked e inDeleted sono a false di default

@@ -148,7 +148,7 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
         return user;
     }
 
-    Utente read(ResultSet rs) {
+    static Utente read(ResultSet rs) {
 
         Utente user = new Utente();
         try {

@@ -2,6 +2,7 @@ package com.unife.ecommerce.controller;
 
 import com.unife.ecommerce.model.dao.DAOFactory;
 import com.unife.ecommerce.model.dao.UserDAO;
+import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Utente;
 import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
@@ -18,7 +19,8 @@ public class UserManagement {
         String applicationMessage = "Registrazione avvenuta con successo";
         Logger logger = LogService.getApplicationLogger();
 
-        try {
+        try
+        {
             //recupero parametri dalla request
             String nome = request.getParameter("nome");
             String cognome = request.getParameter("cognome");
@@ -36,24 +38,30 @@ public class UserManagement {
             daoFactory.beginTransaction();
             UserDAO userDAO = daoFactory.getUserDAO();
             //inserimento utente nel database
-            userDAO.create(null, nome, cognome,email,username,password, telefono,citta,via,civico,cap,false,false,false);
+            try
+            {
+                userDAO.create(null, nome, cognome,email,username,password, telefono,citta,via,civico,cap,false,false,false);
+            }catch (DuplicatedObjectException ex)
+            {   applicationMessage="Username e email già esistenti.";   }
+
             daoFactory.commitTransaction();
 
             //Parametri da passare alla jsp
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
             request.setAttribute("applicationMessage", applicationMessage);
-            request.setAttribute("viewUrl", "homeManagement/view");
+            request.setAttribute("viewUrl", "userManagement/registrazione");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (daoFactory != null) daoFactory.rollbackTransaction();
             } catch (Throwable t) {
             }
             throw new RuntimeException(e);
-
-        } finally {
+        }
+        finally {
             try {
                 if (daoFactory != null) daoFactory.closeTransaction();
             } catch (Throwable t) {

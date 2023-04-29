@@ -27,12 +27,6 @@ public class UserDAOCookieImpl implements UserDAO {
         loggedUser.setEmail(email);
         loggedUser.setUsername(username);
         loggedUser.setAdmin(isAdmin);
-        /*loggedUser.setTel(tel);
-        loggedUser.setCitta(citta);
-        loggedUser.setVia(via);
-        loggedUser.setCivico(civico);
-        loggedUser.setCap(cap);
-        loggedUser.setLocked(isLocked);*/
 
         Cookie cookie;
         cookie = new Cookie("loggedUser", encode(loggedUser));
@@ -61,7 +55,7 @@ public class UserDAOCookieImpl implements UserDAO {
         response.addCookie(cookie);
     }
 
-    //itera su tutti i cookie alla ricerca quello corrispondende al logged user
+    //itera su tutti i cookie alla ricerca di quello corrispondende al logged user
     //se lo trova allora l'utente è loggato e ne recupera le informazioni personali
     @Override
     public Utente findLoggedUser() {
@@ -85,17 +79,17 @@ public class UserDAOCookieImpl implements UserDAO {
     @Override
     public Utente findByUsername(String username) {throw new UnsupportedOperationException("Not supported yet.");}
 
+    //Crea una stringa con le principali informazioni dell'utente
     private String encode(Utente loggedUser) {
 
         String encodedLoggedUser;
         encodedLoggedUser = loggedUser.getIdUtente() + "#" + loggedUser.getNome() + "#" +
                 loggedUser.getCognome()+ "#" + loggedUser.getEmail()+ "#" + loggedUser.getUsername()+ "#" + loggedUser.isAdmin();
-                /*+ "#" + loggedUser.getCitta()+ "#" + loggedUser.getVia()+ "#"
-                + loggedUser.getCivico()+ "#" + loggedUser.getCap()+ "#" + loggedUser.isAdmin()+ "#" + loggedUser.isLocked();*/
         return encodedLoggedUser;
 
     }
 
+    //Dalla stringa con le informazioni dell'utente si crea l'oggetto utente
     private Utente decode(String encodedLoggedUser) {
 
         Utente loggedUser = new Utente();
@@ -107,13 +101,6 @@ public class UserDAOCookieImpl implements UserDAO {
         loggedUser.setEmail(values[3]);
         loggedUser.setUsername(values[4]);
         loggedUser.setAdmin(Boolean.valueOf(values[5]));
-        /*loggedUser.setTel(values[5]);
-        loggedUser.setCitta(values[6]);
-        loggedUser.setVia(values[7]);
-        loggedUser.setCivico(values[8]);
-        loggedUser.setCap(values[9]);
-        loggedUser.setAdmin(Boolean.valueOf(values[10]));
-        loggedUser.setLocked(Boolean.valueOf(values[11]));*/
 
         return loggedUser;
 

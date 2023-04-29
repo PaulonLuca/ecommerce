@@ -1,7 +1,6 @@
 package com.unife.ecommerce.model.dao.CookieImpl;
 
-import com.unife.ecommerce.model.dao.DAOFactory;
-import com.unife.ecommerce.model.dao.UserDAO;
+import com.unife.ecommerce.model.dao.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -48,11 +47,14 @@ public class CookieDAOFactory extends DAOFactory {
     @Override
     public UserDAO getUserDAO() {   return new UserDAOCookieImpl(request,response); }
 
-    /*
     @Override
-    public ContactDAO getContactDAO() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-*/
+    public ProdottoDAO getProdottoDAO() {   throw new UnsupportedOperationException("Not supported yet."); }
+
+    @Override
+    public MarcaDAO getMarcaDAO() { throw new UnsupportedOperationException("Not supported yet.");}
+
+    @Override
+    public CategoriaDAO getCategoriaDAO() {  throw new UnsupportedOperationException("Not supported yet."); }
+
 
 }

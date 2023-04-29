@@ -1,5 +1,6 @@
 package com.unife.ecommerce.model.mo;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Prodotto {
@@ -9,6 +10,7 @@ public class Prodotto {
     private int qtyDisp;
     private double prezzo;
     private String fotoPath;//da sostituire con array di foto
+    private File[] fotoProdotto;
     private boolean isLocked;
     //(1,1) un prodotto ha una cetegoria
     private Categoria cat;
@@ -68,6 +70,9 @@ public class Prodotto {
 
     public void setDeleted(boolean deleted) {   this.deleted = deleted; }
 
+    public File[] getFotoProdotto() {   return fotoProdotto;}
+
+    public void setFotoProdotto(File[] fotoProdotto) {  this.fotoProdotto = fotoProdotto;}
 }
 
 
