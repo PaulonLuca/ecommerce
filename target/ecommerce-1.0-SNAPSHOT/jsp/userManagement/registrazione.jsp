@@ -1,7 +1,12 @@
 <%@ page import="com.unife.ecommerce.model.mo.Utente" %>
+<%@ page import="com.unife.ecommerce.model.mo.Marca" %>
+<%@ page import="com.unife.ecommerce.model.mo.Categoria" %>
+<%@ page import="java.util.ArrayList" %>
 <%
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
+    ArrayList<Marca> marche= (ArrayList<Marca>) request.getAttribute("marche");
+    ArrayList<Categoria> categorie= (ArrayList<Categoria>) request.getAttribute("categorie");
     String applicationMessage = (String) request.getAttribute("applicationMessage");
     String menuActiveLink = "Registrazione";
 %>
@@ -10,9 +15,29 @@
 <html>
 <head>
     <%@include file="/include/htmlHead.inc"%>
+
+    <script>
+        function backToHome()
+        {document.backForm.submit();}
+
+        function onLoadHandler() {
+            var btn = document.querySelector("#btnBack");
+            btn.addEventListener("click", backToHome);
+        }
+        window.addEventListener("load",onLoadHandler);
+
+    </script>
 </head>
 <body>
-<%@include file="/include/header.inc"%>
+
+<%--@include file="/include/header.jsp"--%>
+<header class="clearfix ">
+    <h1 class="logo" style="margin-bottom: 20px;">
+        E-commerce
+    </h1>
+</header>
+
+<button type="button" name="btnBack" id="btnBack" class="button">Home</button>
 
 <main>
     <h1> Registrati inserendo tutti i campi obbligatori</h1>
@@ -65,6 +90,10 @@
     </form>
 
 </main>
+
+<form name="backForm" action="Dispatcher" method="post">
+    <input type="hidden" name="controllerAction" value="HomeManagement.view"/>
+</form>
 </body>
 
 <%@include file="/include/footer.inc"%>

@@ -18,6 +18,8 @@ public interface ProdottoDAO {
 
     public Prodotto findProdottoById(Long id);
 
-    public ArrayList<Prodotto> findAllProdotti(String searchString, HttpServletRequest request);
+    public ArrayList<Prodotto> findAllProdotti( String fotoPath,String idCat,String idMarca, String searchString);
+
+
 
 }

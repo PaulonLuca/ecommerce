@@ -1,8 +1,8 @@
 package com.unife.ecommerce.controller;
 
-import com.unife.ecommerce.model.dao.DAOFactory;
-import com.unife.ecommerce.model.dao.ProdottoDAO;
-import com.unife.ecommerce.model.dao.UserDAO;
+import com.unife.ecommerce.model.dao.*;
+import com.unife.ecommerce.model.mo.Categoria;
+import com.unife.ecommerce.model.mo.Marca;
 import com.unife.ecommerce.model.mo.Prodotto;
 import com.unife.ecommerce.model.mo.Utente;
 import com.unife.ecommerce.services.config.Configuration;
@@ -32,13 +32,17 @@ public class HomeManagement {
             loggedUser = sessionUserDAO.findLoggedUser();
             sessionDAOFactory.commitTransaction();
 
-            //Caricamento prodotti
-            ArrayList<Prodotto> prodotti=loadProdotti(null, request);
+            //Caricamento prodotti, marche e categorie
+            ArrayList<Prodotto> prodotti=loadProdotti( request);
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
 
             //ViewModel
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("prodotti", prodotti);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
             request.setAttribute("viewUrl", "homeManagement/view");
 
         } catch (Exception e) {
@@ -66,8 +70,10 @@ public class HomeManagement {
         Logger logger = LogService.getApplicationLogger();
 
         try {
-            //Caricamento prodotti
-            ArrayList<Prodotto> prodotti=loadProdotti(null,request);
+            //Caricamento prodotti, marche e categorie
+            ArrayList<Prodotto> prodotti=loadProdotti( request);
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
 
             //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sui cookie
             sessionDAOFactory = getSessionDAOFactory(request,response);
@@ -103,6 +109,8 @@ public class HomeManagement {
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("prodotti", prodotti);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
             request.setAttribute("applicationMessage", applicationMessage);
             request.setAttribute("viewUrl", "homeManagement/view");
 
@@ -131,9 +139,12 @@ public class HomeManagement {
         String applicationMessage = "Logout avvenuto con successo";
         Logger logger = LogService.getApplicationLogger();
 
-        try {
-            //Caricamento prodotti
-            ArrayList<Prodotto> prodotti=loadProdotti(null,request);
+        try
+        {
+            //Caricamento prodotti, marche e categorie
+            ArrayList<Prodotto> prodotti=loadProdotti( request);
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
 
             sessionDAOFactory = getSessionDAOFactory(request,response);
             sessionDAOFactory.beginTransaction();
@@ -146,6 +157,8 @@ public class HomeManagement {
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
             request.setAttribute("prodotti", prodotti);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
             request.setAttribute("applicationMessage", applicationMessage);
             request.setAttribute("viewUrl", "homeManagement/view");
 
@@ -166,8 +179,14 @@ public class HomeManagement {
     }
 
     public static void registrationView(HttpServletRequest request, HttpServletResponse response){
+        //Caricemento marche e categorie nel menu
+        ArrayList<Marca> marche= loadMarche();
+        ArrayList<Categoria> categorie=loadCategorie();
+
         request.setAttribute("loggedOn",false);
         request.setAttribute("loggedUser", null);
+        request.setAttribute("marche", marche);
+        request.setAttribute("categorie", categorie);
         request.setAttribute("viewUrl", "userManagement/registrazione");
     }
 
@@ -179,13 +198,42 @@ public class HomeManagement {
         return  sessionDAOFactory;
     }
 
-    private static ArrayList<Prodotto> loadProdotti(String searchString, HttpServletRequest request){
+    private static ArrayList<Prodotto> loadProdotti( HttpServletRequest request){
         //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
         DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
         daoFactory.beginTransaction();
         ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
-        ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdotti(searchString,request);
+
+        //Recupera root path della cartella foto
+        String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+        //Recupero parametri di selezione, se non sono presenti valgono null, se invece è stato fatto click su uno
+        //solo dei tre link uno è valorizzato gli altri sono stringhe vuote
+        String idCat=request.getParameter("selectedCat");
+        String idMarca=request.getParameter("selectedMarca");
+        String searchString=request.getParameter("searchString");
+
+        ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdotti(fotoPath,idCat,idMarca,searchString);
         daoFactory.commitTransaction();
         return prodotti;
+    }
+
+    protected static ArrayList<Marca> loadMarche(){
+        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+        daoFactory.beginTransaction();
+        MarcaDAO marcaDAO=daoFactory.getMarcaDAO();
+        ArrayList<Marca> marche=marcaDAO.findAllMarche();
+        daoFactory.commitTransaction();
+        return marche;
+    }
+
+    protected static ArrayList<Categoria> loadCategorie(){
+        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+        daoFactory.beginTransaction();
+        CategoriaDAO categoriaDAO=daoFactory.getCategoriaDAO();
+        ArrayList<Categoria> categorie=categoriaDAO.findAllCategorie();
+        daoFactory.commitTransaction();
+        return categorie;
     }
 }

@@ -44,7 +44,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
     }
 
     @Override
-    public ArrayList<Prodotto> findAllProdotti(String searchString, HttpServletRequest request) {
+    public ArrayList<Prodotto> findAllProdotti( String fotoPath,String idCat,String idMarca,String searchString) {
         PreparedStatement ps;
         ArrayList<Prodotto> prodotti=new ArrayList<Prodotto>();
 
@@ -55,17 +55,26 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
                     "FROM ((Prodotto AS P INNER JOIN Marca AS M ON P.id_marca=M.id_marca) " +
                     "INNER JOIN Categoria AS C ON P.id_cat=C.id_cat) ";
 
-            if (searchString != null) {
+            //Se presente la stringa di ricerca
+            if (searchString != null && searchString != "") {
                 sql += " WHERE INSTR(nome_prod,?)>0 ";
                 sql += " OR INSTR(descr,?)>0 ";
                 sql += " OR INSTR(nome_marca,?)>0 ";
                 sql += " OR INSTR(nome_cat,?)>0 ";
             }
+            //Se si ricerca una determinata categoria
+            if (idCat != null && idCat != "") {
+                sql += " WHERE P.id_cat="+idCat;
+            }
+            //Se si ricerca una determinata marca
+            if (idMarca != null && idMarca!="") {
+                sql += " WHERE P.id_marca="+idMarca;
+            }
             sql+=" ORDER BY id_prod ;";
             ps = conn.prepareStatement(sql);
 
             int i = 1;
-            if (searchString != null) {
+            if (searchString != null && searchString != "") {
                 ps.setString(i++, searchString);
                 ps.setString(i++, searchString);
                 ps.setString(i++, searchString);
@@ -75,7 +84,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
 
             while (resultSet.next()) {
                 Prodotto p= read(resultSet);
-                p.setFotoProdotto(loadFotoProdotto(p.getIdProd(),request));
+                p.setFotoProdotto(loadFotoProdotto(p.getIdProd(),fotoPath));
                 prodotti.add(p);
             }
             resultSet.close();
@@ -88,11 +97,11 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prodotti;
     }
 
-    private File[] loadFotoProdotto(Long idProd, HttpServletRequest request){
 
-        String imagePath =request.getServletContext().getRealPath("/uploadedImages");
-        imagePath+="/"+idProd.toString()+"/";
-        File imageDir=new File(imagePath);
+
+    private File[] loadFotoProdotto(Long idProd, String fotoPath){
+        fotoPath+="/"+idProd.toString()+"/";
+        File imageDir=new File(fotoPath);
         File[] fileList=imageDir.listFiles();
         return fileList;
     }

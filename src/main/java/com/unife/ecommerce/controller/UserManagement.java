@@ -3,7 +3,6 @@ package com.unife.ecommerce.controller;
 import com.unife.ecommerce.model.dao.DAOFactory;
 import com.unife.ecommerce.model.dao.UserDAO;
 import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
-import com.unife.ecommerce.model.mo.Utente;
 import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,11 +45,12 @@ public class UserManagement {
 
             daoFactory.commitTransaction();
 
+
             //Parametri da passare alla jsp
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
             request.setAttribute("applicationMessage", applicationMessage);
-            request.setAttribute("viewUrl", "userManagement/registrazione");
+            request.setAttribute("viewUrl", "homeManagement/view");
 
         }
         catch (Exception e) {
