@@ -34,10 +34,6 @@ header {
     padding-top: 10px;
 }
 
-.headerReg {
-    background: rgb(218,238,225);
-    padding-top: 30px;
-}
 
 .logo {
     padding-top: 20px;
@@ -45,6 +41,12 @@ header {
     font-size: 2.2em;
     font-weight: 900;
     color: rgb(27,169,111);
+}
+
+.btnheader{
+    margin-top:3px;
+    margin-bottom:3px;
+    margin-left: 10px;
 }
 
 /* Login Section */
@@ -91,8 +93,40 @@ header {
 /* Main Section */
 
 main {
+    width: 1000px;
+    margin: 0 auto;
     background-color: #FFFFFF;
-    padding: 10px 18px;
+    /*padding: 10px 18px;*/
+}
+
+/*aside{
+    width: 200px;
+    float: right;
+}*/
+
+.vetrina {
+    width: 850px;
+    height: 600px;
+    margin: 0 auto;
+}
+
+.imgVetrina {
+    width: 850px;
+    height: 600px;
+}
+
+.prodotti {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.formReg{
+    width: fit-content;
+    margin: 0 auto;
+}
+
+tr {
+    height: 50px;
 }
 
 #pageTitle {
@@ -129,3 +163,6 @@ footer a{
 footer #privacy {
     float:right;
 }
+
+
+

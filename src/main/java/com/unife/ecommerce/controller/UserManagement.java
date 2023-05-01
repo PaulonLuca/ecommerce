@@ -45,12 +45,11 @@ public class UserManagement {
 
             daoFactory.commitTransaction();
 
-
-            //Parametri da passare alla jsp
+            //ViewModel
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
             request.setAttribute("applicationMessage", applicationMessage);
-            request.setAttribute("viewUrl", "homeManagement/view");
+            request.setAttribute("viewUrl", "userManagement/registrazione");
 
         }
         catch (Exception e) {

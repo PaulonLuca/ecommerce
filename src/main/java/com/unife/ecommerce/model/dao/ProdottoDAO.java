@@ -3,7 +3,6 @@ package com.unife.ecommerce.model.dao;
 import com.unife.ecommerce.model.mo.Categoria;
 import com.unife.ecommerce.model.mo.Marca;
 import com.unife.ecommerce.model.mo.Prodotto;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 
@@ -16,9 +15,11 @@ public interface ProdottoDAO {
 
     public Prodotto delete(Prodotto prod);
 
-    public Prodotto findProdottoById(Long id);
+    public Prodotto findProdottoById(Long idProd, String fotopath);
 
     public ArrayList<Prodotto> findAllProdotti( String fotoPath,String idCat,String idMarca, String searchString);
+
+    public ArrayList<Prodotto> findProdottiVetrina(Long idVetrina, String fotoPath);
 
 
 

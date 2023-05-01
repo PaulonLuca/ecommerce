@@ -39,8 +39,32 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto findProdottoById(Long id) {
-        return null;
+    public Prodotto findProdottoById(Long idProd,String fotoPath) {
+        PreparedStatement ps;
+        Prodotto prod=new Prodotto();
+
+        try
+        {
+            String sql = "SELECT id_prod, nome_prod, descr, qty_disp, prezzo, foto_path, is_locked, C.id_cat,C.nome_cat, M.id_marca,M.nome_marca, P.deleted " +
+                    "FROM ((Prodotto AS P INNER JOIN Marca AS M ON P.id_marca=M.id_marca) " +
+                    "INNER JOIN Categoria AS C ON P.id_cat=C.id_cat) WHERE P.id_prod=? ORDER BY id_prod ;";
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, idProd.toString());
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                prod= read(resultSet);
+                prod.setFotoProdotto(loadFotoProdotto(prod.getIdProd(),fotoPath));
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return prod;
     }
 
     @Override
@@ -52,7 +76,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         try
         {
             String sql = "SELECT id_prod, nome_prod, descr, qty_disp, prezzo, foto_path, is_locked, C.id_cat,C.nome_cat, M.id_marca,M.nome_marca, P.deleted " +
-                    "FROM ((Prodotto AS P INNER JOIN Marca AS M ON P.id_marca=M.id_marca) " +
+                    " FROM ((Prodotto AS P INNER JOIN Marca AS M ON P.id_marca=M.id_marca) " +
                     "INNER JOIN Categoria AS C ON P.id_cat=C.id_cat) ";
 
             //Se presente la stringa di ricerca
@@ -97,6 +121,35 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prodotti;
     }
 
+    @Override
+    public ArrayList<Prodotto> findProdottiVetrina(Long idVetrina,String fotoPath) {
+        PreparedStatement ps;
+        ArrayList<Prodotto> prodottiVetrina=new ArrayList<>();
+
+        try
+        {
+            String sql = "SELECT P.id_prod" +
+                    " FROM ((Prodotto AS P INNER JOIN In_evidenza AS IE ON P.id_prod = IE.id_prod) " +
+                    "INNER JOIN Vetrina AS V ON IE.id_vetrina = V.id_vetrina ) " +
+                    "WHERE V.id_vetrina=? ;";
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, idVetrina.toString());
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Long idProd=Long.parseLong(resultSet.getString("id_prod"));
+                prodottiVetrina.add(findProdottoById(idProd,fotoPath));
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return prodottiVetrina;
+    }
 
 
     private File[] loadFotoProdotto(Long idProd, String fotoPath){
