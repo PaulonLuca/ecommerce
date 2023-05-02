@@ -1,12 +1,8 @@
 <%@ page import="com.unife.ecommerce.model.mo.Utente" %>
-<%@ page import="com.unife.ecommerce.model.mo.Marca" %>
-<%@ page import="com.unife.ecommerce.model.mo.Categoria" %>
-<%@ page import="java.util.ArrayList" %>
 <%
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
     String applicationMessage = (String) request.getAttribute("applicationMessage");
-    //String menuActiveLink = "";
 %>
 
 <!DOCTYPE html>

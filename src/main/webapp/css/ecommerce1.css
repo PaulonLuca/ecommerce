@@ -129,6 +129,23 @@ tr {
     height: 50px;
 }
 
+.carouselDettaglio{
+    float: left;
+    width: 500px;
+    height: 350px;
+}
+
+.imgDettaglio{
+    width: 500px;
+    height: 350px;
+}
+
+.priceDetailSection{
+    float: left;
+    margin: 80px 80px 80px 100px;
+    width: fit-content;
+}
+
 #pageTitle {
     margin: 12px 0;
 }

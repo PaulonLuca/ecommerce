@@ -20,6 +20,7 @@ public abstract class DAOFactory {
     public abstract ProdottoDAO getProdottoDAO();
     public abstract MarcaDAO getMarcaDAO();
     public abstract CategoriaDAO getCategoriaDAO();
+    public abstract FornitoreDAO getFornitoreDAO();
 
 
     public static DAOFactory getDAOFactory(String whichFactory,Map factoryParameters) {

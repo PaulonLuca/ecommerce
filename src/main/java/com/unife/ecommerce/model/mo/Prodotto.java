@@ -16,8 +16,8 @@ public class Prodotto {
     private Categoria cat;
     //(1,1) un prodotto ha una marca
     private Marca marca;
-    //(1,1) un prodotto ha un fornitore
-    private Fornitore forn;
+    //(1,n) un prodotto ha n fornitori
+    private ArrayList<Fornitore> fornitori;
     //(0,n) un prodotto ha una lista di ordini in cui è inserito con la rispettiva quantità
     private ArrayList<OrdineQty> ordQty;
     private boolean deleted;
@@ -58,10 +58,6 @@ public class Prodotto {
 
     public void setMarca(Marca marca) {this.marca = marca;}
 
-    public Fornitore getForn() {return forn;}
-
-    public void setForn(Fornitore forn) {this.forn = forn;}
-
     public ArrayList<OrdineQty> getOrdQty() {   return ordQty;  }
 
     public void setOrdQty(ArrayList<OrdineQty> ordQty) {    this.ordQty = ordQty;}
@@ -73,6 +69,10 @@ public class Prodotto {
     public File[] getFotoProdotto() {   return fotoProdotto;}
 
     public void setFotoProdotto(File[] fotoProdotto) {  this.fotoProdotto = fotoProdotto;}
+
+    public ArrayList<Fornitore> getFornitori() {return fornitori;}
+
+    public void setFornitori(ArrayList<Fornitore> fornitori) {this.fornitori = fornitori;}
 }
 
 

@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 
 public class HomeManagement {
 
+    static int numProdottiPagina=6;
+
     public static void view(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
@@ -190,7 +192,7 @@ public class HomeManagement {
         request.setAttribute("viewUrl", "userManagement/registrazione");
     }
 
-    private static DAOFactory getSessionDAOFactory(HttpServletRequest request, HttpServletResponse response){
+    protected static DAOFactory getSessionDAOFactory(HttpServletRequest request, HttpServletResponse response){
         Map sessionFactoryParameters=new HashMap<String,Object>();
         sessionFactoryParameters.put("request",request);
         sessionFactoryParameters.put("response",response);
@@ -198,7 +200,7 @@ public class HomeManagement {
         return  sessionDAOFactory;
     }
 
-    private static ArrayList<Prodotto> loadProdotti( HttpServletRequest request){
+    protected static ArrayList<Prodotto> loadProdotti( HttpServletRequest request){
         //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
         DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
         daoFactory.beginTransaction();
@@ -213,7 +215,29 @@ public class HomeManagement {
         String searchString=request.getParameter("searchString");
 
         ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdotti(fotoPath,idCat,idMarca,searchString);
+
+        //Paginazione prodotti
+        /*int paginationIndex=1;
+        if(request.getAttribute("paginationIndex") !=null)
+            paginationIndex=Integer.parseInt((String)request.getAttribute("paginationIndex"));
+
+        ArrayList<Prodotto> prodottiPagina=new ArrayList<>();
+        int limit=0;
+        if(numProdottiPagina>(prodotti.size()- numProdottiPagina *paginationIndex))
+            limit=prodotti.size()- numProdottiPagina *paginationIndex;
+        else
+            limit=numProdottiPagina * paginationIndex;
+
+        for(int i=(paginationIndex-1)*numProdottiPagina;i<limit ;i++)
+            prodottiPagina.add(prodotti.get(i));
+
+
+
+        int numPagine=(Math.round(prodotti.size()/numProdottiPagina))+1;
+        request.setAttribute("numPagine", numPagine);*/
+
         daoFactory.commitTransaction();
+
         return prodotti;
     }
 

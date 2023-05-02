@@ -12,6 +12,7 @@
     ArrayList<Prodotto> prodottiVetrina = (ArrayList<Prodotto>) request.getAttribute("prodottiVetrina");
     String applicationMessage = (String) request.getAttribute("applicationMessage");
     String menuActiveLink = "Home";
+    //int numPagine=(Integer) request.getAttribute("numPagine") ;
 %>
 
 <!DOCTYPE html>
@@ -22,6 +23,10 @@
         function viewDettagliProdotto(code) {
             document.selectionForm.selectedProduct.value = code;
             document.selectionForm.submit();
+        }
+        function viewPage(pageIndex) {
+            document.paginationForm.paginationIndex.value = pageIndex;
+            document.paginationForm.submit();
         }
     </script>
 </head>
@@ -35,7 +40,7 @@
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselVetrina" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1" ></button>
                 <% for (int i = 1; i < prodottiVetrina.size(); i++) { %>
-                <button type="button" data-bs-target="#carouselVetrina" data-bs-slide-to="<%= i%>" aria-label="Slide <%= i+1%>" ></button>
+                    <button type="button" data-bs-target="#carouselVetrina" data-bs-slide-to="<%= i%>" aria-label="Slide <%= i+1%>" ></button>
                 <%}%>
             </div>
             <div class="carousel-inner">
@@ -44,6 +49,7 @@
                     <img src="uploadedImages/<%=prodottiVetrina.get(i).getIdProd()%>/<%=prodottiVetrina.get(i).getFotoProdotto()[0].getName()%>" class="d-block imgVetrina" >
                     <div class="carousel-caption d-none d-md-block">
                         <h2 style="color: red;">&euro; <%=  prodottiVetrina.get(i).getPrezzo()%></h2>
+                        <p><a href="javascript:viewDettagliProdotto(<%=prodottiVetrina.get(i).getIdProd()%>)" style="color: red;"> Visualizza</a></p>
                     </div>
                 </div>
                 <%}%>
@@ -75,8 +81,7 @@
                     </h5>
                     <p class="card-text">&euro; <%= prodotti.get(i).getPrezzo()%>
                     </p>
-                    <a href="javascript:viewDettagliProdotto(<%=prodotti.get(i).getIdProd()%>)" class="btn btn-primary">Go
-                        somewhere</a>
+                    <a href="javascript:viewDettagliProdotto(<%=prodotti.get(i).getIdProd()%>)" class="btn btn-primary">Visualizza</a>
                 </div>
             </div>
         </article>
@@ -111,17 +116,22 @@
 
 <nav aria-label="Navigation" style="margin: 0 auto; width: fit-content;">
     <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        <li class="page-item"><a class="page-link" href="javascript:viewPage(0)">Previous</a></li>
+        <%--for (int i=0; i< numPagine; i++) {--%>
+            <li class="page-item"><a class="page-link" href="javascript:viewPage(<%--=i--%>)"> <%--=i+1--%></a></li>
+        <%--}--%>
+        <li class="page-item"><a class="page-link" href="javascript:viewPage(<%--=numPagine-1--%>)">Next</a></li>
     </ul>
 </nav>
 
 <form name="selectionForm" action="Dispatcher" method="post">
-    <input type="hidden" name="controllerAction" value="HomeManagement.viewDetail"/>
+    <input type="hidden" name="controllerAction" value="CatalogManagement.view"/>
     <input type="hidden" name="selectedProduct" value=""/>
+</form>
+
+<form name="paginationForm" action="Dispatcher" method="post">
+    <input type="hidden" name="controllerAction" value="HomeManagement.view"/>
+    <input type="hidden" name="paginationIndex" value="0"/>
 </form>
 
 <form name="searchForm" action="Dispatcher" method="post">
