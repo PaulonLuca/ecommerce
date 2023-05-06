@@ -152,7 +152,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
     }
 
 
-    private File[] loadFotoProdotto(Long idProd, String fotoPath){
+    static File[] loadFotoProdotto(Long idProd, String fotoPath){
         fotoPath+="/"+idProd.toString()+"/";
         File imageDir=new File(fotoPath);
         File[] fileList=imageDir.listFiles();

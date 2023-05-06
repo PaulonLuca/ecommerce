@@ -1,14 +1,12 @@
-<%@ page import="com.unife.ecommerce.model.mo.Utente" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.unife.ecommerce.model.mo.Prodotto" %>
-<%@ page import="com.unife.ecommerce.model.mo.Marca" %>
-<%@ page import="com.unife.ecommerce.model.mo.Categoria" %>
+<%@ page import="com.unife.ecommerce.model.mo.*" %>
 <%
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
     ArrayList<Marca> marche = (ArrayList<Marca>) request.getAttribute("marche");
     ArrayList<Categoria> categorie = (ArrayList<Categoria>) request.getAttribute("categorie");
     Prodotto prodotto = (Prodotto) request.getAttribute("prodotto");
+    Carrello carrello=(Carrello) request.getAttribute("carrello");
     String applicationMessage = (String) request.getAttribute("applicationMessage");
     String menuActiveLink = "Home";
 %>
@@ -63,6 +61,7 @@
             <br/>
             <input type="submit" name="conferma" id="conferma" value="Aggiungi al carrello" class="btn btn-primary"
                    style="margin-top: 6px;"/>
+            <input type="hidden" name="selectedProduct" value="<%=prodotto.getIdProd()%>"/>
             <input type="hidden" name="controllerAction" value="CartManagement.add"/>
         </form>
     </section>

@@ -5,12 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-//import com.isw.es_07_rubrica.model.dao.ContactDAO;
-//import com.isw.es_07_rubrica.model.dao.DAOFactory;
-//import com.isw.es_07_rubrica.model.dao.UserDAO;
-
-
-
 public class CookieDAOFactory extends DAOFactory {
 
     private Map factoryParameters;
@@ -46,6 +40,9 @@ public class CookieDAOFactory extends DAOFactory {
 
     @Override
     public UserDAO getUserDAO() {   return new UserDAOCookieImpl(request,response); }
+
+    @Override
+    public CarrelloDAO getCarrelloDAO() {   return new CarrelloDAOCookieImpl(request,response); }
 
     @Override
     public ProdottoDAO getProdottoDAO() {   throw new UnsupportedOperationException("Not supported yet."); }

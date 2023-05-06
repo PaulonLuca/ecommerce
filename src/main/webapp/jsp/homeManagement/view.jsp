@@ -1,8 +1,5 @@
-<%@ page import="com.unife.ecommerce.model.mo.Utente" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.unife.ecommerce.model.mo.Prodotto" %>
-<%@ page import="com.unife.ecommerce.model.mo.Marca" %>
-<%@ page import="com.unife.ecommerce.model.mo.Categoria" %>
+<%@ page import="com.unife.ecommerce.model.mo.*" %>
 <%
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
@@ -10,6 +7,7 @@
     ArrayList<Marca> marche = (ArrayList<Marca>) request.getAttribute("marche");
     ArrayList<Categoria> categorie = (ArrayList<Categoria>) request.getAttribute("categorie");
     ArrayList<Prodotto> prodottiVetrina = (ArrayList<Prodotto>) request.getAttribute("prodottiVetrina");
+    Carrello carrello=(Carrello) request.getAttribute("carrello");
     String applicationMessage = (String) request.getAttribute("applicationMessage");
     String menuActiveLink = "Home";
     //int numPagine=(Integer) request.getAttribute("numPagine") ;
@@ -90,27 +88,6 @@
 
 </main>
 
-<%--
-<aside>
-    <h2>Vetrina</h2>
-    <% for (int i = 0; i < prodottiVetrina.size(); i++) { %>
-
-    <article style="float:left; margin: 10px;">
-        <div class="card" style="width: 10rem; ">
-            <img src="uploadedImages/<%=prodottiVetrina.get(i).getIdProd()%>/<%=prodottiVetrina.get(i).getFotoProdotto()[0].getName()%>"
-                 class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title"><%= prodottiVetrina.get(i).getNomeProd()%>
-                </h5>
-                <p class="card-text">&euro; <%= prodottiVetrina.get(i).getPrezzo()%>
-                </p>
-                <a href="javascript:viewDettagliProdotto(<%=prodottiVetrina.get(i).getIdProd()%>)" class="btn btn-primary">Go
-                    somewhere</a>
-            </div>
-        </div>
-    </article>
-    <% }%>
-</aside>--%>
 
 <div style="clear: both;"></div>
 

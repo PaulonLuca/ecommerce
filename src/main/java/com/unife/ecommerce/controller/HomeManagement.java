@@ -1,10 +1,7 @@
 package com.unife.ecommerce.controller;
 
 import com.unife.ecommerce.model.dao.*;
-import com.unife.ecommerce.model.mo.Categoria;
-import com.unife.ecommerce.model.mo.Marca;
-import com.unife.ecommerce.model.mo.Prodotto;
-import com.unife.ecommerce.model.mo.Utente;
+import com.unife.ecommerce.model.mo.*;
 import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +22,7 @@ public class HomeManagement {
         DAOFactory sessionDAOFactory= null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
+        Carrello riempito=null;
         try
         {
             //Recupera utente loggato se presente
@@ -32,6 +30,20 @@ public class HomeManagement {
             sessionDAOFactory.beginTransaction();
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
+
+            //Se utente è loggato recupero anche il carrello associato all'utente
+            if(loggedUser!=null)
+            {
+                //Recupera id carrello dai cookies
+                CarrelloDAO carrelloDAOCookie=sessionDAOFactory.getCarrelloDAO();
+                Carrello carrello=carrelloDAOCookie.getCookieCart();
+                DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+                daoFactory.beginTransaction();
+                CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
+                String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+                riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
+                daoFactory.commitTransaction();
+            }
             sessionDAOFactory.commitTransaction();
 
             //Caricamento prodotti, marche e categorie
@@ -47,6 +59,7 @@ public class HomeManagement {
             request.setAttribute("marche", marche);
             request.setAttribute("categorie", categorie);
             request.setAttribute("prodottiVetrina", prodottiVetrina);
+            if(loggedUser!=null) request.setAttribute("carrello", riempito);
             request.setAttribute("viewUrl", "homeManagement/view");
 
         } catch (Exception e) {
@@ -107,6 +120,14 @@ public class HomeManagement {
                         null,null,null,null,null,null,user.isAdmin(),false,false);//<--hard coded
             }
 
+            //Creazione carrello
+            CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
+            CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
+            //Creazione carrello nel db
+            Carrello carrello= carrelloDAO.create(-1L,loggedUser);
+            //creazione carrello nei cookies
+            sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+
             daoFactory.commitTransaction();
             sessionDAOFactory.commitTransaction();
 
@@ -117,6 +138,7 @@ public class HomeManagement {
             request.setAttribute("marche", marche);
             request.setAttribute("categorie", categorie);
             request.setAttribute("prodottiVetrina", prodottiVetrina);
+            request.setAttribute("carrello", carrello);
             request.setAttribute("applicationMessage", applicationMessage);
             request.setAttribute("viewUrl", "homeManagement/view");
 
@@ -158,6 +180,11 @@ public class HomeManagement {
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             //eliminazione cookie con l'utente
             sessionUserDAO.delete(null);
+
+            //Eliminazione carrello dai cookies, nel db rimane lo storico
+            CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
+            sessionCartDAO.destroy();
+
             sessionDAOFactory.commitTransaction();
 
             //ViewModel

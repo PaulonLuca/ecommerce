@@ -20,6 +20,8 @@ public class Utente {
     private ArrayList<IndirizzoSpedizione> indirizziSped;
     //(0,n) lista degli ordini fatti dall'utente
     private ArrayList<Ordine> ordini;
+    //(0,n) ogni utente può avere più carrelli
+    private ArrayList<Carrello> carrelli;
     private boolean deleted;
 
     public Long getIdUtente() { return idUtente;}
@@ -86,4 +88,8 @@ public class Utente {
     public boolean isDeleted() {    return deleted;}
 
     public void setDeleted(boolean deleted) {   this.deleted = deleted;}
+
+    public ArrayList<Carrello> getCarrelli() { return carrelli;}
+
+    public void setCarrelli(ArrayList<Carrello> carrelli) {this.carrelli = carrelli;}
 }

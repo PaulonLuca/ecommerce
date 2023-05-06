@@ -82,4 +82,7 @@ public class MySQLJDBCDAOFactory extends DAOFactory {
     @Override
     public FornitoreDAO getFornitoreDAO() { return new FornitoreDAOMySQLJDBCImpl(connection);    }
 
+    @Override
+    public CarrelloDAO getCarrelloDAO() { return new CarrelloDAOMySQLJDBCImpl(connection);    }
+
 }

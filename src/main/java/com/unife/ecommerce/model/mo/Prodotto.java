@@ -20,6 +20,8 @@ public class Prodotto {
     private ArrayList<Fornitore> fornitori;
     //(0,n) un prodotto ha una lista di ordini in cui è inserito con la rispettiva quantità
     private ArrayList<OrdineQty> ordQty;
+    //(0,n) ogni prodotto ha una lista di carrelli in cui è presente in una certa quantità
+    private ArrayList<CarrelloQty> carrelli;
     private boolean deleted;
 
     public Long getIdProd() { return idProd;}
@@ -73,6 +75,10 @@ public class Prodotto {
     public ArrayList<Fornitore> getFornitori() {return fornitori;}
 
     public void setFornitori(ArrayList<Fornitore> fornitori) {this.fornitori = fornitori;}
+
+    public ArrayList<CarrelloQty> getCarrelli() {return carrelli;}
+
+    public void setCarrelli(ArrayList<CarrelloQty> carrelli) {this.carrelli = carrelli;}
 }
 
 

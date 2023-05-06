@@ -13,46 +13,51 @@ import java.util.logging.Logger;
 
 import static com.unife.ecommerce.controller.HomeManagement.*;
 
-public class CatalogManagement {
+public class CartManagement {
 
     public static void view(HttpServletRequest request, HttpServletResponse response) {
 
-        DAOFactory sessionDAOFactory= null;
-        Utente loggedUser;
+    }
+
+    public static void add(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
+        DAOFactory sessionDAOFactory=null;
         try
         {
-            //Recupera utente loggato se presente
+            String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
             sessionDAOFactory = getSessionDAOFactory(request,response);
             sessionDAOFactory.beginTransaction();
+
+            //Recupera utente loggato se presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
-            loggedUser = sessionUserDAO.findLoggedUser();
+            Utente loggedUser = sessionUserDAO.findLoggedUser();
+
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
             Carrello carrello=carrelloDAOCokie.getCookieCart();
-
-            sessionDAOFactory.commitTransaction();
 
             //Caricamento marche e categorie
             ArrayList<Marca> marche= loadMarche();
             ArrayList<Categoria> categorie= loadCategorie();
 
-            //Caricamento informazioni singolo prodotto
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-            daoFactory.beginTransaction();
+            //Caricamento singolo prodotto
             ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
-            //Caricamento informazioni fornitori prodotto
             FornitoreDAO fornitoreDAO=daoFactory.getFornitoreDAO();
-            //Recupera root path della cartella foto
-            String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
             String idProd=request.getParameter("selectedProduct");
             Prodotto prodotto=prodottoDAO.findProdottoById(Long.parseLong(idProd),fotoPath);
             prodotto.setFornitori(fornitoreDAO.findAllFornitoriForProduct(prodotto.getIdProd()));
-            //Caricamento carrello
+
+            //Inserimento prodotto nel carrello nel db
             CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
+            int qty=Integer.parseInt(request.getParameter("qty"));
+            carrelloDAOdb.add(carrello.getIdCart(),Long.parseLong(idProd),qty);
             Carrello riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
 
+            sessionDAOFactory.commitTransaction();
             daoFactory.commitTransaction();
+
 
             //ViewModel
             request.setAttribute("loggedOn",loggedUser!=null);
@@ -61,9 +66,9 @@ public class CatalogManagement {
             request.setAttribute("categorie", categorie);
             request.setAttribute("prodotto", prodotto);
             request.setAttribute("carrello", riempito);
+            request.setAttribute("selectedProduct",request.getAttribute("selectedProduct"));
             request.setAttribute("viewUrl", "catalogManagement/view");
-
-        } catch (Exception e) {
+        }catch (Exception e) {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
@@ -77,6 +82,11 @@ public class CatalogManagement {
             } catch (Throwable t) {
             }
         }
+
+
+    }
+
+    public static void remove(HttpServletRequest request, HttpServletResponse response) {
 
     }
 }

@@ -49,54 +49,6 @@
         <input type="hidden" name="controllerAction" value="HomeManagement.registrationView"/>
     </form>
 
-    <%--<nav><!-- Defining the navigation menu -->
-        <ul>
-            <li <%=menuActiveLink.equals("Home") ? "class=\"active\"" : ""%>>
-                <a href="Dispatcher?controllerAction=HomeManagement.view">Home</a>
-            </li>
-            <li>
-                <div class="dropdown">
-                    <button class="dropbtn">Categorie
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <% for (int i = 0; i < categorie.size(); i++) { %>
-                        <a href=""><%= categorie.get(i).getNomeCat() %></a>
-                        <% } %>
-                    </div>
-                </div>
-            </li>
-
-            <li>
-                <div class="dropdown">
-                    <button class="dropbtn">Marche
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <% for (int i = 0; i < marche.size(); i++) { %>
-                        <a href=""><%= marche.get(i).getNomeMarca() %></a>
-                        <% } %>
-                    </div>
-                </div>
-            </li>
-
-            <li>
-            </li>
-
-            <%if (loggedOn) {%>
-            <li <%=menuActiveLink.equals("Ordini") ? "class=\"active\"" : ""%>>
-                <a href="Dispatcher?controllerAction=AddressBookManagement.view">Ordini</a>
-            </li>
-            <li><a href="javascript:logoutForm.submit()">Logout</a></li>
-
-            <%} else {%>
-            <li <%=menuActiveLink.equals("Registrazione") ? "class=\"active\"" : ""%>>
-                <a href="javascript:registrationForm.submit()">Registrati</a>
-            </li>
-            <% }%>
-        </ul>
-    </nav>--%>
-
     <%if (!loggedOn) {%>
     <section id="login" class="clearfix">
         <form name="logonForm" action="Dispatcher" method="post">
@@ -158,6 +110,15 @@
                         <a  class="nav-link" href="Dispatcher?controllerAction=AddressBookManagement.view">Ordini</a>
                     </li>
                     <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
+                    <li>
+                        <button type="button" class="btn btn-primary position-relative">
+                        Carrello
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <%=carrello.getComposizione().size()%>
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                        </button>
+                    </li>
 
                     <%} else {%>
                     <li class=" <%=menuActiveLink.equals("Registrazione") ? "\"active\"" : ""%> nav-item">
