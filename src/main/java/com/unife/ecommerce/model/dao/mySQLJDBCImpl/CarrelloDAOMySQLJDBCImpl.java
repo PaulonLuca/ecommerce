@@ -114,7 +114,7 @@ public class CarrelloDAOMySQLJDBCImpl implements CarrelloDAO {
             int i = 1;
             ps.setLong(i++, idCart);
             ps.setLong(i++, idProd);
-            ps.executeQuery();
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

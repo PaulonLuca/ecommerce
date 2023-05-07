@@ -25,13 +25,14 @@ public class HomeManagement {
         Carrello riempito=null;
         try
         {
-            //Recupera utente loggato se presente
+            //Recupera utente loggato se presente dai cookie
             sessionDAOFactory = getSessionDAOFactory(request,response);
             sessionDAOFactory.beginTransaction();
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
+            sessionDAOFactory.commitTransaction();
 
-            //Se utente è loggato recupero anche il carrello associato all'utente
+            //Se utente è loggato recupero anche il carrello associato all'utente dal db
             if(loggedUser!=null)
             {
                 //Recupera id carrello dai cookies
@@ -44,7 +45,6 @@ public class HomeManagement {
                 riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
                 daoFactory.commitTransaction();
             }
-            sessionDAOFactory.commitTransaction();
 
             //Caricamento prodotti, marche e categorie
             ArrayList<Prodotto> prodotti=loadProdotti( request);
@@ -83,10 +83,12 @@ public class HomeManagement {
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory = null;
         Utente loggedUser;
+        Carrello carrello=null;
         String applicationMessage = "Benvenuto, inizia ad acquistare i tuoi prodotti";
         Logger logger = LogService.getApplicationLogger();
 
-        try {
+        try
+        {
             //Caricamento prodotti, marche e categorie
             ArrayList<Prodotto> prodotti=loadProdotti( request);
             ArrayList<Marca> marche= loadMarche();
@@ -96,9 +98,8 @@ public class HomeManagement {
             //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sui cookie
             sessionDAOFactory = getSessionDAOFactory(request,response);
             sessionDAOFactory.beginTransaction();
-            //Da cookieDAO factory si ootiene lo UserDAO per scrivere e leggere dai cookie
+            //Da cookieDAO factory si ottiene lo UserDAO per scrivere e leggere dai cookie
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
-            //loggedUser = sessionUserDAO.findLoggedUser();
 
             //Recupero dati utente dal db
             //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
@@ -118,15 +119,15 @@ public class HomeManagement {
             } else {
                 loggedUser = sessionUserDAO.create(user.getIdUtente(),user.getNome(),user.getCognome(),user.getEmail(),user.getUsername(),
                         null,null,null,null,null,null,user.isAdmin(),false,false);//<--hard coded
-            }
 
-            //Creazione carrello
-            CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
-            CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
-            //Creazione carrello nel db
-            Carrello carrello= carrelloDAO.create(-1L,loggedUser);
-            //creazione carrello nei cookies
-            sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+                //Creazione carrello
+                CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
+                CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
+                //Creazione carrello nel db
+                carrello= carrelloDAO.create(-1L,loggedUser);
+                //creazione carrello nei cookies
+                sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+            }
 
             daoFactory.commitTransaction();
             sessionDAOFactory.commitTransaction();
@@ -177,10 +178,10 @@ public class HomeManagement {
 
             sessionDAOFactory = getSessionDAOFactory(request,response);
             sessionDAOFactory.beginTransaction();
+
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             //eliminazione cookie con l'utente
             sessionUserDAO.delete(null);
-
             //Eliminazione carrello dai cookies, nel db rimane lo storico
             CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
             sessionCartDAO.destroy();

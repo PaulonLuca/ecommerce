@@ -49,6 +49,10 @@
         <input type="hidden" name="controllerAction" value="HomeManagement.registrationView"/>
     </form>
 
+    <form name="cartForm" action="Dispatcher" method="post">
+        <input type="hidden" name="controllerAction" value="CartManagement.view"/>
+    </form>
+
     <%if (!loggedOn) {%>
     <section id="login" class="clearfix">
         <form name="logonForm" action="Dispatcher" method="post">
@@ -111,11 +115,11 @@
                     </li>
                     <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
                     <li>
-                        <button type="button" class="btn btn-primary position-relative">
-                        Carrello
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <button type="button" class="btn btn-primary position-relative" onclick="javascript:cartForm.submit()">
+                            Carrello <span class="bi bi-cart"></span>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             <%=carrello.getComposizione().size()%>
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">Carrello</span>
                         </span>
                         </button>
                     </li>

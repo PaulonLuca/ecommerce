@@ -118,6 +118,6 @@
 
 </body>
 
-<%@include file="/include/footer.inc" %>
+<%@include file="/include/footer.jsp" %>
 
 </html>

@@ -25,6 +25,7 @@ public class CatalogManagement {
             //Recupera utente loggato se presente
             sessionDAOFactory = getSessionDAOFactory(request,response);
             sessionDAOFactory.beginTransaction();
+
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
             //Recupera id carrello dai cookies
@@ -40,6 +41,7 @@ public class CatalogManagement {
             //Caricamento informazioni singolo prodotto
             DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             daoFactory.beginTransaction();
+
             ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
             //Caricamento informazioni fornitori prodotto
             FornitoreDAO fornitoreDAO=daoFactory.getFornitoreDAO();
