@@ -18,6 +18,8 @@ public class CatalogManagement {
     public static void view(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
+        Carrello carrello=null;
+        Carrello riempito=null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
         try
@@ -28,9 +30,12 @@ public class CatalogManagement {
 
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
-            //Recupera id carrello dai cookies
-            CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
-            Carrello carrello=carrelloDAOCokie.getCookieCart();
+            if(loggedUser!=null)
+            {
+                //Recupera id carrello dai cookies
+                CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
+                carrello=carrelloDAOCokie.getCookieCart();
+            }
 
             sessionDAOFactory.commitTransaction();
 
@@ -50,10 +55,12 @@ public class CatalogManagement {
             String idProd=request.getParameter("selectedProduct");
             Prodotto prodotto=prodottoDAO.findProdottoById(Long.parseLong(idProd),fotoPath);
             prodotto.setFornitori(fornitoreDAO.findAllFornitoriForProduct(prodotto.getIdProd()));
-            //Caricamento carrello
-            CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
-            Carrello riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
-
+            if(loggedUser!=null)
+            {
+                //Caricamento carrello
+                CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
+                riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
+            }
             daoFactory.commitTransaction();
 
             //ViewModel

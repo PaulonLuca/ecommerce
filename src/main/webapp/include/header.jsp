@@ -116,7 +116,7 @@
                     <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
                     <li>
                         <button type="button" class="btn btn-primary position-relative" onclick="javascript:cartForm.submit()">
-                            Carrello <span class="bi bi-cart"></span>
+                            Carrello <i class="bi bi-cart"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             <%=carrello.getComposizione().size()%>
                             <span class="visually-hidden">Carrello</span>

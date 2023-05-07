@@ -55,6 +55,7 @@
     <section class="priceDetailSection">
         <h3>&euro; <%= prodotto.getPrezzo()%>
         </h3>
+        <%if(loggedOn) {%>
         <form name="addToCartForm" action="Dispatcher" method="post">
             <label for="qty"> Quantit&agrave;</label>
             <input type="number" name="qty" id="qty" value="1" min="1" max="<%=prodotto.getQtyDisp()%>"/>
@@ -64,6 +65,7 @@
             <input type="hidden" name="selectedProduct" value="<%=prodotto.getIdProd()%>"/>
             <input type="hidden" name="controllerAction" value="CartManagement.add"/>
         </form>
+        <%}%>
     </section>
 
     <div style="clear: left;"></div>

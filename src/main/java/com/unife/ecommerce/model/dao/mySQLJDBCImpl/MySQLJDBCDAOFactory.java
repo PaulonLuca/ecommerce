@@ -85,4 +85,13 @@ public class MySQLJDBCDAOFactory extends DAOFactory {
     @Override
     public CarrelloDAO getCarrelloDAO() { return new CarrelloDAOMySQLJDBCImpl(connection);    }
 
+    @Override
+    public SpedizioneDAO getSpedizioneDAO() { return new SpedizioneDAOMySQLJDBCImpl(connection);    }
+
+    @Override
+    public TipoPagamentoDAO getTipoPagamentoDAO() { return new TipoPagamentoDAOMySQLJDBCImpl(connection);    }
+
+    @Override
+    public IndirizzoSpedizioneDAO getIndirizzoSpedizioneDAO() { return new IndirizzoSpedizioneDAOMySQLJDBCImpl(connection);    }
+
 }

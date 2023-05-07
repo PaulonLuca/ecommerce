@@ -3,19 +3,22 @@ package com.unife.ecommerce.model.mo;
 import java.sql.Date;
 
 public class Pagamento {
-    private Long idPaga;
+    private Long idPag;
     private Date dataPag;
     private double totale;
+    private String numeroCarta;
+    private int mese;
+    private int anno;
+    private int cvv;
     //(1,1) tipologia di pagamento
     private TipoPagamento tipoPag;
-    private String numeroCarta;
     //(1,1) un pagamento ha un solo ordine associato
     private Ordine ordine;
     private boolean deleted;
 
-    public Long getIdPaga() { return idPaga;}
+    public Long getIdPaga() { return idPag;}
 
-    public void setIdPaga(Long idPaga) {this.idPaga = idPaga;}
+    public void setIdPaga(Long idPaga) {this.idPag = idPaga;}
 
     public Date getDataPag() {return dataPag;}
 
@@ -40,4 +43,16 @@ public class Pagamento {
     public boolean isDeleted() {    return deleted; }
 
     public void setDeleted(boolean deleted) {   this.deleted = deleted; }
+
+    public int getMese() { return mese;}
+
+    public void setMese(int mese) { this.mese = mese;}
+
+    public int getAnno() { return anno;}
+
+    public void setAnno(int anno) { this.anno = anno;}
+
+    public int getCvv() { return cvv;}
+
+    public void setCvv(int cvv) { this.cvv = cvv;}
 }

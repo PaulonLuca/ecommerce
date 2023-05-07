@@ -25,6 +25,13 @@
             document.modifyCartForm.controllerAction.value = "CatalogManagement.view";
             document.modifyCartForm.submit();
         }
+        function confirmOrder() {
+            var dimCar=<%=carrello.getComposizione().size()%>;
+            if(dimCar>0)
+                document.orderForm.submit();
+            else
+                alert("Il carrello è vuoto")
+        }
     </script>
 </head>
 <body>
@@ -65,12 +72,17 @@
             }%>
             &euro; <%=totale%>
         </h2>
+        <input type="button"  class="btn btn-primary" id="btnConfirm" nome="btnConfirm" value="Ordina" onclick="javascript:confirmOrder()">
     </section>
 </main>
 
 <form name="modifyCartForm" action="Dispatcher" method="post">
     <input type="hidden" name="controllerAction" value=""/>
     <input type="hidden" name="selectedProduct" value=""/>
+</form>
+
+<form name="orderForm" action="Dispatcher" method="post">
+    <input type="hidden" name="controllerAction" value="OrderManagement.viewInfoOrder"/>
 </form>
 
 <form name="searchForm" action="Dispatcher" method="post">
