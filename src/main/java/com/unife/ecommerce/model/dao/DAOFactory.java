@@ -25,6 +25,7 @@ public abstract class DAOFactory {
     public abstract SpedizioneDAO getSpedizioneDAO();
     public abstract TipoPagamentoDAO getTipoPagamentoDAO();
     public abstract IndirizzoSpedizioneDAO getIndirizzoSpedizioneDAO();
+    public abstract PagamentoDAO getPagamentoDAO();
 
 
     public static DAOFactory getDAOFactory(String whichFactory,Map factoryParameters) {

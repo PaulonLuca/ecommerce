@@ -30,7 +30,7 @@
             if(dimCar>0)
                 document.orderForm.submit();
             else
-                alert("Il carrello è vuoto")
+                alert("Il carrello e' vuoto")
         }
     </script>
 </head>

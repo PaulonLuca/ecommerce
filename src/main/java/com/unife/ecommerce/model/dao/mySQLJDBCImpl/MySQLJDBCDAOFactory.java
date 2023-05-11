@@ -7,9 +7,6 @@ import java.util.Map;
 
 import com.unife.ecommerce.model.dao.*;
 import com.unife.ecommerce.services.config.Configuration;
-//import com.isw.es_07_rubrica.model.dao.ContactDAO;
-
-import com.unife.ecommerce.services.config.Configuration;
 
 public class MySQLJDBCDAOFactory extends DAOFactory {
 
@@ -92,6 +89,10 @@ public class MySQLJDBCDAOFactory extends DAOFactory {
     public TipoPagamentoDAO getTipoPagamentoDAO() { return new TipoPagamentoDAOMySQLJDBCImpl(connection);    }
 
     @Override
-    public IndirizzoSpedizioneDAO getIndirizzoSpedizioneDAO() { return new IndirizzoSpedizioneDAOMySQLJDBCImpl(connection);    }
+    public IndirizzoSpedizioneDAO getIndirizzoSpedizioneDAO() { return new IndirizzoSpedizioneDAOMySQLJDBCImpl(connection);}
+
+    @Override
+    public PagamentoDAO getPagamentoDAO() {return new PagamentoDAOMySQLJDBCImpl(connection);}
+
 
 }

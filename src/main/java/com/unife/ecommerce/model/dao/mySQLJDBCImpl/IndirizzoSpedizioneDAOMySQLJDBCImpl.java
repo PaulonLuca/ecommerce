@@ -1,8 +1,8 @@
 package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.IndirizzoSpedizioneDAO;
+import com.unife.ecommerce.model.mo.Carrello;
 import com.unife.ecommerce.model.mo.IndirizzoSpedizione;
-import com.unife.ecommerce.model.mo.Spedizione;
 import com.unife.ecommerce.model.mo.Utente;
 
 import java.sql.Connection;
@@ -25,7 +25,7 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
         PreparedStatement ps;
         ArrayList<IndirizzoSpedizione> indirizzi = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM Indirizzo_spedizone AS IND INNER JOIN Utente AS U ON IND.id_utente=U.id_utente WHERE U.id_utente=?";
+            String sql = "SELECT * FROM Indirizzo_spedizione AS IND INNER JOIN Utente AS U ON IND.id_utente=U.id_utente WHERE U.id_utente=?";
             ps = conn.prepareStatement(sql);
             int i=1;
             ps.setString(i++,utente.getIdUtente().toString());
@@ -45,7 +45,44 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
 
     @Override
     public IndirizzoSpedizione create(String citta, String via, String civico, String cap, Utente utente) {
-        return null;
+        IndirizzoSpedizione indSped = null;
+        try {
+            //recupera il valore a cui è arrivato l'id_utente dalla tabella di utilità dopo averlo incrementato di 1
+            String sql = "update Counter set counter_value=counter_value+1 where id_counter='" + COUNTER_ID + "'";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+            sql = "SELECT counter_value FROM Counter where id_counter='" + COUNTER_ID + "'";
+            ps = conn.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+
+            indSped = new IndirizzoSpedizione();
+            indSped.setIdIndSped(resultSet.getLong("counter_value"));
+            indSped.setUtente(utente);
+            indSped.setCitta(citta);
+            indSped.setVia(via);
+            indSped.setCap(cap);
+            indSped.setCivico(civico);
+            indSped.setDeleted(false);
+
+            resultSet.close();
+
+            sql = "INSERT INTO Indirizzo_spedizione VALUES (?,?,?,?,?,?,?)";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, indSped.getIdIndSped());
+            ps.setString(i++, indSped.getCitta());
+            ps.setString(i++, indSped.getVia());
+            ps.setString(i++, indSped.getCivico());
+            ps.setString(i++, indSped.getCap());
+            ps.setLong(i++, utente.getIdUtente());
+            ps.setBoolean(i++, indSped.isDeleted());
+            ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return indSped;
     }
 
     static IndirizzoSpedizione read(ResultSet rs)
