@@ -7,7 +7,9 @@ import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -142,33 +144,58 @@ public class OrderManagement {
 
             //Inserimento dei vari campi nel db usando i DAO opportuni
             //Inserimento Nuovo indirizzo se presente
-            if(selectIndirizzo!=null)
-            {
-                IndirizzoSpedizioneDAO indirizzoDAO=daoFactory.getIndirizzoSpedizioneDAO();
-                indirizzoDAO.create(citta,via,civico,cap,loggedUser);
-            }
-            //Inserimento Pagamento con data
-            PagamentoDAO pagDAO=daoFactory.getPagamentoDAO();
-            /*if(tipoPag=="1" || tipoPag=="2")
-                pagDAO.createFull(null,0,numeroCarta,mese,anno,cvv,tipoPag,false);
+            //altrimenti utilizza l'id dell'indirizzo passato nell'insert dell'ordine
+            IndirizzoSpedizione indirizzoSpedizione=null;
+            IndirizzoSpedizioneDAO indirizzoDAO=daoFactory.getIndirizzoSpedizioneDAO();
+            if(selectIndirizzo==null)
+                indirizzoSpedizione=indirizzoDAO.create(citta,via,civico,cap,loggedUser);
             else
-            {
-                pagDAO.createSimple(null,0,tipoPag,false);
-            }*/
+                indirizzoSpedizione=indirizzoDAO.findIndirizzoById(Long.parseLong(selectIndirizzo));
+
+            //Lettura tipologia spedizione
+            SpedizioneDAO spedizioneDAO=daoFactory.getSpedizioneDAO();
+            Spedizione spedOrdine=spedizioneDAO.findSpedizioneById(Long.parseLong(spedizione));
+
+            //Inserimento Pagamento
+            //Generazione data odierna
+            Date dataOrdine= new Date(Calendar.getInstance().getTimeInMillis());
+            //Lettura tipo pagamento
+            TipoPagamentoDAO tipoPagDAO=daoFactory.getTipoPagamentoDAO();
+            TipoPagamento tipoPagamento= tipoPagDAO.findTipoPagById(Long.parseLong(tipoPag));
+            //Calcolo totale
+            double tot=spedOrdine.getCosto();
+            for(int i=0;i<riempito.getComposizione().size();i++)
+                tot+=riempito.getComposizione().get(i).getQty()*riempito.getComposizione().get(i).getProd().getPrezzo();
+
+            PagamentoDAO pagDAO=daoFactory.getPagamentoDAO();
+            Pagamento pag=null;
+            if(tipoPagamento.getIdTipoPag()==2 || tipoPagamento.getIdTipoPag()==3)
+                pag=pagDAO.createFull(dataOrdine,tot,numeroCarta,mese,anno,cvv,tipoPagamento,false);
+            else
+                pag=pagDAO.createSimple(dataOrdine,tot,tipoPagamento,false);
 
 
-
+            //Lettura stato
+            StatoDAO statoDAO=daoFactory.getStatoDAO();
+            Stato statoOrdine=statoDAO.findStatoByDescr("Confermato");
 
             //Inserimento Ordine con composizione che è contenuta nel carrello, tipologia di spedizione e stato
-
-            //Creazione nuovo carrello vuoto nel db e nei cookie
-            Carrello vuoto=carrelloDAOdb.create(-1L,loggedUser);
-            carrelloDAOCokie.create(vuoto.getIdCart(),loggedUser);
+            OrdineDAO ordineDAO=daoFactory.getOrdineDAO();
+            Ordine nuovoOrdine=ordineDAO.create(dataOrdine,pag,spedOrdine,statoOrdine,loggedUser,indirizzoSpedizione,false);
 
 
             //Aggiornamento disponibilità prodotti decrementate delle quantità acquistate, se non è possibile
             //acquistare il prodotto perchè qualcuno li ha già acquistati lanciare eccezione e ritornare alla
             //visualizzazione del carrello in cui è stato tolto il prodotto problematico
+            ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
+            for(int i=0;i<riempito.getComposizione().size();i++)
+            {
+                //decrementa disponibilità magazzino
+            }
+
+            //Creazione nuovo carrello vuoto nel db e nei cookie
+            Carrello vuoto=carrelloDAOdb.create(-1L,loggedUser);
+            carrelloDAOCokie.create(vuoto.getIdCart(),loggedUser);
 
 
             sessionDAOFactory.commitTransaction();

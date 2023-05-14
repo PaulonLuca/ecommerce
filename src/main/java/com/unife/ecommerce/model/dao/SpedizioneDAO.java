@@ -7,4 +7,6 @@ import java.util.ArrayList;
 public interface SpedizioneDAO {
 
     public ArrayList<Spedizione> finaAllSpedizioni();
+
+    public Spedizione findSpedizioneById(Long idSped);
 }

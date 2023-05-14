@@ -4,8 +4,6 @@ import com.unife.ecommerce.model.dao.ProdottoDAO;
 import com.unife.ecommerce.model.mo.Categoria;
 import com.unife.ecommerce.model.mo.Marca;
 import com.unife.ecommerce.model.mo.Prodotto;
-import com.unife.ecommerce.model.mo.Utente;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.sql.Connection;

@@ -1,7 +1,6 @@
 package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.IndirizzoSpedizioneDAO;
-import com.unife.ecommerce.model.mo.Carrello;
 import com.unife.ecommerce.model.mo.IndirizzoSpedizione;
 import com.unife.ecommerce.model.mo.Utente;
 
@@ -83,6 +82,30 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
         }
 
         return indSped;
+    }
+
+    @Override
+    public IndirizzoSpedizione findIndirizzoById(Long idInd) {
+        PreparedStatement ps;
+        IndirizzoSpedizione ind = null;
+        try {
+            String sql = "SELECT * FROM Indirizzo_spedizione WHERE id_ind_sped=?";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, idInd);
+
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                ind=read(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ind;
     }
 
     static IndirizzoSpedizione read(ResultSet rs)

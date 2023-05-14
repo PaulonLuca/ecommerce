@@ -10,4 +10,6 @@ public interface IndirizzoSpedizioneDAO {
     public ArrayList<IndirizzoSpedizione> findAllIndirizziSped(Utente utente);
 
     public IndirizzoSpedizione create(String citta, String via, String civico, String cap, Utente utente);
+
+    public IndirizzoSpedizione findIndirizzoById(Long idInd);
 }

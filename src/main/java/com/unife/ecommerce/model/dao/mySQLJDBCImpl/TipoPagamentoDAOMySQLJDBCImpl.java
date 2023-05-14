@@ -39,6 +39,30 @@ public class TipoPagamentoDAOMySQLJDBCImpl implements TipoPagamentoDAO {
         return tipi;
     }
 
+    @Override
+    public TipoPagamento findTipoPagById(Long idPag) {
+        PreparedStatement ps;
+        TipoPagamento tipo = null;
+        try {
+            String sql = "SELECT * FROM Tipo_pagamento WHERE id_tipo_pag=?";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, idPag);
+
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                tipo=read(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tipo;
+    }
+
     static TipoPagamento read(ResultSet rs)
     {
         TipoPagamento tipo = new TipoPagamento();

@@ -77,7 +77,7 @@
                     </tr>
                     <tr>
                         <td>Utilizza esistente</td>
-                        <td><input type="radio" id="oldInd"  name="newInd" checked value="old" required onclick="gestisciCampiIndirizzo()"></td>
+                        <td><input type="radio" id="oldInd"  name="newInd" value="old" required onclick="gestisciCampiIndirizzo()"></td>
                     </tr>
 
                     <tr>
@@ -103,7 +103,7 @@
                     </tr>
                     <tr>
                         <td><label for="citta">Citt&agrave;</label></td>
-                        <td><input type="citta" id="citta"  name="email" maxlength="60" required></td>
+                        <td><input type="citta" id="citta"  name="citta" maxlength="60" required></td>
                     </tr>
                     <tr>
                         <td><label for="cap">Cap</label></td>

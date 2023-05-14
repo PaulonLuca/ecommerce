@@ -1,7 +1,6 @@
 package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.SpedizioneDAO;
-import com.unife.ecommerce.model.mo.Marca;
 import com.unife.ecommerce.model.mo.Spedizione;
 
 import java.sql.Connection;
@@ -38,6 +37,30 @@ public class SpedizioneDAOMySQLJDBCImpl implements SpedizioneDAO {
             throw new RuntimeException(e);
         }
         return metodiSpedizione;
+    }
+
+    @Override
+    public Spedizione findSpedizioneById(Long idSped) {
+        PreparedStatement ps;
+        Spedizione spedizione = new Spedizione();
+        try {
+            String sql = "SELECT * FROM Spedizione WHERE id_sped=?";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, idSped);
+
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                spedizione= read(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return spedizione;
     }
 
     static Spedizione read(ResultSet rs)

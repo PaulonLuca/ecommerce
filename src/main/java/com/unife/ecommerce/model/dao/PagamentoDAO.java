@@ -9,5 +9,5 @@ public interface PagamentoDAO {
 
     public Pagamento createFull(Date data, double totale, String numCarta, String mese, String anno, String cvv, TipoPagamento tipo, boolean deleted);
 
-    public Pagamento createSimple(Date data, double totale,TipoPagamento tipo);
+    public Pagamento createSimple(Date data, double totale,TipoPagamento tipo, boolean deleted);
 }

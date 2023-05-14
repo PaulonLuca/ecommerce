@@ -77,7 +77,7 @@
                     </tr>
                     <tr>
                         <td>Utilizza esistente</td>
-                        <td><input type="radio" id="oldInd"  name="newInd" checked value="old" required onclick="gestisciCampiIndirizzo()"></td>
+                        <td><input type="radio" id="oldInd"  name="newInd" value="old" required onclick="gestisciCampiIndirizzo()"></td>
                     </tr>
 
                     <tr>

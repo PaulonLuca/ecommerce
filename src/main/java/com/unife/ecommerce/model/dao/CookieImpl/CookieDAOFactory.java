@@ -68,4 +68,9 @@ public class CookieDAOFactory extends DAOFactory {
     @Override
     public PagamentoDAO getPagamentoDAO() {throw new UnsupportedOperationException("Not supported yet.");}
 
+    @Override
+    public OrdineDAO getOrdineDAO() {throw new UnsupportedOperationException("Not supported yet.");}
+
+    @Override
+    public StatoDAO getStatoDAO() {throw new UnsupportedOperationException("Not supported yet.");}
 }
