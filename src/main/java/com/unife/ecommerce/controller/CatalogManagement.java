@@ -18,6 +18,7 @@ public class CatalogManagement {
     public static void view(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
+        DAOFactory daoFactory=null;
         Carrello carrello=null;
         Carrello riempito=null;
         Utente loggedUser;
@@ -44,7 +45,7 @@ public class CatalogManagement {
             ArrayList<Categoria> categorie= loadCategorie();
 
             //Caricamento informazioni singolo prodotto
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             daoFactory.beginTransaction();
 
             ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
@@ -76,15 +77,15 @@ public class CatalogManagement {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
 
         } finally {
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
         }
 
     }

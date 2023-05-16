@@ -18,10 +18,11 @@ public class CartManagement {
     public static void view(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             sessionDAOFactory = getSessionDAOFactory(request,response);
             daoFactory.beginTransaction();
             sessionDAOFactory.beginTransaction();
@@ -58,25 +59,26 @@ public class CartManagement {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
 
         } finally {
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
         }
     }
 
     public static void add(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             sessionDAOFactory = getSessionDAOFactory(request,response);
             daoFactory.beginTransaction();
             sessionDAOFactory.beginTransaction();
@@ -123,25 +125,26 @@ public class CartManagement {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
 
         } finally {
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
         }
     }
 
     public static void remove(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             sessionDAOFactory = getSessionDAOFactory(request,response);
             daoFactory.beginTransaction();
             sessionDAOFactory.beginTransaction();
@@ -180,15 +183,15 @@ public class CartManagement {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
 
         } finally {
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
         }
     }
 }

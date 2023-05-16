@@ -20,10 +20,11 @@ public class OrderManagement {
     public static void viewInfoOrder(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             sessionDAOFactory = getSessionDAOFactory(request,response);
             daoFactory.beginTransaction();
             sessionDAOFactory.beginTransaction();
@@ -80,20 +81,76 @@ public class OrderManagement {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
 
         } finally {
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
         }
     }
 
     //Visualizza lo storico degli ordini dell'utente loggato
     public static void view(HttpServletRequest request, HttpServletResponse response) {
+        Logger logger = LogService.getApplicationLogger();
+        DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
+        try
+        {
+            String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            sessionDAOFactory = getSessionDAOFactory(request,response);
+            daoFactory.beginTransaction();
+            sessionDAOFactory.beginTransaction();
+
+            //Recupera utente loggato presente
+            UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
+            Utente loggedUser = sessionUserDAO.findLoggedUser();
+
+            //Recupera id carrello dai cookies
+            CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
+            Carrello carrello=carrelloDAOCokie.getCookieCart();
+
+            //Caricamento marche e categorie
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
+
+            //Caricamento carrello
+            CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
+            Carrello riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
+
+            //Caricamento ordini dell'utente loggato
+            OrdineDAO ordineDAO=daoFactory.getOrdineDAO();
+            ArrayList<Ordine> ordini=ordineDAO.findAllOrdiniByUserId(loggedUser.getIdUtente());
+
+            sessionDAOFactory.commitTransaction();
+            daoFactory.commitTransaction();
+
+            //ViewModel
+            request.setAttribute("loggedOn",loggedUser!=null);
+            request.setAttribute("loggedUser", loggedUser);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
+            request.setAttribute("carrello", riempito);
+            request.setAttribute("ordini",ordini);
+            request.setAttribute("viewUrl", "orderManagement/view");
+        }catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
 
     }
 
@@ -102,10 +159,13 @@ public class OrderManagement {
         //Recupera tutti i campi della form e chiama per ogni DAO il metodo di inserimento nel db
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
+        String applicationMessage="";
+
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
             sessionDAOFactory = getSessionDAOFactory(request,response);
             daoFactory.beginTransaction();
             sessionDAOFactory.beginTransaction();
@@ -128,102 +188,146 @@ public class OrderManagement {
             CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
             Carrello riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
 
-            //Recupera parametri orderForm
-            String radioNewInd=request.getParameter("newInd");
-            String selectIndirizzo=request.getParameter("indirizzo");
-            String via=request.getParameter("via");
-            String civico=request.getParameter("civico");
-            String citta=request.getParameter("citta");
-            String cap=request.getParameter("cap");
-            String spedizione=request.getParameter("spedizione");
-            String tipoPag=request.getParameter("tipoPag");
-            String numeroCarta=request.getParameter("numeroCarta");
-            String mese=request.getParameter("mese");
-            String anno=request.getParameter("anno");
-            String cvv=request.getParameter("cvv");
-
-            //Inserimento dei vari campi nel db usando i DAO opportuni
-            //Inserimento Nuovo indirizzo se presente
-            //altrimenti utilizza l'id dell'indirizzo passato nell'insert dell'ordine
-            IndirizzoSpedizione indirizzoSpedizione=null;
-            IndirizzoSpedizioneDAO indirizzoDAO=daoFactory.getIndirizzoSpedizioneDAO();
-            if(selectIndirizzo==null)
-                indirizzoSpedizione=indirizzoDAO.create(citta,via,civico,cap,loggedUser);
-            else
-                indirizzoSpedizione=indirizzoDAO.findIndirizzoById(Long.parseLong(selectIndirizzo));
-
-            //Lettura tipologia spedizione
-            SpedizioneDAO spedizioneDAO=daoFactory.getSpedizioneDAO();
-            Spedizione spedOrdine=spedizioneDAO.findSpedizioneById(Long.parseLong(spedizione));
-
-            //Inserimento Pagamento
-            //Generazione data odierna
-            Date dataOrdine= new Date(Calendar.getInstance().getTimeInMillis());
-            //Lettura tipo pagamento
-            TipoPagamentoDAO tipoPagDAO=daoFactory.getTipoPagamentoDAO();
-            TipoPagamento tipoPagamento= tipoPagDAO.findTipoPagById(Long.parseLong(tipoPag));
-            //Calcolo totale
-            double tot=spedOrdine.getCosto();
-            for(int i=0;i<riempito.getComposizione().size();i++)
-                tot+=riempito.getComposizione().get(i).getQty()*riempito.getComposizione().get(i).getProd().getPrezzo();
-
-            PagamentoDAO pagDAO=daoFactory.getPagamentoDAO();
-            Pagamento pag=null;
-            if(tipoPagamento.getIdTipoPag()==2 || tipoPagamento.getIdTipoPag()==3)
-                pag=pagDAO.createFull(dataOrdine,tot,numeroCarta,mese,anno,cvv,tipoPagamento,false);
-            else
-                pag=pagDAO.createSimple(dataOrdine,tot,tipoPagamento,false);
 
 
-            //Lettura stato
-            StatoDAO statoDAO=daoFactory.getStatoDAO();
-            Stato statoOrdine=statoDAO.findStatoByDescr("Confermato");
-
-            //Inserimento Ordine con composizione che è contenuta nel carrello, tipologia di spedizione e stato
-            OrdineDAO ordineDAO=daoFactory.getOrdineDAO();
-            Ordine nuovoOrdine=ordineDAO.create(dataOrdine,pag,spedOrdine,statoOrdine,loggedUser,indirizzoSpedizione,false);
-
-
+            //----------------------Verifica se l'ordine può andare a buon fine---------------------
             //Aggiornamento disponibilità prodotti decrementate delle quantità acquistate, se non è possibile
-            //acquistare il prodotto perchè qualcuno li ha già acquistati lanciare eccezione e ritornare alla
-            //visualizzazione del carrello in cui è stato tolto il prodotto problematico
+            //acquistare il prodotto perchè qualcuno li ha già acquistati ritornare alla
+            //visualizzazione del carrello in cui è stato tolto il/i prodotto/i problematico/i
             ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
+            boolean confermaOrdine=true;
+            String nonDisponibili="Attenzione uno o più prodotti non disponibili sono stati rimossi dal carrello:\n";
+            //Verifica che tutti i prodotti nel carrello hanno una quantià utile al decremento
             for(int i=0;i<riempito.getComposizione().size();i++)
             {
-                //decrementa disponibilità magazzino
+                //Se il prodotto nel carrello ha NON una quantità decrementabile si rimuove dal carrello
+                //l'ordine non può essere confermato quindi si presenta nuovamente l'interfaccia carrello
+                if(!prodottoDAO.checkQtyDisp(riempito.getComposizione().get(i).getProd().getIdProd(),riempito.getComposizione().get(i).getQty()))
+                {
+                    nonDisponibili+=riempito.getComposizione().get(i).getProd().getNomeProd()+"\n";
+                    carrelloDAOdb.delete(riempito.getIdCart(),riempito.getComposizione().get(i).getProd().getIdProd());
+                    confermaOrdine=false;
+                }
             }
+            //-----------------------------------------------------------------------------------------
 
-            //Creazione nuovo carrello vuoto nel db e nei cookie
-            Carrello vuoto=carrelloDAOdb.create(-1L,loggedUser);
-            carrelloDAOCokie.create(vuoto.getIdCart(),loggedUser);
+            //Se tutti i prodotti hanno una quantità utile al decremento
+            if(confermaOrdine)
+            {
+                applicationMessage="Ordine avvenuto con successo";
 
+                //Decrementa la quantità di ogni prodotto
+                for(int i=0;i<riempito.getComposizione().size();i++)
+                    prodottoDAO.updateQty(riempito.getComposizione().get(i).getProd().getIdProd(),riempito.getComposizione().get(i).getQty());
 
-            sessionDAOFactory.commitTransaction();
-            daoFactory.commitTransaction();
+                //---------------------------Completamento ordine-------------------------------
+                //Recupera parametri orderForm
+                String radioNewInd=request.getParameter("newInd");
+                String selectIndirizzo=request.getParameter("indirizzo");
+                String via=request.getParameter("via");
+                String civico=request.getParameter("civico");
+                String citta=request.getParameter("citta");
+                String cap=request.getParameter("cap");
+                String spedizione=request.getParameter("spedizione");
+                String tipoPag=request.getParameter("tipoPag");
+                String numeroCarta=request.getParameter("numeroCarta");
+                String mese=request.getParameter("mese");
+                String anno=request.getParameter("anno");
+                String cvv=request.getParameter("cvv");
 
-            //ViewModel
+                //Inserimento dei vari campi nel db usando i DAO opportuni
+                //Inserimento Nuovo indirizzo se presente
+                //altrimenti utilizza l'id dell'indirizzo passato nell'insert dell'ordine
+                IndirizzoSpedizione indirizzoSpedizione=null;
+                IndirizzoSpedizioneDAO indirizzoDAO=daoFactory.getIndirizzoSpedizioneDAO();
+                if(selectIndirizzo==null)
+                    indirizzoSpedizione=indirizzoDAO.create(citta,via,civico,cap,loggedUser);
+                else
+                    indirizzoSpedizione=indirizzoDAO.findIndirizzoById(Long.parseLong(selectIndirizzo));
+
+                //Lettura tipologia spedizione
+                SpedizioneDAO spedizioneDAO=daoFactory.getSpedizioneDAO();
+                Spedizione spedOrdine=spedizioneDAO.findSpedizioneById(Long.parseLong(spedizione));
+
+                //Inserimento Pagamento
+                //Generazione data odierna
+                Date dataOrdine= new Date(Calendar.getInstance().getTimeInMillis());
+                //Lettura tipo pagamento
+                TipoPagamentoDAO tipoPagDAO=daoFactory.getTipoPagamentoDAO();
+                TipoPagamento tipoPagamento= tipoPagDAO.findTipoPagById(Long.parseLong(tipoPag));
+                //Calcolo totale
+                double tot=spedOrdine.getCosto();
+                for(int i=0;i<riempito.getComposizione().size();i++)
+                    tot+=riempito.getComposizione().get(i).getQty()*riempito.getComposizione().get(i).getProd().getPrezzo();
+
+                PagamentoDAO pagDAO=daoFactory.getPagamentoDAO();
+                Pagamento pag=null;
+                if(tipoPagamento.getIdTipoPag()==2 || tipoPagamento.getIdTipoPag()==3)
+                    pag=pagDAO.createFull(dataOrdine,tot,numeroCarta,mese,anno,cvv,tipoPagamento,false);
+                else
+                    pag=pagDAO.createSimple(dataOrdine,tot,tipoPagamento,false);
+
+                //Lettura stato
+                StatoDAO statoDAO=daoFactory.getStatoDAO();
+                Stato statoOrdine=statoDAO.findStatoByDescr("Confermato");
+
+                //Inserimento Ordine con composizione che è contenuta nel carrello, tipologia di spedizione e stato
+                OrdineDAO ordineDAO=daoFactory.getOrdineDAO();
+                Ordine nuovoOrdine=ordineDAO.create(dataOrdine,pag,spedOrdine,statoOrdine,loggedUser,indirizzoSpedizione,false, riempito.getComposizione());
+
+                //Creazione nuovo carrello vuoto nel db e nei cookie
+                Carrello vuoto=carrelloDAOdb.create(-1L,loggedUser);
+                carrelloDAOCokie.create(vuoto.getIdCart(),loggedUser);
+
+                sessionDAOFactory.commitTransaction();
+                daoFactory.commitTransaction();
+
+                //ViewModel
+                request.setAttribute("prodottiVetrina", prodottiVetrina);
+                request.setAttribute("prodotti", prodotti);
+                request.setAttribute("carrello", vuoto);
+                request.setAttribute("viewUrl", "homeManagement/view");
+            }
+            else
+            {
+                //Alcuni prodotti sono stati eliminati dal carrello
+                //Ricarica prodotti se alcuni sono stati eliminati
+                prodottiVetrina=loadProdottiVetrina( request);
+                prodotti=loadProdotti( request);
+                applicationMessage=nonDisponibili;
+                //Reload carrello senza gli elementi rimossi
+                riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
+
+                sessionDAOFactory.commitTransaction();
+                daoFactory.commitTransaction();
+
+                //ViewModel
+                request.setAttribute("prodottiVetrina", prodottiVetrina);
+                request.setAttribute("prodotti", prodotti);
+                request.setAttribute("carrello", riempito);
+                request.setAttribute("viewUrl", "cartManagement/view");
+
+            }
+            //View Model comune
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
             request.setAttribute("categorie", categorie);
-            request.setAttribute("prodottiVetrina", prodottiVetrina);
-            request.setAttribute("prodotti", prodotti);
-            request.setAttribute("carrello", riempito);
-            request.setAttribute("selectedProduct",request.getAttribute("selectedProduct"));
-            request.setAttribute("viewUrl", "homeManagement/view");
+            request.setAttribute("applicationMessage", applicationMessage);
+
         }catch (Exception e) {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
 
         } finally {
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
         }
 
     }

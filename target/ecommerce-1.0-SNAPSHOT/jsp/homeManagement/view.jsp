@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%@include file="/include/htmlHead.inc" %>
+    <%@include file="/include/htmlHead.jsp" %>
     <script>
         function viewDettagliProdotto(code) {
             document.selectionForm.selectedProduct.value = code;

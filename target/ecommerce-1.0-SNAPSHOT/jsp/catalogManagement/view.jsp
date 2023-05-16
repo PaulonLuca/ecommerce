@@ -14,7 +14,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%@include file="/include/htmlHead.inc" %>
+    <%@include file="/include/htmlHead.jsp" %>
 </head>
 <body>
 <%@include file="/include/header.jsp" %>

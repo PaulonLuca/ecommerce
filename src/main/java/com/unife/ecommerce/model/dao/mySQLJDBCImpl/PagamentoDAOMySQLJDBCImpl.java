@@ -98,4 +98,34 @@ public class PagamentoDAOMySQLJDBCImpl implements PagamentoDAO {
 
         return pag;
     }
+
+    static Pagamento read(ResultSet rs)
+    {
+        Pagamento pag = new Pagamento();
+        try {
+            pag.setIdPaga(rs.getLong("id_pag"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setDataPag(rs.getDate("data_pag"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setTotale(rs.getDouble("totale"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setNumeroCarta(rs.getString("numero_carta"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setMese(rs.getInt("mese"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setAnno(rs.getInt("anno"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setCvv(rs.getInt("data_pag"));
+        } catch (SQLException sqle) { }
+        try {
+            pag.setDeleted(rs.getBoolean("deleted"));
+        } catch (SQLException sqle) { }
+        return  pag;
+    }
 }

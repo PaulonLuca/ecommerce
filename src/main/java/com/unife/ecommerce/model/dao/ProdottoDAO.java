@@ -21,6 +21,8 @@ public interface ProdottoDAO {
 
     public ArrayList<Prodotto> findProdottiVetrina(Long idVetrina, String fotoPath);
 
+    public boolean updateQty(Long idProd, int qty);
 
+    public boolean checkQtyDisp(Long idProd, int qty);
 
 }

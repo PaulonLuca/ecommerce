@@ -111,7 +111,7 @@
 
                     <%if (loggedOn) {%>
                     <li class=" <%=menuActiveLink.equals("Ordini") ? "\"active\"" : ""%> nav-item">
-                        <a  class="nav-link" href="Dispatcher?controllerAction=AddressBookManagement.view">Ordini</a>
+                        <a  class="nav-link" href="Dispatcher?controllerAction=OrderManagement.view">Ordini</a>
                     </li>
                     <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
                     <li>

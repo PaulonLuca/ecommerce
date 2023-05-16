@@ -17,7 +17,7 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
 
 
     @Override
-    public Ordine create(Date dataOrd, Pagamento pag, Spedizione sped, Stato stato, Utente utente, IndirizzoSpedizione ind, boolean deleted) {
+    public Ordine create(Date dataOrd, Pagamento pag, Spedizione sped, Stato stato, Utente utente, IndirizzoSpedizione ind, boolean deleted , ArrayList<ProdottoQty> composizione) {
         Ordine ordine = null;
         try {
             //recupera il valore a cui è arrivato l'id_pag dalla tabella di utilità dopo averlo incrementato di 1
@@ -37,6 +37,7 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
             ordine.setStato(stato);
             ordine.setUtente(utente);
             ordine.setIndSped(ind);
+            ordine.setProdQty(composizione);
             ordine.setDeleted(deleted);
 
             resultSet.close();
@@ -53,6 +54,19 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
             ps.setLong(i++, ordine.getIndSped().getIdIndSped());
             ps.setBoolean(i++, ordine.isDeleted());
             ps.executeUpdate();
+
+            //Inserimento composizione ordine
+            for(int j=0;j<composizione.size();j++)
+            {
+                sql="INSERT INTO Composizione VALUES(?,?,?)";
+                ps = conn.prepareStatement(sql);
+                i=1;
+                ps.setLong(i++,composizione.get(j).getProd().getIdProd());
+                ps.setLong(i++,ordine.getIdOrd());
+                ps.setInt(i++,composizione.get(j).getQty());
+                ps.executeUpdate();
+            }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -61,7 +75,41 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
 
     @Override
     public ArrayList<Ordine> findAllOrdiniByUserId(Long idUtente) {
-        return null;
+        PreparedStatement ps;
+        ArrayList<Ordine> ordini=new ArrayList<Ordine>();
+
+        //Caricamento ordini dal db
+        try
+        {
+            String sql = "SELECT O.id_ord, O.data_ord,O.deleted,P.id_pag,P.data_pag, P.totale,P.numero_carta,P.mese,P.anno,P.cvv,P.deleted,TP.id_tipo_pag,TP.nome_tipo_pag,TP.deleted," +
+                    "S.id_sped,S.nome_sped,S.costo,S.num_giorni,S.deleted, I.id_ind_sped,I.citta,I.via,I.civico,I.cap,I.deleted,ST.id_stato,ST.descr,ST.deleted," +
+                    "U.id_utente,U.nome,U.cognome,U.email,U.username,U.psw,U.tel,U.citta,U.via,U.cap,U.civico,U.is_admin,U.is_locked,U.deleted " +
+                    "FROM ((((((Ordine AS O INNER JOIN Pagamento AS P ON O.id_pag=P.id_pag) " +
+                    "INNER JOIN Tipo_pagamento AS TP ON P.id_tipo_pag=TP.id_tipo_pag) " +
+                    "INNER JOIN Spedizione AS S ON S.id_sped=O.id_sped) " +
+                    "INNER JOIN Utente AS U ON U.id_utente=O.id_utente) " +
+                    "INNER JOIN  Indirizzo_spedizione AS I ON I.id_ind_sped=O.id_ind_sped) " +
+                    "INNER JOIN Stato AS ST ON ST.id_stato=O.id_stato) " +
+                    "WHERE O.id_utente=?";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, idUtente);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Ordine o;
+                o=read(resultSet);
+                //Load composizione ordine
+
+                ordini.add(o);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ordini;
     }
 
     @Override
@@ -72,5 +120,34 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
     @Override
     public void updateState(Long idStato) {
 
+    }
+
+    private ArrayList<ProdottoQty> loadComposizione(Long idOrdine)
+    {
+        return null;
+    }
+
+    static Ordine read(ResultSet rs)
+    {
+        Ordine ordine = new Ordine();
+        try {
+            ordine.setIdOrd(rs.getLong("id_ord"));
+        } catch (SQLException sqle) { }
+        try {
+            ordine.setDataOrd(rs.getDate("data_ord"));
+        } catch (SQLException sqle) { }
+
+        ordine.setUtente(UserDAOMySQLJDBCImpl.read(rs));
+        ordine.setIndSped(IndirizzoSpedizioneDAOMySQLJDBCImpl.read(rs));
+        ordine.setStato(StatoDAOMySQLJDBCImpl.read(rs));
+        ordine.setPag(PagamentoDAOMySQLJDBCImpl.read(rs));
+        ordine.getPag().setTipoPag(TipoPagamentoDAOMySQLJDBCImpl.read(rs));
+        ordine.setSped(SpedizioneDAOMySQLJDBCImpl.read(rs));
+
+        try {
+            ordine.setDeleted(rs.getBoolean("deleted"));
+        } catch (SQLException sqle) { }
+
+        return  ordine;
     }
 }

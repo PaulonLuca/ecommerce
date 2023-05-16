@@ -56,15 +56,13 @@ public class UserManagement {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (daoFactory != null) daoFactory.rollbackTransaction();
-            } catch (Throwable t) {
-            }
+            } catch (Throwable t) { }
             throw new RuntimeException(e);
         }
         finally {
             try {
                 if (daoFactory != null) daoFactory.closeTransaction();
-            } catch (Throwable t) {
-            }
+            } catch (Throwable t) { }
         }
     }
 
