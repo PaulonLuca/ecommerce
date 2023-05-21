@@ -23,6 +23,8 @@ public class CatalogManagement {
         Carrello riempito=null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
+        boolean isAmdin=false;
+
         try
         {
             //Recupera utente loggato se presente
@@ -32,6 +34,10 @@ public class CatalogManagement {
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
             if(loggedUser!=null)
+                isAmdin=loggedUser.isAdmin();
+
+            //Se utente è loggato e non è un amministratore
+            if(loggedUser!=null && !loggedUser.isAdmin())
             {
                 //Recupera id carrello dai cookies
                 CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -56,7 +62,7 @@ public class CatalogManagement {
             String idProd=request.getParameter("selectedProduct");
             Prodotto prodotto=prodottoDAO.findProdottoById(Long.parseLong(idProd),fotoPath);
             prodotto.setFornitori(fornitoreDAO.findAllFornitoriForProduct(prodotto.getIdProd()));
-            if(loggedUser!=null)
+            if(loggedUser!=null && !loggedUser.isAdmin())
             {
                 //Caricamento carrello
                 CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
@@ -65,6 +71,7 @@ public class CatalogManagement {
             daoFactory.commitTransaction();
 
             //ViewModel
+            request.setAttribute("isAdmin",isAmdin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);

@@ -13,6 +13,6 @@ public interface OrdineDAO {
 
     public ArrayList<Ordine> findAll();
 
-    public void updateState(Long idStato);
+    public void updateState(Long idOrdine, Long idStato);
 
 }

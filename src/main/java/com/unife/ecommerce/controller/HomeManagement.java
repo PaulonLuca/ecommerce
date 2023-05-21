@@ -24,6 +24,7 @@ public class HomeManagement {
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
         Carrello riempito=null;
+        boolean isAdmin=false;
         try
         {
             //Recupera utente loggato se presente dai cookie
@@ -34,17 +35,24 @@ public class HomeManagement {
             sessionDAOFactory.commitTransaction();
 
             //Se utente è loggato recupero anche il carrello associato all'utente dal db
-            if(loggedUser!=null)
+
+            if(loggedUser!=null )
             {
-                //Recupera id carrello dai cookies
-                CarrelloDAO carrelloDAOCookie=sessionDAOFactory.getCarrelloDAO();
-                Carrello carrello=carrelloDAOCookie.getCookieCart();
-                daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-                daoFactory.beginTransaction();
-                CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
-                String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-                riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
-                daoFactory.commitTransaction();
+                //Se utente è amministratore non ha un carrello
+                if(!loggedUser.isAdmin())
+                {
+                    //Recupera id carrello dai cookies
+                    CarrelloDAO carrelloDAOCookie=sessionDAOFactory.getCarrelloDAO();
+                    Carrello carrello=carrelloDAOCookie.getCookieCart();
+                    daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+                    daoFactory.beginTransaction();
+                    CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
+                    String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+                    riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
+                    daoFactory.commitTransaction();
+                }
+                else
+                    isAdmin=loggedUser.isAdmin();
             }
 
             //Caricamento prodotti, marche e categorie
@@ -53,7 +61,9 @@ public class HomeManagement {
             ArrayList<Categoria> categorie= loadCategorie();
             ArrayList<Prodotto> prodottiVetrina=loadProdottiVetrina( request);
 
+
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("prodotti", prodotti);
@@ -87,6 +97,7 @@ public class HomeManagement {
         Carrello carrello=null;
         String applicationMessage = "Benvenuto, inizia ad acquistare i tuoi prodotti";
         Logger logger = LogService.getApplicationLogger();
+        boolean isAdmin=false;
 
         try
         {
@@ -118,22 +129,30 @@ public class HomeManagement {
                 applicationMessage = "Username e password errati!";
                 loggedUser=null;
             } else {
+                //Logon avvenuto con successo, creazione utente sui cookies
                 loggedUser = sessionUserDAO.create(user.getIdUtente(),user.getNome(),user.getCognome(),user.getEmail(),user.getUsername(),
                         null,null,null,null,null,null,user.isAdmin(),false,false);//<--hard coded
 
-                //Creazione carrello
-                CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
-                CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
-                //Creazione carrello nel db
-                carrello= carrelloDAO.create(-1L,loggedUser);
-                //creazione carrello nei cookies
-                sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+                //Carrello presente solo se l'utente non è un amministratore
+                if(!loggedUser.isAdmin())
+                {
+                    //Creazione carrello
+                    CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
+                    CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
+                    //Creazione carrello nel db
+                    carrello= carrelloDAO.create(-1L,loggedUser);
+                    //creazione carrello nei cookies
+                    sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+                }
+                //verifica se l'utente è anche amministratore
+                isAdmin=user.isAdmin();
             }
 
             daoFactory.commitTransaction();
             sessionDAOFactory.commitTransaction();
 
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("prodotti", prodotti);
@@ -179,15 +198,22 @@ public class HomeManagement {
             sessionDAOFactory.beginTransaction();
 
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
+            Utente loggedUser=sessionUserDAO.findLoggedUser();
+
             //eliminazione cookie con l'utente
             sessionUserDAO.delete(null);
+
             //Eliminazione carrello dai cookies, nel db rimane lo storico
-            CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
-            sessionCartDAO.destroy();
+            //Se l'utente non è amministratore
+            if(!loggedUser.isAdmin()) {
+                CarrelloDAO sessionCartDAO = sessionDAOFactory.getCarrelloDAO();
+                sessionCartDAO.destroy();
+            }
 
             sessionDAOFactory.commitTransaction();
 
             //ViewModel
+            request.setAttribute("isAdmin",false);
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
             request.setAttribute("prodotti", prodotti);

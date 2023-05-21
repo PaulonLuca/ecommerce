@@ -110,19 +110,36 @@
                     </li>
 
                     <%if (loggedOn) {%>
-                    <li class=" <%=menuActiveLink.equals("Ordini") ? "\"active\"" : ""%> nav-item">
-                        <a  class="nav-link" href="Dispatcher?controllerAction=OrderManagement.view">Ordini</a>
-                    </li>
-                    <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
-                    <li>
-                        <button type="button" class="btn btn-primary position-relative" onclick="javascript:cartForm.submit()">
-                            Carrello <i class="bi bi-cart"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            <%=carrello.getComposizione().size()%>
-                            <span class="visually-hidden">Carrello</span>
-                        </span>
-                        </button>
-                    </li>
+
+                        <%if(!isAdmin) {%>
+                            <li class=" <%=menuActiveLink.equals("Ordini") ? "\"active\"" : ""%> nav-item">
+                                <a  class="nav-link" href="Dispatcher?controllerAction=OrderManagement.view">Ordini</a>
+                            </li>
+
+                            <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
+
+                            <li>
+                                <button type="button" class="btn btn-primary position-relative" onclick="javascript:cartForm.submit()">
+                                    Carrello <i class="bi bi-cart"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <%=carrello.getComposizione().size()%>
+                                    <span class="visually-hidden">Carrello</span>
+                                </span>
+                                </button>
+                            </li>
+
+                        <%} else {%>
+                        <li class=" <%=menuActiveLink.equals("Modifica stato ordini") ? "\"active\"" : ""%> nav-item">
+                            <a  class="nav-link" href="Dispatcher?controllerAction=OrderManagement.view">Modifica stato ordini</a>
+                        </li>
+
+                        <li class=" <%=menuActiveLink.equals("Visualizza utenti") ? "\"active\"" : ""%> nav-item">
+                            <a  class="nav-link" href="Dispatcher?controllerAction=OrderManagement.update">Visualizza utenti</a>
+                        </li>
+
+                        <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
+
+                        <%}%>
 
                     <%} else {%>
                     <li class=" <%=menuActiveLink.equals("Registrazione") ? "\"active\"" : ""%> nav-item">

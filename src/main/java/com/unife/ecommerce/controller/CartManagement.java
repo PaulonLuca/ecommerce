@@ -19,6 +19,8 @@ public class CartManagement {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
         DAOFactory daoFactory=null;
+        boolean isAdmin=false;
+
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
@@ -30,6 +32,7 @@ public class CartManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -48,6 +51,7 @@ public class CartManagement {
 
 
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -75,6 +79,7 @@ public class CartManagement {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
         DAOFactory daoFactory=null;
+        boolean isAdmin=false;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
@@ -86,6 +91,7 @@ public class CartManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -113,6 +119,7 @@ public class CartManagement {
 
 
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -141,6 +148,7 @@ public class CartManagement {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
         DAOFactory daoFactory=null;
+        boolean isAdmin=false;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
@@ -152,6 +160,7 @@ public class CartManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -172,6 +181,7 @@ public class CartManagement {
 
 
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);

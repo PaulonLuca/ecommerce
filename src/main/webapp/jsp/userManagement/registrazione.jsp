@@ -1,5 +1,6 @@
 <%@ page import="com.unife.ecommerce.model.mo.Utente" %>
 <%
+    boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
     String applicationMessage = (String) request.getAttribute("applicationMessage");

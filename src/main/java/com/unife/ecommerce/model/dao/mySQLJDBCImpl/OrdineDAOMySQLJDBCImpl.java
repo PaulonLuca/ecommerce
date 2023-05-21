@@ -100,6 +100,7 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
                 Ordine o;
                 o=read(resultSet);
                 //Load composizione ordine
+                o.setProdQty(loadComposizione(o.getIdOrd()));
 
                 ordini.add(o);
             }
@@ -112,19 +113,89 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
         return ordini;
     }
 
+    //Caricamento ordini di tutti gli utenti dal db
     @Override
     public ArrayList<Ordine> findAll() {
-        return null;
+
+        PreparedStatement ps;
+        ArrayList<Ordine> ordini=new ArrayList<Ordine>();
+
+        //Caricamento ordini dal db
+        try
+        {
+            String sql = "SELECT O.id_ord, O.data_ord,O.deleted,P.id_pag,P.data_pag, P.totale,P.numero_carta,P.mese,P.anno,P.cvv,P.deleted,TP.id_tipo_pag,TP.nome_tipo_pag,TP.deleted," +
+                    "S.id_sped,S.nome_sped,S.costo,S.num_giorni,S.deleted, I.id_ind_sped,I.citta,I.via,I.civico,I.cap,I.deleted,ST.id_stato,ST.descr,ST.deleted," +
+                    "U.id_utente,U.nome,U.cognome,U.email,U.username,U.psw,U.tel,U.citta,U.via,U.cap,U.civico,U.is_admin,U.is_locked,U.deleted " +
+                    "FROM ((((((Ordine AS O INNER JOIN Pagamento AS P ON O.id_pag=P.id_pag) " +
+                    "INNER JOIN Tipo_pagamento AS TP ON P.id_tipo_pag=TP.id_tipo_pag) " +
+                    "INNER JOIN Spedizione AS S ON S.id_sped=O.id_sped) " +
+                    "INNER JOIN Utente AS U ON U.id_utente=O.id_utente) " +
+                    "INNER JOIN  Indirizzo_spedizione AS I ON I.id_ind_sped=O.id_ind_sped) " +
+                    "INNER JOIN Stato AS ST ON ST.id_stato=O.id_stato) ORDER BY O.id_ord";
+            ps = conn.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Ordine o;
+                o=read(resultSet);
+                //Load composizione ordine
+                o.setProdQty(loadComposizione(o.getIdOrd()));
+                ordini.add(o);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ordini;
     }
 
+    //Modifica stato dell'ordine effettuato
     @Override
-    public void updateState(Long idStato) {
+    public void updateState(Long idOrdine, Long idStato) {
+        PreparedStatement ps;
+        try {
+            String sql="UPDATE Ordine SET id_stato=? WHERE id_ord=?";
+                ps = conn.prepareStatement(sql);
+                int i = 1;
+                ps.setLong(i++, idStato);
+                ps.setLong(i++, idOrdine);
+                ps.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ArrayList<ProdottoQty> loadComposizione(Long idOrdine)
     {
-        return null;
+        PreparedStatement ps;
+        ArrayList<ProdottoQty> composizione=new ArrayList<>();
+        try
+        {
+            String sql = "SELECT P.id_prod,P.nome_prod,P.descr, P.qty_disp, P.prezzo, P.foto_path, P.is_locked,P.id_cat, P.id_marca,P.deleted, C.id_ord,C.qty " +
+                    "FROM Prodotto as P INNER JOIN Composizione AS C ON P.id_prod=C.id_prod " +
+                    "WHERE C.id_ord=?;";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, idOrdine);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                ProdottoQty pqty=new ProdottoQty();
+                pqty.setProd(ProdottoDAOMySQLJDBCImpl.read(resultSet));
+                pqty.setQty(resultSet.getInt("qty"));
+                //Load composizione ordine
+                composizione.add(pqty);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return composizione;
     }
 
     static Ordine read(ResultSet rs)

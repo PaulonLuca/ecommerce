@@ -46,6 +46,7 @@ public class UserManagement {
             daoFactory.commitTransaction();
 
             //ViewModel
+            request.setAttribute("isAdmin",false);//non è amministratore di default alla registrazione
             request.setAttribute("loggedOn",false);
             request.setAttribute("loggedUser", null);
             request.setAttribute("applicationMessage", applicationMessage);

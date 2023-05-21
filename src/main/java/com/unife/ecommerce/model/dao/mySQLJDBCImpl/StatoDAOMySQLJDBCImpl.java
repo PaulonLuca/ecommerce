@@ -44,7 +44,25 @@ public class StatoDAOMySQLJDBCImpl implements StatoDAO {
 
     @Override
     public ArrayList<Stato> findAll() {
-        return null;
+
+        PreparedStatement ps;
+        ArrayList<Stato> stati=new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM Stato";
+            ps = conn.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                stati.add(read(resultSet));
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return stati;
     }
 
     static Stato read(ResultSet rs)

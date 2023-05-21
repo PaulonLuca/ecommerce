@@ -21,6 +21,7 @@ public class OrderManagement {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
         DAOFactory daoFactory=null;
+        boolean isAdmin=false;
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
@@ -32,6 +33,7 @@ public class OrderManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -67,6 +69,7 @@ public class OrderManagement {
             daoFactory.commitTransaction();
 
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -93,11 +96,15 @@ public class OrderManagement {
         }
     }
 
-    //Visualizza lo storico degli ordini dell'utente loggato
+    //Visualizza lo storico degli ordini dell'utente loggato oppure visualizza gli ordini
+    //di tutti gli utenti se l'utente è un amministratore
     public static void view(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
         DAOFactory daoFactory=null;
+        boolean isAdmin=false;
+        Carrello riempito=null;
+
         try
         {
             String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
@@ -109,27 +116,44 @@ public class OrderManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
 
-            //Recupera id carrello dai cookies
-            CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
-            Carrello carrello=carrelloDAOCokie.getCookieCart();
+            if(!loggedUser.isAdmin())
+            {
+                //Recupera id carrello dai cookies
+                CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
+                Carrello carrello=carrelloDAOCokie.getCookieCart();
+
+                //Caricamento carrello
+                CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
+                riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
+            }
 
             //Caricamento marche e categorie
             ArrayList<Marca> marche= loadMarche();
             ArrayList<Categoria> categorie= loadCategorie();
 
-            //Caricamento carrello
-            CarrelloDAO carrelloDAOdb=daoFactory.getCarrelloDAO();
-            Carrello riempito=carrelloDAOdb.loadCarrello(carrello.getIdCart(),fotoPath);
-
-            //Caricamento ordini dell'utente loggato
+            //Caricamento ordini dell'utente loggato, se è un amministratore si caricano gli ordini
+            //di tutti gli utenti
             OrdineDAO ordineDAO=daoFactory.getOrdineDAO();
-            ArrayList<Ordine> ordini=ordineDAO.findAllOrdiniByUserId(loggedUser.getIdUtente());
+
+            ArrayList<Ordine> ordini=null;
+            ArrayList<Stato> stati=null;
+            if(!loggedUser.isAdmin())
+                ordini=ordineDAO.findAllOrdiniByUserId(loggedUser.getIdUtente());
+            else
+            {
+                ordini=ordineDAO.findAll();
+                StatoDAO statoDAO=daoFactory.getStatoDAO();
+                stati=statoDAO.findAll();
+            }
 
             sessionDAOFactory.commitTransaction();
             daoFactory.commitTransaction();
 
             //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
+            request.setAttribute("stati",stati);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -161,6 +185,7 @@ public class OrderManagement {
         DAOFactory sessionDAOFactory=null;
         DAOFactory daoFactory=null;
         String applicationMessage="";
+        boolean isAdmin;
 
         try
         {
@@ -173,6 +198,7 @@ public class OrderManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -309,6 +335,7 @@ public class OrderManagement {
 
             }
             //View Model comune
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -331,4 +358,73 @@ public class OrderManagement {
         }
 
     }
+
+
+
+
+    //Modifica stato dell'ordine
+    public static void updateOrderState(HttpServletRequest request, HttpServletResponse response) {
+        Logger logger = LogService.getApplicationLogger();
+        DAOFactory sessionDAOFactory=null;
+        DAOFactory daoFactory=null;
+        boolean isAdmin=false;
+        Carrello riempito=null;
+
+        try
+        {
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            sessionDAOFactory = getSessionDAOFactory(request,response);
+            daoFactory.beginTransaction();
+            sessionDAOFactory.beginTransaction();
+
+            //Recupera utente loggato presente
+            UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
+            Utente loggedUser = sessionUserDAO.findLoggedUser();
+            isAdmin=loggedUser.isAdmin();
+
+            //Caricamento marche e categorie
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
+
+            //Recupera ordine da modificare e stato da impostare
+            Long idStato=Long.parseLong(request.getParameter("newStato"));
+            Long idOrdine=Long.parseLong(request.getParameter("selectedOrder"));
+            OrdineDAO ordineDAO=daoFactory.getOrdineDAO();
+            //Modifica dello stato
+            ordineDAO.updateState(idOrdine,idStato);
+            //Ricaricemento prodotti con il nuovo stato
+            ArrayList<Ordine> ordini=ordineDAO.findAll();
+            StatoDAO statoDAO=daoFactory.getStatoDAO();
+            //Caricamento di tutti gli stati
+            ArrayList<Stato> stati=statoDAO.findAll();
+
+            sessionDAOFactory.commitTransaction();
+            daoFactory.commitTransaction();
+
+            //ViewModel
+            request.setAttribute("isAdmin",isAdmin);
+            request.setAttribute("stati",stati);
+            request.setAttribute("loggedOn",loggedUser!=null);
+            request.setAttribute("loggedUser", loggedUser);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
+            request.setAttribute("carrello", riempito);
+            request.setAttribute("ordini",ordini);
+            request.setAttribute("viewUrl", "orderManagement/view");
+        }catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
+    }
+
 }
