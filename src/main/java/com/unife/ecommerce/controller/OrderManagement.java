@@ -359,9 +359,6 @@ public class OrderManagement {
 
     }
 
-
-
-
     //Modifica stato dell'ordine
     public static void updateOrderState(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();

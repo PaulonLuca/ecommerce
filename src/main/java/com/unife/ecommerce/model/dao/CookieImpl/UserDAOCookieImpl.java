@@ -6,6 +6,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.ArrayList;
+
 public class UserDAOCookieImpl implements UserDAO {
 
     HttpServletRequest request;
@@ -78,6 +80,12 @@ public class UserDAOCookieImpl implements UserDAO {
 
     @Override
     public Utente findByUsername(String username) {throw new UnsupportedOperationException("Not supported yet.");}
+
+    @Override
+    public ArrayList<Utente> findAll(boolean isAdmin, Long idLogged) {throw new UnsupportedOperationException("Not supported yet.");}
+
+    @Override
+    public void updateField(Long idUtente, String field, boolean value) { throw new UnsupportedOperationException("Not supported yet.");}
 
     //Crea una stringa con le principali informazioni dell'utente
     private String encode(Utente loggedUser) {

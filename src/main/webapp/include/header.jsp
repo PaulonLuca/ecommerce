@@ -134,7 +134,7 @@
                         </li>
 
                         <li class=" <%=menuActiveLink.equals("Visualizza utenti") ? "\"active\"" : ""%> nav-item">
-                            <a  class="nav-link" href="Dispatcher?controllerAction=OrderManagement.update">Visualizza utenti</a>
+                            <a  class="nav-link" href="Dispatcher?controllerAction=UserManagement.view">Visualizza utenti</a>
                         </li>
 
                         <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>

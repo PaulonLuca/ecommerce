@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserDAOMySQLJDBCImpl implements UserDAO {
 
@@ -146,6 +147,47 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
             throw new RuntimeException(e);
         }
         return user;
+    }
+
+    //Carica tutti gli utenti registrati non amministratori oppure gli utenti amministratori
+    @Override
+    public ArrayList<Utente> findAll(boolean isAdmin, Long idLogged) {
+        PreparedStatement ps;
+        ArrayList<Utente> utenti=new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Utente WHERE is_admin=? AND id_utente!=?";
+            ps = conn.prepareStatement(sql);
+            int i=1;
+            ps.setBoolean(i++,isAdmin);
+            ps.setLong(i++,idLogged);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                utenti.add(read(resultSet));
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return utenti;
+    }
+
+    @Override
+    public void updateField(Long idUtente, String field, boolean value) {
+        PreparedStatement ps;
+        try {
+            String sql="UPDATE Utente SET " + field + "=? WHERE id_utente=?";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setBoolean(i++, value);
+            ps.setLong(i++, idUtente);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     static Utente read(ResultSet rs) {

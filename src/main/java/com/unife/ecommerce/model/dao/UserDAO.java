@@ -3,6 +3,8 @@ package com.unife.ecommerce.model.dao;
 import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Utente;
 
+import java.util.ArrayList;
+
 //Interfaccia implementata sui Cookies ed in MySQL
 public interface UserDAO
 {
@@ -32,4 +34,9 @@ public interface UserDAO
     public Utente findByUserId(Long userId);
 
     public Utente findByUsername(String username);
+
+    public ArrayList<Utente> findAll(boolean isAdmin, Long idLogged);
+
+    public void updateField(Long idUtente, String field, boolean value);
+
 }

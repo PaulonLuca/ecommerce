@@ -93,7 +93,7 @@ public class HomeManagement {
 
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory = null;
-        Utente loggedUser;
+        Utente loggedUser=null;
         Carrello carrello=null;
         String applicationMessage = "Benvenuto, inizia ad acquistare i tuoi prodotti";
         Logger logger = LogService.getApplicationLogger();
@@ -129,23 +129,29 @@ public class HomeManagement {
                 applicationMessage = "Username e password errati!";
                 loggedUser=null;
             } else {
-                //Logon avvenuto con successo, creazione utente sui cookies
-                loggedUser = sessionUserDAO.create(user.getIdUtente(),user.getNome(),user.getCognome(),user.getEmail(),user.getUsername(),
-                        null,null,null,null,null,null,user.isAdmin(),false,false);//<--hard coded
 
-                //Carrello presente solo se l'utente non è un amministratore
-                if(!loggedUser.isAdmin())
+                if(!user.isLocked())
                 {
-                    //Creazione carrello
-                    CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
-                    CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
-                    //Creazione carrello nel db
-                    carrello= carrelloDAO.create(-1L,loggedUser);
-                    //creazione carrello nei cookies
-                    sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+                    //Logon avvenuto con successo, creazione utente sui cookies
+                    loggedUser = sessionUserDAO.create(user.getIdUtente(),user.getNome(),user.getCognome(),user.getEmail(),user.getUsername(),
+                            null,null,null,null,null,null,user.isAdmin(),false,false);//<--hard coded
+
+                    //Carrello presente solo se l'utente non è un amministratore
+                    if(!loggedUser.isAdmin())
+                    {
+                        //Creazione carrello
+                        CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
+                        CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
+                        //Creazione carrello nel db
+                        carrello= carrelloDAO.create(-1L,loggedUser);
+                        //creazione carrello nei cookies
+                        sessionCartDAO.create(carrello.getIdCart(),loggedUser);
+                    }
+                    //verifica se l'utente è anche amministratore
+                    isAdmin=user.isAdmin();
                 }
-                //verifica se l'utente è anche amministratore
-                isAdmin=user.isAdmin();
+                else
+                    applicationMessage="Impossibile fare logon. L'utente risulta bloccato.";
             }
 
             daoFactory.commitTransaction();
