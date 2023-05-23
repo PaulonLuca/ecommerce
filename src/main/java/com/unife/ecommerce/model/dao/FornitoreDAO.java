@@ -7,4 +7,6 @@ import java.util.ArrayList;
 public interface FornitoreDAO {
 
     public ArrayList<Fornitore> findAllFornitoriForProduct(Long idProd);
+
+    public ArrayList<Fornitore> findAll();
 }

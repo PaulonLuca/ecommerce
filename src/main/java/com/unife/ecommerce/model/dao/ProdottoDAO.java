@@ -25,4 +25,6 @@ public interface ProdottoDAO {
 
     public boolean checkQtyDisp(Long idProd, int qty);
 
+    public boolean isInVetrina(Long idProd);
+
 }

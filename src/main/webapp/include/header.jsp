@@ -137,6 +137,10 @@
                             <a  class="nav-link" href="Dispatcher?controllerAction=UserManagement.view">Visualizza utenti</a>
                         </li>
 
+                        <li class=" <%=menuActiveLink.equals("Inserisci prodotto") ? "\"active\"" : ""%> nav-item">
+                            <a  class="nav-link" href="Dispatcher?controllerAction=CatalogManagement.viewInfoProdotto">Inserisci prodotto</a>
+                        </li>
+
                         <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
 
                         <%}%>

@@ -209,6 +209,37 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         }
     }
 
+    @Override
+    public boolean isInVetrina(Long idProd) {
+        PreparedStatement ps;
+        try
+        {
+            String sql = "SELECT * FROM In_evidenza WHERE id_prod=?";
+
+            ps = conn.prepareStatement(sql);
+            int i=1;
+            ps.setLong(i++, idProd);
+            ResultSet resultSet = ps.executeQuery();
+
+            //Se il risultato contiene un record, allora il prdodotto è in vetrina
+            if (resultSet.next())
+            {
+                resultSet.close();
+                ps.close();
+                return true;
+            }
+            else
+            {
+                resultSet.close();
+                ps.close();
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     static File[] loadFotoProdotto(Long idProd, String fotoPath){
         fotoPath+="/"+idProd.toString()+"/";

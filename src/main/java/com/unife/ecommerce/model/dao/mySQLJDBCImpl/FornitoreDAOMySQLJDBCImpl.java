@@ -48,6 +48,31 @@ public class FornitoreDAOMySQLJDBCImpl implements FornitoreDAO {
         return fornitori;
     }
 
+    @Override
+    public ArrayList<Fornitore> findAll() {
+        PreparedStatement ps;
+        ArrayList<Fornitore> fornitori=new ArrayList<>();
+
+        try
+        {
+            String sql = "SELECT * FROM Fornitore";
+
+            ps = conn.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                fornitori.add(read(resultSet));
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return fornitori;
+    }
+
     static Fornitore read(ResultSet rs) {
 
         Fornitore forn = new Fornitore();
