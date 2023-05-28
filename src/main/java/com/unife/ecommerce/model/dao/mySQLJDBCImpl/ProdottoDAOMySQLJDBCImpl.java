@@ -211,7 +211,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         {
             String sql = "SELECT id_prod, nome_prod, descr, qty_disp, prezzo, foto_path, is_locked, C.id_cat,C.nome_cat, M.id_marca,M.nome_marca, P.deleted " +
                     " FROM ((Prodotto AS P INNER JOIN Marca AS M ON P.id_marca=M.id_marca) " +
-                    "INNER JOIN Categoria AS C ON P.id_cat=C.id_cat) WHERE P.qty_disp>0";
+                    "INNER JOIN Categoria AS C ON P.id_cat=C.id_cat) WHERE P.qty_disp>0 AND P.is_locked=false";
 
             //Se presente la stringa di ricerca
             if (searchString != null && searchString != "") {
@@ -227,6 +227,60 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
             //Se si ricerca una determinata marca
             if (idMarca != null && idMarca!="") {
                 sql += " AND P.id_marca="+idMarca;
+            }
+            sql+=" ORDER BY id_prod ;";
+            ps = conn.prepareStatement(sql);
+
+            int i = 1;
+            if (searchString != null && searchString != "") {
+                ps.setString(i++, searchString);
+                ps.setString(i++, searchString);
+                ps.setString(i++, searchString);
+                ps.setString(i++, searchString);
+            }
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Prodotto p= read(resultSet);
+                p.setFotoProdotto(loadFotoProdotto(p.getIdProd(),fotoPath));
+                prodotti.add(p);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return prodotti;
+    }
+
+    @Override
+    public ArrayList<Prodotto> findAllProdottiAdmin(String fotoPath, String idCat, String idMarca, String searchString) {
+        PreparedStatement ps;
+        ArrayList<Prodotto> prodotti=new ArrayList<Prodotto>();
+
+        //Lista dei fornitori del prodotto viene popolata nel controller usando il DAO Fornitore
+        try
+        {
+            String sql = "SELECT id_prod, nome_prod, descr, qty_disp, prezzo, foto_path, is_locked, C.id_cat,C.nome_cat, M.id_marca,M.nome_marca, P.deleted " +
+                    " FROM ((Prodotto AS P INNER JOIN Marca AS M ON P.id_marca=M.id_marca) " +
+                    "INNER JOIN Categoria AS C ON P.id_cat=C.id_cat)";
+
+            //Se presente la stringa di ricerca
+            if (searchString != null && searchString != "") {
+                sql += "WHERE (INSTR(nome_prod,?)>0 ";
+                sql += " OR INSTR(descr,?)>0 ";
+                sql += " OR INSTR(nome_marca,?)>0 ";
+                sql += " OR INSTR(nome_cat,?))>0 ";
+            }
+            //Se si ricerca una determinata categoria
+            if (idCat != null && idCat != "") {
+                sql += " WHERE P.id_cat="+idCat;
+            }
+            //Se si ricerca una determinata marca
+            if (idMarca != null && idMarca!="") {
+                sql += " WHERE P.id_marca="+idMarca;
             }
             sql+=" ORDER BY id_prod ;";
             ps = conn.prepareStatement(sql);
@@ -420,6 +474,10 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         }
         try {
             prod.setFotoPath(rs.getString("foto_path"));
+        } catch (SQLException sqle) {
+        }
+        try {
+            prod.setLocked(rs.getBoolean("is_locked"));
         } catch (SQLException sqle) {
         }
         try {

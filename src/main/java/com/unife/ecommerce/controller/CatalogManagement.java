@@ -290,7 +290,7 @@ public class CatalogManagement {
             daoFactory.commitTransaction();
 
             //Ricarica i campi per la home page
-            ArrayList<Prodotto> ricaricati=loadProdotti(request);
+            ArrayList<Prodotto> ricaricati=loadProdottiAdmin(request);
             ArrayList<Marca> marche= loadMarche();
             ArrayList<Categoria> categorie= loadCategorie();
             ArrayList<Prodotto> ricaricaVetrina=loadProdottiVetrina(request);
@@ -321,8 +321,58 @@ public class CatalogManagement {
         }
     }
 
+    public static void viewInsertCatMarca(HttpServletRequest request, HttpServletResponse response) {
+        DAOFactory sessionDAOFactory= null;
+        DAOFactory daoFactory=null;
+        Utente loggedUser;
+        Logger logger = LogService.getApplicationLogger();
+        boolean isAmdin=false;
+
+        try
+        {
+            //Recupera utente loggato se presente
+            sessionDAOFactory = getSessionDAOFactory(request,response);
+            sessionDAOFactory.beginTransaction();
+
+            UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
+            loggedUser = sessionUserDAO.findLoggedUser();
+            if(loggedUser!=null)
+                isAmdin=loggedUser.isAdmin();
+
+            sessionDAOFactory.commitTransaction();
+
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+
+            //Caricamento marche e categorie
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
+
+            //ViewModel
+            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("loggedOn",loggedUser!=null);
+            request.setAttribute("loggedUser", loggedUser);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
+            request.setAttribute("viewUrl", "catalogManagement/insertCatMarca");
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
+    }
+
     //Completare il copia incolla delle foto del prodotto
-    //Completare modifica prodotto
     //Care form per inserire Marca, Fornitori, Categoria
 
     private static void uploadFotoProdotto(Long idProdotto, String fotoPathProd,String fotoPathDefault)
@@ -341,5 +391,4 @@ public class CatalogManagement {
 
 
     }
-
 }

@@ -21,6 +21,8 @@ public interface ProdottoDAO {
 
     public ArrayList<Prodotto> findAllProdotti( String fotoPath,String idCat,String idMarca, String searchString);
 
+    public ArrayList<Prodotto> findAllProdottiAdmin( String fotoPath,String idCat,String idMarca, String searchString);
+
     public ArrayList<Prodotto> findProdottiVetrina(Long idVetrina, String fotoPath);
 
     public boolean updateQty(Long idProd, int qty);

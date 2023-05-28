@@ -141,6 +141,10 @@
                             <a  class="nav-link" href="Dispatcher?controllerAction=CatalogManagement.viewInfoProdotto">Inserisci prodotto</a>
                         </li>
 
+                        <li class=" <%=menuActiveLink.equals("Inserisci marca o categoria") ? "\"active\"" : ""%> nav-item">
+                            <a  class="nav-link" href="Dispatcher?controllerAction=CatalogManagement.viewInsertCatMarca">Inserisci marca o categoria</a>
+                        </li>
+
                         <li><a class="nav-link" href="javascript:logoutForm.submit()">Logout</a></li>
 
                         <%}%>

@@ -56,7 +56,12 @@ public class HomeManagement {
             }
 
             //Caricamento prodotti, marche e categorie
-            ArrayList<Prodotto> prodotti=loadProdotti( request);
+            ArrayList<Prodotto> prodotti=null;
+            if(isAdmin)
+                prodotti=loadProdottiAdmin( request);
+            else
+                prodotti=loadProdotti(request);
+
             ArrayList<Marca> marche= loadMarche();
             ArrayList<Categoria> categorie= loadCategorie();
             ArrayList<Prodotto> prodottiVetrina=loadProdottiVetrina( request);
@@ -102,7 +107,7 @@ public class HomeManagement {
         try
         {
             //Caricamento prodotti, marche e categorie
-            ArrayList<Prodotto> prodotti=loadProdotti( request);
+            ArrayList<Prodotto> prodotti=null;
             ArrayList<Marca> marche= loadMarche();
             ArrayList<Categoria> categorie= loadCategorie();
             ArrayList<Prodotto> prodottiVetrina=loadProdottiVetrina( request);
@@ -128,6 +133,7 @@ public class HomeManagement {
                 sessionUserDAO.delete(null);
                 applicationMessage = "Username e password errati!";
                 loggedUser=null;
+                prodotti=loadProdotti(request);
             } else {
 
                 if(!user.isLocked())
@@ -139,6 +145,7 @@ public class HomeManagement {
                     //Carrello presente solo se l'utente non è un amministratore
                     if(!loggedUser.isAdmin())
                     {
+                        prodotti=loadProdotti(request);
                         //Creazione carrello
                         CarrelloDAO sessionCartDAO=sessionDAOFactory.getCarrelloDAO();
                         CarrelloDAO carrelloDAO=daoFactory.getCarrelloDAO();
@@ -147,11 +154,17 @@ public class HomeManagement {
                         //creazione carrello nei cookies
                         sessionCartDAO.create(carrello.getIdCart(),loggedUser);
                     }
+                    else
+                        prodotti=loadProdottiAdmin(request);
                     //verifica se l'utente è anche amministratore
                     isAdmin=user.isAdmin();
                 }
                 else
+                {
                     applicationMessage="Impossibile fare logon. L'utente risulta bloccato.";
+                    prodotti=loadProdotti(request);
+                }
+
             }
 
             daoFactory.commitTransaction();
@@ -295,6 +308,22 @@ public class HomeManagement {
 
         daoFactory.commitTransaction();
 
+        return prodotti;
+    }
+
+    protected static ArrayList<Prodotto> loadProdottiAdmin( HttpServletRequest request){
+        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+        daoFactory.beginTransaction();
+        ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
+        String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+        String idCat=request.getParameter("selectedCat");
+        String idMarca=request.getParameter("selectedMarca");
+        String searchString=request.getParameter("searchString");
+
+        ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdottiAdmin(fotoPath,idCat,idMarca,searchString);
+
+        daoFactory.commitTransaction();
         return prodotti;
     }
 
