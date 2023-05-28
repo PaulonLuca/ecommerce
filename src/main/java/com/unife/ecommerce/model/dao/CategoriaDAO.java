@@ -7,4 +7,6 @@ import java.util.ArrayList;
 public interface CategoriaDAO {
 
     public ArrayList<Categoria> findAllCategorie();
+
+    public Categoria findCategoriaById(Long idCat);
 }

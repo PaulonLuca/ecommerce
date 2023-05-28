@@ -7,4 +7,6 @@ import java.util.ArrayList;
 public interface MarcaDAO {
 
     public ArrayList<Marca> findAllMarche();
+
+    public Marca findMarcaById(Long idMarca);
 }

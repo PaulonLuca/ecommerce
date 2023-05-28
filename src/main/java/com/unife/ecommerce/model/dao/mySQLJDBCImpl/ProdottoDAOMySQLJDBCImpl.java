@@ -22,13 +22,149 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto create(Long idProd, String nomeProd, String descr, int qtyDisp, double prezzo, String photoPath, boolean isLocked, Marca marca, Categoria cat, boolean deleted) {
-        return null;
+    public Prodotto create(Long idProd, String nomeProd, String descr, int qtyDisp, double prezzo, String photoPath, boolean isLocked, Marca marca, Categoria cat, boolean deleted, ArrayList<Long> fornitori) {
+
+        Prodotto prodotto = null;
+        try {
+            //recupera il valore a cui è arrivato l'id_prod dalla tabella di utilità dopo averlo incrementato di 1
+            String sql = "update Counter set counter_value=counter_value+1 where id_counter='" + COUNTER_ID + "'";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+            sql = "SELECT counter_value FROM Counter where id_counter='" + COUNTER_ID + "'";
+            ps = conn.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+
+            prodotto = new Prodotto();
+            prodotto.setIdProd(resultSet.getLong("counter_value"));
+            prodotto.setNomeProd(nomeProd);
+            prodotto.setFotoPath(photoPath+"/"+prodotto.getIdProd()+"/");
+            prodotto.setFotoProdotto(null);//da riempire
+            prodotto.setDescr(descr);
+            prodotto.setPrezzo(prezzo);
+            prodotto.setQtyDisp(qtyDisp);
+            prodotto.setLocked(isLocked);
+            prodotto.setMarca(marca);
+            prodotto.setCat(cat);
+            prodotto.setDeleted(deleted);
+
+            resultSet.close();
+
+            sql = "INSERT INTO Prodotto VALUES (?,?,?,?,?,?,?,?,?,?)";
+            ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setLong(i++, prodotto.getIdProd());
+            ps.setString(i++, prodotto.getNomeProd());
+            ps.setString(i++, prodotto.getDescr());
+            ps.setInt(i++, prodotto.getQtyDisp());
+            ps.setDouble(i++, prodotto.getPrezzo());
+            ps.setString(i++, prodotto.getFotoPath());
+            ps.setBoolean(i++, prodotto.isLocked());
+            ps.setLong(i++, prodotto.getCat().getIdCat());
+            ps.setLong(i++, prodotto.getMarca().getIdMarca());
+            ps.setBoolean(i++, prodotto.isDeleted());
+            ps.executeUpdate();
+
+            //Inserimento composizione fornitori prodotto
+            for(int j=0;j<fornitori.size();j++)
+            {
+                sql="INSERT INTO Fornitura VALUES(?,?)";
+                ps = conn.prepareStatement(sql);
+                i=1;
+                ps.setLong(i++,prodotto.getIdProd());
+                ps.setLong(i++,fornitori.get(j));
+                ps.executeUpdate();
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return prodotto;
     }
 
     @Override
-    public Prodotto update(Prodotto prod) {
-        return null;
+    public void update(Prodotto oldProd,Prodotto newProd) {
+        PreparedStatement ps;
+        try
+        {
+            ArrayList<String> sqlArray=new ArrayList<>();
+
+            String sql = "UPDATE Prodotto SET ";
+
+            if(!oldProd.getNomeProd().equals(newProd.getNomeProd()))
+                sqlArray.add("nome_prod=? ");
+
+            if(!oldProd.getDescr().equals(newProd.getDescr()))
+                sqlArray.add("descr=? ");
+
+            if(oldProd.getQtyDisp()!=newProd.getQtyDisp())
+                sqlArray.add("qty_disp=? ");
+
+            if(oldProd.getPrezzo()!=newProd.getPrezzo())
+                sqlArray.add("prezzo=? ");
+
+            if(oldProd.isLocked()!=newProd.isLocked())
+                sqlArray.add("is_locked=? ");
+
+            if(sqlArray.size()==1)
+                sql+=sqlArray.get(0);
+            else
+            {
+                for(int j=0;j< sqlArray.size();j++)
+                    if(j==sqlArray.size()-1)
+                        sql+=sqlArray.get(j);
+                    else
+                        sql+=sqlArray.get(j)+", ";
+            }
+
+
+            sql+="WHERE id_prod=?";
+
+            ps = conn.prepareStatement(sql);
+            int i=1;
+            if(!oldProd.getNomeProd().equals(newProd.getNomeProd()))
+                ps.setString(i++,newProd.getNomeProd());
+            if(!oldProd.getDescr().equals(newProd.getDescr()))
+                ps.setString(i++,newProd.getDescr());
+            if(oldProd.getQtyDisp()!=newProd.getQtyDisp())
+                ps.setInt(i++,newProd.getQtyDisp());
+            if(oldProd.getPrezzo()!=newProd.getPrezzo())
+                ps.setDouble(i++,newProd.getPrezzo());
+            if(oldProd.isLocked()!=newProd.isLocked())
+                ps.setBoolean(i++,newProd.isLocked());
+            ps.setLong(i++,newProd.getIdProd());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void updateVetrina(Prodotto prod,boolean newInVetrina) {
+        PreparedStatement ps;
+        Long idVetrina=1L;
+        try
+        {
+            //Se prodotto era in vetrina viene rimosso
+            //Se non era in vetrina viene aggiunto
+            String sql="";
+            if(newInVetrina)
+                sql="INSERT INTO In_evidenza VALUES (?,?)";
+            else
+                sql="DELETE FROM In_evidenza WHERE id_vetrina=? AND id_prod=? ";
+            ps = conn.prepareStatement(sql);
+            int i=1;
+            ps.setLong(i++,idVetrina);
+            ps.setLong(i++,prod.getIdProd());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -245,6 +381,17 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         fotoPath+="/"+idProd.toString()+"/";
         File imageDir=new File(fotoPath);
         File[] fileList=imageDir.listFiles();
+
+        if(fileList==null)
+        {
+            String[] s=fotoPath.split(File.separator);
+            String path="";
+            for(int i=0;i<s.length-2;i++)
+                path+=s[i]+"/";
+            path+="images/";
+            imageDir=new File(path);
+            fileList=imageDir.listFiles();
+        }
         return fileList;
     }
 

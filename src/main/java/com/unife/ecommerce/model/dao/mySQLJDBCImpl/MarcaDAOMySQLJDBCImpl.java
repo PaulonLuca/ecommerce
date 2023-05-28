@@ -39,6 +39,29 @@ public class MarcaDAOMySQLJDBCImpl implements MarcaDAO {
         return marche;
     }
 
+    @Override
+    public Marca findMarcaById(Long idMarca) {
+        PreparedStatement ps;
+        Marca marca = new Marca();
+        try {
+            String sql = " SELECT * FROM Marca WHERE id_marca=?";
+            ps = conn.prepareStatement(sql);
+            int i=1;
+            ps.setLong(i++,idMarca);
+            ResultSet resultSet = ps.executeQuery();
+
+            if (resultSet.next()) {
+                marca=read(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return marca;
+    }
+
     static Marca read(ResultSet rs)
     {
         Marca marca = new Marca();

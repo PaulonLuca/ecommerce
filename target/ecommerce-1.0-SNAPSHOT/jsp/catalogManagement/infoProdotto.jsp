@@ -6,7 +6,6 @@
     boolean inVetrina=(Boolean) request.getAttribute("inVetrina");
     ArrayList<Fornitore> fornitori = (ArrayList<Fornitore>) request.getAttribute("fornitori");
 
-
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
@@ -34,7 +33,7 @@
         <h2>Modificare i campi del prodotto</h2>
     <%}%>
 
-    <form name="productForm" method="post" action="Dispatcher" class="form-control-lg formReg" >
+    <form name="productForm" method="post" action="Dispatcher" class="form-control-lg formReg">
         <fieldset>
             <table >
                 <tr>
@@ -79,31 +78,33 @@
                         </select>
                     </td>
                 </tr>
+                <%if(insertMode){%>
                 <tr>
                     <td><label for="fornitori">Fornitori</label></td>
                     <td>
-                        <select id="fornitori" name="fornitori">
+                        <select id="fornitori" name="fornitori" multiple="multiple">
                             <%for (int i=0;i<fornitori.size();i++){%>
-                            <option value="<%=fornitori.get(i).getIdFornitore()%>"
-                                    <% if(!insertMode) {%>
+                            <option value="<%=fornitori.get(i).getIdFornitore()%>" <%=i==0? "selected":""%>
+                                    <%-- if(!insertMode) {%>
                                         <% for(int j=0;j< prodotto.getFornitori().size();j++) {
                                             if(fornitori.get(i).getIdFornitore()==prodotto.getFornitori().get(j).getIdFornitore()) { %>
                                                 "selected"
                                             <%}%>
-                                        <%} }%> >
+                                        <%} }--%> >
                                 <%=fornitori.get(i).getNomeFornitore()%>
                             </option>
                             <%}%>
                         </select>
                     </td>
                 </tr>
+                <%}%>
                 <tr>
                     <td><label for="vetrina">Vetrina</label></td>
-                    <td><input type="checkbox" id="vetrina"  name="vetrina" <%=!insertMode && inVetrina? "checked":""%>  required></td>
+                    <td><input type="checkbox" id="vetrina"  name="vetrina" <%=!insertMode && inVetrina? "checked":""%>  ></td>
                 </tr>
                 <tr>
                     <td><label for="bloccato">Bloccato</label></td>
-                    <td><input type="checkbox" id="bloccato"  name="bloccato" <%=!insertMode && prodotto.isLocked()? "checked":""%> required></td>
+                    <td><input type="checkbox" id="bloccato"  name="bloccato" <%=!insertMode && prodotto.isLocked()? "checked":""%> ></td>
                 </tr>
 
             </table>
@@ -114,8 +115,9 @@
                 <input type="submit" class="button" value="Inserisci" style="margin-top: 15px;"/>
             <%}%>
 
-            <input type="hidden" name="controllerAction" value="<%=!insertMode? "CatalogManagement.update": "CatalogManagement.add" %>"/>
-
+            <input type="hidden" name="controllerAction" value="CatalogManagement.add"/>
+            <input type="hidden" name="insertMode" value="<%=insertMode %>"/>
+            <input type="hidden" name="selectedProd" value="<%=!insertMode? prodotto.getIdProd():null %>"/>
         </fieldset>
     </form>
 

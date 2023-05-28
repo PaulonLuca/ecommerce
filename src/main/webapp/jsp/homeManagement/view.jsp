@@ -73,8 +73,10 @@
         <%}%>
         <article style="float:left;">
             <div class="card" style="width: 18rem; margin: 10px;">
+
                 <img src="uploadedImages/<%=prodotti.get(i).getIdProd()%>/<%=prodotti.get(i).getFotoProdotto()[0].getName()%>"
                      class="card-img-top" style="height: 14rem;">
+
                 <div class="card-body">
                     <h5 class="card-title"><%= prodotti.get(i).getNomeProd().length()>20? prodotti.get(i).getNomeProd().substring(0,19)+"..." :prodotti.get(i).getNomeProd() %>
                     </h5>

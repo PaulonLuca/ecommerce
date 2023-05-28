@@ -9,9 +9,11 @@ import java.util.ArrayList;
 //Interfaccia implementata in MySql
 public interface ProdottoDAO {
 
-    public Prodotto create(Long idProd, String nomeProd, String descr, int qtyDisp, double prezzo, String photoPath, boolean isLocked, Marca marca, Categoria cat, boolean deleted);
+    public Prodotto create(Long idProd, String nomeProd, String descr, int qtyDisp, double prezzo, String photoPath, boolean isLocked, Marca marca, Categoria cat, boolean deleted, ArrayList<Long> fornitori);
 
-    public Prodotto update(Prodotto prod);
+    public void update(Prodotto oldProd, Prodotto newProd);
+
+    public void updateVetrina(Prodotto prod,boolean newInVetrina);
 
     public Prodotto delete(Prodotto prod);
 
