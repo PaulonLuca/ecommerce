@@ -271,21 +271,38 @@ public class HomeManagement {
     }
 
     protected static ArrayList<Prodotto> loadProdotti( HttpServletRequest request){
-        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
-        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-        daoFactory.beginTransaction();
-        ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
+        DAOFactory daoFactory=null;
+        Logger logger = LogService.getApplicationLogger();
+        try
+        {
+            //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+            ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
 
-        //Recupera root path della cartella foto
-        String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-        //Recupero parametri di selezione, se non sono presenti valgono null, se invece è stato fatto click su uno
-        //solo dei tre link uno è valorizzato gli altri sono stringhe vuote
-        String idCat=request.getParameter("selectedCat");
-        String idMarca=request.getParameter("selectedMarca");
-        String searchString=request.getParameter("searchString");
+            //Recupera root path della cartella foto
+            String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+            //Recupero parametri di selezione, se non sono presenti valgono null, se invece è stato fatto click su uno
+            //solo dei tre link uno è valorizzato gli altri sono stringhe vuote
+            String idCat=request.getParameter("selectedCat");
+            String idMarca=request.getParameter("selectedMarca");
+            String searchString=request.getParameter("searchString");
+            ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdotti(fotoPath,idCat,idMarca,searchString);
 
-        ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdotti(fotoPath,idCat,idMarca,searchString);
+            daoFactory.commitTransaction();
+            return prodotti;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
 
+        } finally {
+            try {
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
         //Paginazione prodotti
         /*int paginationIndex=1;
         if(request.getAttribute("paginationIndex") !=null)
@@ -305,58 +322,121 @@ public class HomeManagement {
 
         int numPagine=(Math.round(prodotti.size()/numProdottiPagina))+1;
         request.setAttribute("numPagine", numPagine);*/
-
-        daoFactory.commitTransaction();
-
-        return prodotti;
     }
 
     protected static ArrayList<Prodotto> loadProdottiAdmin( HttpServletRequest request){
-        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
-        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-        daoFactory.beginTransaction();
-        ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
-        String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
-        String idCat=request.getParameter("selectedCat");
-        String idMarca=request.getParameter("selectedMarca");
-        String searchString=request.getParameter("searchString");
+        DAOFactory daoFactory=null;
+        Logger logger = LogService.getApplicationLogger();
+        try
+        {
+            //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+            ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
+            String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+            String idCat=request.getParameter("selectedCat");
+            String idMarca=request.getParameter("selectedMarca");
+            String searchString=request.getParameter("searchString");
 
-        ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdottiAdmin(fotoPath,idCat,idMarca,searchString);
+            ArrayList<Prodotto> prodotti=prodottoDAO.findAllProdottiAdmin(fotoPath,idCat,idMarca,searchString);
 
-        daoFactory.commitTransaction();
-        return prodotti;
+            daoFactory.commitTransaction();
+            return prodotti;
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
     }
 
     protected static ArrayList<Prodotto> loadProdottiVetrina(HttpServletRequest request){
-        //Recupera root path della cartella foto
-        String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+        DAOFactory daoFactory=null;
+        Logger logger = LogService.getApplicationLogger();
+        try
+        {
+            //Recupera root path della cartella foto
+            String fotoPath=request.getServletContext().getRealPath("/uploadedImages");
+            //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+            ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
+            ArrayList<Prodotto> prodottiVetrina=prodottoDAO.findProdottiVetrina(1L,fotoPath);
+            daoFactory.commitTransaction();
+            return prodottiVetrina;
 
-        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
-        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-        daoFactory.beginTransaction();
-        ProdottoDAO prodottoDAO=daoFactory.getProdottoDAO();
-        ArrayList<Prodotto> prodottiVetrina=prodottoDAO.findProdottiVetrina(1L,fotoPath);
-        daoFactory.commitTransaction();
-        return prodottiVetrina;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
+
     }
 
     protected static ArrayList<Marca> loadMarche(){
-        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
-        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-        daoFactory.beginTransaction();
-        MarcaDAO marcaDAO=daoFactory.getMarcaDAO();
-        ArrayList<Marca> marche=marcaDAO.findAllMarche();
-        daoFactory.commitTransaction();
-        return marche;
+        DAOFactory daoFactory=null;
+        Logger logger = LogService.getApplicationLogger();
+        try
+        {
+            //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+            MarcaDAO marcaDAO=daoFactory.getMarcaDAO();
+            ArrayList<Marca> marche=marcaDAO.findAllMarche();
+            daoFactory.commitTransaction();
+            return marche;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
     }
 
     protected static ArrayList<Categoria> loadCategorie(){
-        //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
-        DAOFactory daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-        daoFactory.beginTransaction();
-        CategoriaDAO categoriaDAO=daoFactory.getCategoriaDAO();
-        ArrayList<Categoria> categorie=categoriaDAO.findAllCategorie();
-        daoFactory.commitTransaction();
-        return categorie;
+        DAOFactory daoFactory=null;
+        Logger logger = LogService.getApplicationLogger();
+        try
+        {
+            //Dalla DAOFactory astratta si ottiene la DAOFactory che ritorna i DAO per scrivere e leggere sal db
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+            CategoriaDAO categoriaDAO=daoFactory.getCategoriaDAO();
+            ArrayList<Categoria> categorie=categoriaDAO.findAllCategorie();
+            daoFactory.commitTransaction();
+            return categorie;
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
     }
 }

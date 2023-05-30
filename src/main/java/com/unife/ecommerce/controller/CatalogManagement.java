@@ -1,6 +1,7 @@
 package com.unife.ecommerce.controller;
 
 import com.unife.ecommerce.model.dao.*;
+import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.*;
 import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
@@ -323,7 +324,6 @@ public class CatalogManagement {
 
     public static void viewInsertCatMarca(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory sessionDAOFactory= null;
-        DAOFactory daoFactory=null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
         boolean isAmdin=false;
@@ -341,9 +341,6 @@ public class CatalogManagement {
 
             sessionDAOFactory.commitTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
-            daoFactory.beginTransaction();
-
             //Caricamento marche e categorie
             ArrayList<Marca> marche= loadMarche();
             ArrayList<Categoria> categorie= loadCategorie();
@@ -357,6 +354,150 @@ public class CatalogManagement {
             request.setAttribute("viewUrl", "catalogManagement/insertCatMarca");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
+    }
+
+    public static void addCategoria(HttpServletRequest request, HttpServletResponse response) {
+        DAOFactory sessionDAOFactory= null;
+        DAOFactory daoFactory=null;
+        Utente loggedUser;
+        Logger logger = LogService.getApplicationLogger();
+        boolean isAmdin=false;
+        String applicationMessage="Nuova categoria inserita";
+
+        try
+        {
+            //Recupera utente loggato se presente
+            sessionDAOFactory = getSessionDAOFactory(request,response);
+            sessionDAOFactory.beginTransaction();
+
+            UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
+            loggedUser = sessionUserDAO.findLoggedUser();
+            if(loggedUser!=null)
+                isAmdin=loggedUser.isAdmin();
+
+            sessionDAOFactory.commitTransaction();
+
+            //Recupera la categoria dai parametri
+            String categoria=request.getParameter("categoria");
+
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+
+            //Inserimento della nuova categoria
+            try
+            {
+                CategoriaDAO categoriaDAO=daoFactory.getCategoriaDAO();
+                categoriaDAO.create(categoria);
+            }catch (DuplicatedObjectException ex)
+            {
+                applicationMessage="Categoria già presente";
+            }
+
+            daoFactory.commitTransaction();
+
+            //Caricamento marche e categorie
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
+            ArrayList<Prodotto> prodottiVetrina=loadProdottiVetrina(request);
+            ArrayList<Prodotto> prodotti=loadProdottiAdmin(request);
+
+            //ViewModel
+            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("loggedOn",loggedUser!=null);
+            request.setAttribute("loggedUser", loggedUser);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
+            request.setAttribute("prodotti",prodotti);
+            request.setAttribute("prodottiVetrina",prodottiVetrina);
+            request.setAttribute("viewUrl", "homeManagement/view");
+            request.setAttribute("applicationMessage",applicationMessage);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Controller Error", e);
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();
+                if(daoFactory!=null) daoFactory.rollbackTransaction();
+            } catch (Throwable t) { }
+            throw new RuntimeException(e);
+
+        } finally {
+            try {
+                if (sessionDAOFactory != null) sessionDAOFactory.closeTransaction();
+                if(daoFactory!=null) daoFactory.closeTransaction();
+            } catch (Throwable t) { }
+        }
+    }
+
+    public static void addMarca(HttpServletRequest request, HttpServletResponse response) {
+        DAOFactory sessionDAOFactory= null;
+        DAOFactory daoFactory=null;
+        Utente loggedUser;
+        Logger logger = LogService.getApplicationLogger();
+        boolean isAmdin=false;
+        String applicationMessage="Nuova marca inserita";
+
+        try
+        {
+            //Recupera utente loggato se presente
+            sessionDAOFactory = getSessionDAOFactory(request,response);
+            sessionDAOFactory.beginTransaction();
+
+            UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
+            loggedUser = sessionUserDAO.findLoggedUser();
+            if(loggedUser!=null)
+                isAmdin=loggedUser.isAdmin();
+
+            sessionDAOFactory.commitTransaction();
+
+            //Recupera la categoria dai parametri
+            String marca=request.getParameter("marca");
+
+            daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL,null);
+            daoFactory.beginTransaction();
+
+            //Inserimento della nuova marca
+            try
+            {
+                MarcaDAO marcaDAO=daoFactory.getMarcaDAO();
+                marcaDAO.create(marca);
+
+            }catch (DuplicatedObjectException doex)
+            {
+                applicationMessage="Marca già presente";
+            }
+
+            daoFactory.commitTransaction();
+
+            //Caricamento marche e categorie
+            ArrayList<Marca> marche= loadMarche();
+            ArrayList<Categoria> categorie= loadCategorie();
+            ArrayList<Prodotto> prodottiVetrina=loadProdottiVetrina(request);
+            ArrayList<Prodotto> prodotti=loadProdottiAdmin(request);
+
+            //ViewModel
+            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("loggedOn",loggedUser!=null);
+            request.setAttribute("loggedUser", loggedUser);
+            request.setAttribute("marche", marche);
+            request.setAttribute("categorie", categorie);
+            request.setAttribute("prodotti",prodotti);
+            request.setAttribute("prodottiVetrina",prodottiVetrina);
+            request.setAttribute("viewUrl", "homeManagement/view");
+            request.setAttribute("applicationMessage",applicationMessage);
+
+        }
+        catch (Exception e) {
             logger.log(Level.SEVERE, "Controller Error", e);
             try {
                 if (sessionDAOFactory != null) sessionDAOFactory.rollbackTransaction();

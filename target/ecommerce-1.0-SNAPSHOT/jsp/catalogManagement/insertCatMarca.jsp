@@ -28,8 +28,8 @@
         <fieldset>
             <table >
                 <tr>
-                    <td><label for="cat">Nome categoria</label></td>
-                    <td> <input type="text" id="cat"  name="cat" maxlength="100" required></td>
+                    <td><label for="categoria">Nome categoria</label></td>
+                    <td> <input type="text" id="categoria"  name="categoria" maxlength="100" required></td>
                 </tr>
             </table>
             <input type="submit" class="button" value="Inserisci categoria" style="margin-top: 15px;"/>

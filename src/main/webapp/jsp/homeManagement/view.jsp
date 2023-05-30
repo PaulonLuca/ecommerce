@@ -94,7 +94,7 @@
 
 <div style="clear: both;"></div>
 
-<nav aria-label="Navigation" style="margin: 0 auto; width: fit-content;">
+<!--nav aria-label="Navigation" style="margin: 0 auto; width: fit-content;">
     <ul class="pagination">
         <li class="page-item"><a class="page-link" href="javascript:viewPage(0)">Previous</a></li>
         <%--for (int i=0; i< numPagine; i++) {--%>
@@ -102,17 +102,17 @@
         <%--}--%>
         <li class="page-item"><a class="page-link" href="javascript:viewPage(<%--=numPagine-1--%>)">Next</a></li>
     </ul>
-</nav>
+</nav-->
 
 <form name="selectionForm" action="Dispatcher" method="post">
     <input type="hidden" name="controllerAction" value="CatalogManagement.view"/>
     <input type="hidden" name="selectedProduct" value=""/>
 </form>
 
-<form name="paginationForm" action="Dispatcher" method="post">
+<!--form name="paginationForm" action="Dispatcher" method="post">
     <input type="hidden" name="controllerAction" value="HomeManagement.view"/>
     <input type="hidden" name="paginationIndex" value="0"/>
-</form>
+</form-->
 
 <form name="searchForm" action="Dispatcher" method="post">
     <input type="hidden" name="controllerAction" value="HomeManagement.view"/>

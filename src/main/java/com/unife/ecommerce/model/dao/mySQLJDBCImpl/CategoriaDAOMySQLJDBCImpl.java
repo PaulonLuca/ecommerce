@@ -1,7 +1,9 @@
 package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.CategoriaDAO;
+import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Categoria;
+import com.unife.ecommerce.model.mo.IndirizzoSpedizione;
 import com.unife.ecommerce.model.mo.Marca;
 
 import java.sql.Connection;
@@ -61,6 +63,62 @@ public class CategoriaDAOMySQLJDBCImpl implements CategoriaDAO {
             throw new RuntimeException(e);
         }
         return cat;
+    }
+
+    @Override
+    public Categoria create(String nome)  throws DuplicatedObjectException {
+        Categoria categoria = null;
+        try {
+            //verifica se la marca è già presente nel database
+            String sql = " SELECT id_cat FROM Categoria WHERE nome_cat=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int i = 1;
+            ps.setString(i++, nome);
+            ResultSet resultSet = ps.executeQuery();
+            boolean exist = resultSet.next();
+            resultSet.close();
+            //se già presenta viene lanciata un'eccezione
+            if (exist) {
+                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di un contatto già esistente.");
+            }
+
+            //recupera il valore a cui è arrivato l'id_cat dalla tabella di utilità dopo averlo incrementato di 1
+            sql = "update Counter set counter_value=counter_value+1 where id_counter='" + COUNTER_ID + "'";
+            ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+            sql = "SELECT counter_value FROM Counter where id_counter='" + COUNTER_ID + "'";
+            ps = conn.prepareStatement(sql);
+            resultSet = ps.executeQuery();
+            resultSet.next();
+
+            categoria = new Categoria();
+            categoria.setIdCat(resultSet.getLong("counter_value"));
+            categoria.setNomeCat(nome);
+            categoria.setDeleted(false);
+
+            resultSet.close();
+
+            sql = "INSERT INTO Categoria VALUES (?,?,?)";
+            ps = conn.prepareStatement(sql);
+            i = 1;
+            ps.setLong(i++, categoria.getIdCat());
+            ps.setString(i++, categoria.getNomeCat());
+            ps.setBoolean(i++, categoria.isDeleted());
+            ps.executeUpdate();
+
+            Long idCatalogo=1L;
+            sql = "INSERT INTO Contiene_catalogo VALUES (?,?)";
+            ps = conn.prepareStatement(sql);
+            i=1;
+            ps.setLong(i++, idCatalogo);
+            ps.setLong(i++, categoria.getIdCat());
+            ps.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return categoria;
     }
 
     static Categoria read(ResultSet rs)
