@@ -1,5 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.unife.ecommerce.model.mo.*" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
+
 <%
     ArrayList<Utente> utentiRegistrati =(ArrayList<Utente>) request.getAttribute("utentiRegistrati");
     ArrayList<Utente> utentiAdmin =(ArrayList<Utente>) request.getAttribute("utentiAdmin");

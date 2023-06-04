@@ -1,5 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.unife.ecommerce.model.mo.*" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
 <%
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
@@ -53,7 +55,7 @@
             <div class="carousel-inner">
                 <% for (int i = 0; i < prodotto.getFotoProdotto().length; i++) { %>
                 <div class="carousel-item active" data-bs-interval="1700">
-                    <img src="uploadedImages/<%=prodotto.getIdProd()%>/<%=prodotto.getFotoProdotto()[i].getName()%>"
+                    <img src="<%=prodotto.getFotoPath()%><%=prodotto.getFotoProdotto()[i].getName()%>"
                          class="d-block imgDettaglio">
                 </div>
                 <%}%>

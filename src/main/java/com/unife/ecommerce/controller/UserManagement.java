@@ -86,7 +86,18 @@ public class UserManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            //Redirect to home page
+            if(loggedUser==null)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
             isAdmin=loggedUser.isAdmin();
+            if(!isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             //Caricamento marche e categorie
             ArrayList<Marca> marche= loadMarche();
@@ -151,7 +162,18 @@ public class UserManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            //Redirect to home page
+            if(loggedUser==null)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
             isAdmin=loggedUser.isAdmin();
+            if(!isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             //Caricamento marche e categorie
             ArrayList<Marca> marche= loadMarche();

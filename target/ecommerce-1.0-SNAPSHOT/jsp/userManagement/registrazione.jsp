@@ -1,4 +1,7 @@
 <%@ page import="com.unife.ecommerce.model.mo.Utente" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
+
 <%
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");

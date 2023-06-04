@@ -187,7 +187,7 @@ public class CatalogManagement {
         DAOFactory daoFactory=null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
-        boolean isAmdin=false;
+        boolean isAdmin=false;
 
         try
         {
@@ -237,7 +237,13 @@ public class CatalogManagement {
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
             if(loggedUser!=null)
-                isAmdin=loggedUser.isAdmin();
+                isAdmin=loggedUser.isAdmin();
+            //Redirect to home page
+            if(loggedUser==null || !isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             sessionDAOFactory.commitTransaction();
 
@@ -297,7 +303,7 @@ public class CatalogManagement {
             ArrayList<Prodotto> ricaricaVetrina=loadProdottiVetrina(request);
 
             //ViewModel
-            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("prodotti",ricaricati);
@@ -326,7 +332,7 @@ public class CatalogManagement {
         DAOFactory sessionDAOFactory= null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
-        boolean isAmdin=false;
+        boolean isAdmin=false;
 
         try
         {
@@ -337,7 +343,13 @@ public class CatalogManagement {
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
             if(loggedUser!=null)
-                isAmdin=loggedUser.isAdmin();
+                isAdmin=loggedUser.isAdmin();
+            //Redirect to home page
+            if(loggedUser==null || !isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             sessionDAOFactory.commitTransaction();
 
@@ -346,7 +358,7 @@ public class CatalogManagement {
             ArrayList<Categoria> categorie= loadCategorie();
 
             //ViewModel
-            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -372,7 +384,7 @@ public class CatalogManagement {
         DAOFactory daoFactory=null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
-        boolean isAmdin=false;
+        boolean isAdmin=false;
         String applicationMessage="Nuova categoria inserita";
 
         try
@@ -384,7 +396,13 @@ public class CatalogManagement {
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
             if(loggedUser!=null)
-                isAmdin=loggedUser.isAdmin();
+                isAdmin=loggedUser.isAdmin();
+            //Redirect to home page
+            if(loggedUser==null || !isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             sessionDAOFactory.commitTransaction();
 
@@ -413,7 +431,7 @@ public class CatalogManagement {
             ArrayList<Prodotto> prodotti=loadProdottiAdmin(request);
 
             //ViewModel
-            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -444,7 +462,7 @@ public class CatalogManagement {
         DAOFactory daoFactory=null;
         Utente loggedUser;
         Logger logger = LogService.getApplicationLogger();
-        boolean isAmdin=false;
+        boolean isAdmin=false;
         String applicationMessage="Nuova marca inserita";
 
         try
@@ -456,7 +474,13 @@ public class CatalogManagement {
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             loggedUser = sessionUserDAO.findLoggedUser();
             if(loggedUser!=null)
-                isAmdin=loggedUser.isAdmin();
+                isAdmin=loggedUser.isAdmin();
+            //Redirect to home page
+            if(loggedUser==null || !isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             sessionDAOFactory.commitTransaction();
 
@@ -486,7 +510,7 @@ public class CatalogManagement {
             ArrayList<Prodotto> prodotti=loadProdottiAdmin(request);
 
             //ViewModel
-            request.setAttribute("isAdmin",isAmdin);
+            request.setAttribute("isAdmin",isAdmin);
             request.setAttribute("loggedOn",loggedUser!=null);
             request.setAttribute("loggedUser", loggedUser);
             request.setAttribute("marche", marche);
@@ -516,7 +540,7 @@ public class CatalogManagement {
     //Completare il copia incolla delle foto del prodotto
     //Care form per inserire Marca, Fornitori, Categoria
 
-    private static void uploadFotoProdotto(Long idProdotto, String fotoPathProd,String fotoPathDefault)
+    /*private static void uploadFotoProdotto(Long idProdotto, String fotoPathProd,String fotoPathDefault)
     {
         try
         {
@@ -531,5 +555,5 @@ public class CatalogManagement {
         }catch (IOException ex){}
 
 
-    }
+    }*/
 }

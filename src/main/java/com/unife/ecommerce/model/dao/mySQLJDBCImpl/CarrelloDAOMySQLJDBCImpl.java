@@ -141,7 +141,7 @@ public class CarrelloDAOMySQLJDBCImpl implements CarrelloDAO {
             carrello.setIdCart(idCart);
             while (resultSet.next()) {
                 ProdottoQty p= read(resultSet);
-                p.getProd().setFotoProdotto(ProdottoDAOMySQLJDBCImpl.loadFotoProdotto(p.getProd().getIdProd(),fotoPath));
+                p.getProd().setFotoProdotto(ProdottoDAOMySQLJDBCImpl.loadFotoProdotto(p.getProd(),fotoPath));
                 contenutoCarrello.add(p);
             }
             resultSet.close();

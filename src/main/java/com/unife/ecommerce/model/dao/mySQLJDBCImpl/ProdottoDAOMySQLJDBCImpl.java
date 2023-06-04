@@ -189,7 +189,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
 
             if (resultSet.next()) {
                 prod= read(resultSet);
-                prod.setFotoProdotto(loadFotoProdotto(prod.getIdProd(),fotoPath));
+                prod.setFotoProdotto(loadFotoProdotto(prod,fotoPath));
             }
             resultSet.close();
             ps.close();
@@ -242,7 +242,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
 
             while (resultSet.next()) {
                 Prodotto p= read(resultSet);
-                p.setFotoProdotto(loadFotoProdotto(p.getIdProd(),fotoPath));
+                p.setFotoProdotto(loadFotoProdotto(p,fotoPath));
                 prodotti.add(p);
             }
             resultSet.close();
@@ -296,7 +296,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
 
             while (resultSet.next()) {
                 Prodotto p= read(resultSet);
-                p.setFotoProdotto(loadFotoProdotto(p.getIdProd(),fotoPath));
+                p.setFotoProdotto(loadFotoProdotto(p,fotoPath));
                 prodotti.add(p);
             }
             resultSet.close();
@@ -431,7 +431,8 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
     }
 
 
-    static File[] loadFotoProdotto(Long idProd, String fotoPath){
+    static File[] loadFotoProdotto(Prodotto prod, String fotoPath){
+        Long idProd=prod.getIdProd();
         fotoPath+="/"+idProd.toString()+"/";
         File imageDir=new File(fotoPath);
         File[] fileList=imageDir.listFiles();
@@ -445,6 +446,8 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
             path+="images/";
             imageDir=new File(path);
             fileList=imageDir.listFiles();
+            path="images/";
+            prod.setFotoPath(path);
         }
         return fileList;
     }

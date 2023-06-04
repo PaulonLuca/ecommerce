@@ -1,5 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.unife.ecommerce.model.mo.*" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
 <%
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
@@ -45,7 +47,9 @@
             <div class="carousel-inner">
                 <% for (int i = 0; i < prodottiVetrina.size(); i++) { %>
                 <div class="carousel-item active" data-bs-interval="1700">
-                    <img src="uploadedImages/<%=prodottiVetrina.get(i).getIdProd()%>/<%=prodottiVetrina.get(i).getFotoProdotto()[0].getName()%>" class="d-block imgVetrina" >
+
+                    <img src="<%=prodottiVetrina.get(i).getFotoPath()%><%=prodottiVetrina.get(i).getFotoProdotto()[0].getName()%>" class="d-block imgVetrina" >
+
                     <div class="carousel-caption d-none d-md-block">
                         <h2 style="color: red;">&euro; <%=  prodottiVetrina.get(i).getPrezzo()%></h2>
                         <p><a href="javascript:viewDettagliProdotto(<%=prodottiVetrina.get(i).getIdProd()%>)" style="color: red;"> Visualizza</a></p>
@@ -74,7 +78,7 @@
         <article style="float:left;">
             <div class="card" style="width: 18rem; margin: 10px;">
 
-                <img src="uploadedImages/<%=prodotti.get(i).getIdProd()%>/<%=prodotti.get(i).getFotoProdotto()[0].getName()%>"
+                <img src="<%=prodotti.get(i).getFotoPath()%><%=prodotti.get(i).getFotoProdotto()[0].getName()%>"
                      class="card-img-top" style="height: 14rem;">
 
                 <div class="card-body">

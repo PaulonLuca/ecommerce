@@ -1,5 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.unife.ecommerce.model.mo.*" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
 <%
     boolean insertMode=(Boolean) request.getAttribute("insertMode");
     Prodotto prodotto = (Prodotto) request.getAttribute("prodotto");

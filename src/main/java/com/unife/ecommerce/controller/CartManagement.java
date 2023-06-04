@@ -32,7 +32,18 @@ public class CartManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            //Redirect to home page
+            if(loggedUser==null)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
             isAdmin=loggedUser.isAdmin();
+            if(isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -91,7 +102,18 @@ public class CartManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            //Redirect to home page
+            if(loggedUser==null)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
             isAdmin=loggedUser.isAdmin();
+            if(isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();
@@ -160,7 +182,18 @@ public class CartManagement {
             //Recupera utente loggato presente
             UserDAO sessionUserDAO = sessionDAOFactory.getUserDAO();
             Utente loggedUser = sessionUserDAO.findLoggedUser();
+            //Redirect to home page
+            if(loggedUser==null)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
             isAdmin=loggedUser.isAdmin();
+            if(isAdmin)
+            {
+                request.setAttribute("viewUrl","../index");
+                return;
+            }
 
             //Recupera id carrello dai cookies
             CarrelloDAO carrelloDAOCokie=sessionDAOFactory.getCarrelloDAO();

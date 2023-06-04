@@ -1,4 +1,6 @@
 <%String contextPath=request.getContextPath();%>
+<%@ page session="false" %>
+
 <!DOCTYPE HTML>
 <html lang="it-IT">
 <head>

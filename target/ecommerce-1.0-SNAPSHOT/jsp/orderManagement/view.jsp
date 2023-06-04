@@ -1,5 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.unife.ecommerce.model.mo.*" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
+
 <%
     ArrayList<Stato> stati =(ArrayList<Stato>) request.getAttribute("stati");
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");

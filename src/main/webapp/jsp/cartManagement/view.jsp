@@ -1,6 +1,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.unife.ecommerce.model.mo.*" %>
+<%@ page session="false" %>
+<%@ page errorPage="../errorPage.jsp"%>
+
 <%
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
@@ -55,7 +59,7 @@
             <tbody>
             <% for(int i=0; i<carrello.getComposizione().size();i++) {%>
                 <tr>
-                    <th><img src="uploadedImages/<%=carrello.getComposizione().get(i).getProd().getIdProd()%>/<%=carrello.getComposizione().get(i).getProd().getFotoProdotto()[0].getName()%>" style="width: 50px; height: 50px;"></th>
+                    <th><img src="<%=carrello.getComposizione().get(i).getProd().getFotoPath()%><%=carrello.getComposizione().get(i).getProd().getFotoProdotto()[0].getName()%>" style="width: 50px; height: 50px;"></th>
                     <th><%=carrello.getComposizione().get(i).getProd().getNomeProd()%></th>
                     <th><%=carrello.getComposizione().get(i).getQty()%></th>
                     <th> &euro; <%=carrello.getComposizione().get(i).getQty()*carrello.getComposizione().get(i).getProd().getPrezzo()%></th>
