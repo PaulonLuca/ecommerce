@@ -15,6 +15,23 @@
 <html>
 <head>
     <%@include file="/include/htmlHead.jsp" %>
+    <script>
+        function validateForm() {
+
+            if( !isNaN(document.categoriaForm.categoria.value) ) {
+                alert( "Il campo categoria non pu\u00F2 contenere valori numerici" );
+                document.categoriaForm.categoria.focus() ;
+                return false;
+            }
+            if( !isNaN(document.categoriaForm.marca.value) ) {
+                alert( "Il campo marca non pu\u00F2 contenere valori numerici" );
+                document.categoriaForm.marca.focus() ;
+                return false;
+            }
+
+            return( true );
+        }
+    </script>
 
 </head>
 <body>
@@ -22,9 +39,9 @@
 
 <main class="clearfix">
 
-    <h2>Inserimento categoria</h2>
+    <h2 style="text-align: center">Inserimento categoria</h2>
 
-    <form name="categoriaForm" method="post" action="Dispatcher" class="form-control-lg formReg">
+    <form name="categoriaForm" method="post" action="Dispatcher" class="form-control-lg formReg" onsubmit="return validateForm()">
         <fieldset>
             <table >
                 <tr>
@@ -37,9 +54,9 @@
         </fieldset>
     </form>
 
-    <h2>Inserimento marca</h2>
+    <h2 style="text-align: center">Inserimento marca</h2>
 
-    <form name="marcaForm" method="post" action="Dispatcher" class="form-control-lg formReg">
+    <form name="marcaForm" method="post" action="Dispatcher" class="form-control-lg formReg" onsubmit="return validateForm()">
         <fieldset>
             <table >
                 <tr>

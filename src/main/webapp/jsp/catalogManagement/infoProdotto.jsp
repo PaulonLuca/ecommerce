@@ -20,7 +20,24 @@
 <html>
 <head>
     <%@include file="/include/htmlHead.jsp" %>
+    <script>
+        function validateForm() {
 
+            if( document.productForm.qty_disp.value=="" ) {
+                alert( "Il campo quantit\u00E0 non pu\u00F2 essere vuoto" );
+                document.productForm.qty_disp.focus() ;
+                return false;
+            }
+
+            if( isNaN(document.productForm.prezzo.value) ) {
+                alert( "Il campo prezzo deve contenere solo valori numerici" );
+                document.productForm.prezzo.focus() ;
+                return false;
+            }
+
+            return( true );
+        }
+    </script>
 </head>
 <body>
 <%@include file="/include/header.jsp" %>
@@ -33,7 +50,7 @@
         <h2>Modificare i campi del prodotto</h2>
     <%}%>
 
-    <form name="productForm" method="post" action="Dispatcher" class="form-control-lg formReg">
+    <form name="productForm" method="post" action="Dispatcher" class="form-control-lg formReg" onsubmit="return validateForm()">
         <fieldset>
             <table >
                 <tr>
@@ -42,7 +59,7 @@
                 </tr>
                 <tr>
                     <td><label for="descrizione">Descrizione</label></td>
-                    <td><input type="textarea" id="descrizione"  name="descrizione" maxlength="50" value="<%=!insertMode? prodotto.getDescr(): ""%>" required></td>
+                    <td><textarea  id="descrizione"  name="descrizione" maxlength="50"  required rows="8" cols="40"> <%=!insertMode? prodotto.getDescr(): ""%></textarea></td>
                 </tr>
                 <tr>
                     <td><label for="qty_disp">Quantit&agrave; disponibile</label></td>

@@ -73,7 +73,9 @@
             }%>
             &euro; <%=totale%>
         </h2>
-        <input type="button"  class="btn btn-primary" id="btnConfirm" nome="btnConfirm" value="Ordina" onclick="javascript:confirmOrder()">
+        <div style="text-align: center;">
+            <input type="button"  class="btn btn-primary" id="btnConfirm" nome="btnConfirm" value="Ordina" onclick="javascript:confirmOrder()" style="margin-top: 30px; width: 300px;">
+        </div>
     </section>
 </main>
 

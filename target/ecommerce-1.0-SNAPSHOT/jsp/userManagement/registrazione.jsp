@@ -19,6 +19,23 @@
         function backToHome()
         {document.backForm.submit();}
 
+        function validateForm() {
+
+            if( isNaN(document.registrationForm.telefono.value) ) {
+                alert( "Il telefono deve contenere solo valori numerici" );
+                document.registrationForm.telefono.focus() ;
+                return false;
+            }
+
+            if( isNaN(document.registrationForm.cap.value) ) {
+                alert( "Il cap deve contenere solo valori numerici" );
+                document.registrationForm.cap.focus() ;
+                return false;
+            }
+
+            return( true );
+        }
+
         function onLoadHandler() {
             var btn = document.querySelector("#btnBack");
             btn.addEventListener("click", backToHome);
@@ -42,7 +59,7 @@
 <main>
     <h1 style="text-align: center;"> Registrati inserendo tutti i campi obbligatori</h1>
 
-    <form name="registrationForm" method="post" action="Dispatcher" class="form-control-lg formReg" >
+    <form name="registrationForm" method="post" action="Dispatcher" onsubmit="return validateForm()" class="form-control-lg formReg" >
         <fieldset>
             <table >
                 <tr>

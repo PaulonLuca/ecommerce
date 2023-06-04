@@ -155,7 +155,11 @@ public class HomeManagement {
                         sessionCartDAO.create(carrello.getIdCart(),loggedUser);
                     }
                     else
+                    {
                         prodotti=loadProdottiAdmin(request);
+                        applicationMessage = "Benvenuto, inizia a gestire l'e-commerce e gli altri utenti";
+                    }
+
                     //verifica se l'utente è anche amministratore
                     isAdmin=user.isAdmin();
                 }

@@ -56,6 +56,53 @@
                 document.querySelector("#cvv").disabled=true;
             }
         }
+
+        function validateForm() {
+
+            if( isNaN(document.orderForm.cap.value) ) {
+                alert( "Il cap deve contenere solo valori numerici" );
+                document.orderForm.cap.focus() ;
+                return false;
+            }
+
+            if( isNaN(document.orderForm.numeroCarta.value) ) {
+                alert( "Il numero dalla carta deve contenere solo valori numerici" );
+                document.orderForm.numeroCarta.focus() ;
+                return false;
+            }
+
+            if( document.orderForm.numeroCarta.value.length!=16 ) {
+                alert( "Il numero dalla carta deve contenere 16 valori numerici" );
+                document.orderForm.numeroCarta.focus() ;
+                return false;
+            }
+
+            if( isNaN(document.orderForm.mese.value) ) {
+                alert( "Il mese deve contenere solo valori numerici" );
+                document.orderForm.mese.focus() ;
+                return false;
+            }
+
+            if( isNaN(document.orderForm.anno.value) ) {
+                alert( "L'anno deve contenere solo valori numerici" );
+                document.orderForm.anno.focus() ;
+                return false;
+            }
+
+            if( document.orderForm.anno.value>=2000 ) {
+                alert( "Anno inserito non valido" );
+                document.orderForm.anno.focus() ;
+                return false;
+            }
+
+            if( isNaN(document.orderForm.cvv.value) ) {
+                alert( "Il cvv deve contenere solo valori numerici" );
+                document.orderForm.cvv.focus() ;
+                return false;
+            }
+
+            return( true );
+        }
     </script>
 </head>
 <body>
@@ -67,18 +114,18 @@
 
         <h1 style="text-align: left;"> Inserire i campi obbligatori</h1>
 
-        <form name="orderForm" method="post" action="Dispatcher" class="form-control-lg " >
+        <form name="orderForm" method="post" action="Dispatcher" onsubmit="return validateForm()" class="form-control-lg " >
             <h2>Indirizzo di spedizione</h2>
             <fieldset>
                 <table class="table">
                     <%if(indirizzi.size()>0){%>
                     <tr>
                         <td>Nuovo indirizzo</td>
-                        <td><input type="radio" id="newInd"  name="newInd" checked value="new"  required onclick="gestisciCampiIndirizzo()"></td>
+                        <td><input type="radio" id="newInd"  name="newInd"  value="new"  required onclick="gestisciCampiIndirizzo()"></td>
                     </tr>
                     <tr>
                         <td>Utilizza esistente</td>
-                        <td><input type="radio" id="oldInd"  name="newInd" value="old" required onclick="gestisciCampiIndirizzo()"></td>
+                        <td><input type="radio" id="oldInd"  name="newInd" checked value="old" required onclick="gestisciCampiIndirizzo()"></td>
                     </tr>
 
                     <tr>
@@ -96,19 +143,19 @@
 
                     <tr>
                         <td><label for="via">Via</label></td>
-                        <td> <input type="text" id="via"  name="via" maxlength="50" required></td>
+                        <td> <input type="text" id="via"  name="via" maxlength="50" required disabled></td>
                     </tr>
                     <tr>
                         <td><label for="civico">Civico</label></td>
-                        <td><input type="text" id="civico"  name="civico" maxlength="50" required></td>
+                        <td><input type="text" id="civico"  name="civico" maxlength="50" required disabled></td>
                     </tr>
                     <tr>
                         <td><label for="citta">Citt&agrave;</label></td>
-                        <td><input type="citta" id="citta"  name="citta" maxlength="60" required></td>
+                        <td><input type="citta" id="citta"  name="citta" maxlength="60" required disabled></td>
                     </tr>
                     <tr>
                         <td><label for="cap">Cap</label></td>
-                        <td><input type="text" id="cap"  name="cap" maxlength="40" required></td>
+                        <td><input type="text" id="cap"  name="cap" maxlength="40" required disabled></td>
                     </tr>
                 </table>
             </fieldset>

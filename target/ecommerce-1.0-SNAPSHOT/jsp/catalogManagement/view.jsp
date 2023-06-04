@@ -16,6 +16,24 @@
 <html>
 <head>
     <%@include file="/include/htmlHead.jsp" %>
+    <script>
+        function validateForm() {
+
+            if( isNaN(document.addToCartForm.qty.value) ) {
+                alert( "Il campo quantit\u00E0 deve contenere solo valori numerici" );
+                document.addToCartForm.qty.focus() ;
+                return false;
+            }
+
+            if( document.addToCartForm.qty.value=="" ) {
+                alert( "Il campo quantit\u00E0 non pu\u00F2 essere vuoto" );
+                document.addToCartForm.qty.focus() ;
+                return false;
+            }
+
+            return( true );
+        }
+    </script>
 </head>
 <body>
 <%@include file="/include/header.jsp" %>
@@ -57,7 +75,7 @@
         <h3>&euro; <%= prodotto.getPrezzo()%>
         </h3>
         <%if(loggedOn && !isAdmin) {%>
-        <form name="addToCartForm" action="Dispatcher" method="post">
+        <form name="addToCartForm" action="Dispatcher" method="post" onsubmit="return validateForm()">
             <label for="qty"> Quantit&agrave;</label>
             <input type="number" name="qty" id="qty" value="1" min="1" max="<%=prodotto.getQtyDisp()%>"/>
             <br/>
@@ -85,7 +103,7 @@
                 <td><%=prodotto.getNomeProd()%></td>
             </tr>
             <tr>
-                <td>Quantità disponibile</td>
+                <td>Quantit&agrave; disponibile</td>
                 <td><%=prodotto.getQtyDisp()%></td>
             </tr>
             <tr>
