@@ -3,6 +3,7 @@ package com.unife.ecommerce.model.mo;
 import java.io.File;
 import java.util.ArrayList;
 
+//Oggetto che mappa il prodotto
 public class Prodotto {
     private Long idProd;
     private String nomeProd;

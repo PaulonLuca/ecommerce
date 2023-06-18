@@ -1,5 +1,7 @@
 package com.unife.ecommerce.model.mo;
 
+//Rappresenta l'oggetto carrallo qty, serve per tradurre la relazione tra carrello e prodotto
+//con lato carrello con attributo qty sulla relazione.
 public class CarrelloQty {
     private Carrello carrello;
     private int qty;

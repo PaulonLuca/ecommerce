@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.util.ArrayList;
 
+//Oggetto che mappa il carrello
 public class Carrello {
     private Long idCart;
     private Utente utente;

@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.util.ArrayList;
 
+//Oggetto che mappa la marca
 public class Marca {
     private Long idMarca;
     private String nomeMarca;

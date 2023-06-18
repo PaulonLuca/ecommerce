@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.util.ArrayList;
 
+//Oggetto che mappa il fornitore
 public class Fornitore {
     private Long idFornitore;
     private String nomeFornitore;

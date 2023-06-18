@@ -3,6 +3,7 @@ package com.unife.ecommerce.model.mo;
 import java.sql.Date;
 import java.util.ArrayList;
 
+//Oeggetto che mappa l'ordine
 public class Ordine {
     private Long idOrd;
     private Date dataOrd;
@@ -16,7 +17,6 @@ public class Ordine {
     private Utente utente;
     //(1,1) indirizzo di spedizione dell'ordine
     private IndirizzoSpedizione indSped;
-
     //(1,n) array di prodotti con la loro quantità
     private ArrayList<ProdottoQty> prodQty; //pensa a soluzione migliore
     private boolean deleted;

@@ -3,6 +3,14 @@
 <%@ page session="false" %>
 <%@ page errorPage="../errorPage.jsp"%>
 <%
+    //jsp per completare l'ordine
+    //Viene presentata una jsp divisa in 3 sezioni:
+    //1) Inserimento/selezione indirizzo di spedizione: è possibile usare un indirizzo esistente oppure
+    //inserirne uno nuovo
+    //2) Selezione della metodologia di spedizione
+    //3) Inserimento informazioni pagamento: è possibile selezionare il  metodo di pagamento, in base alla
+    //tipologia è possibile inserire o meno i campi relativi alla carta
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");

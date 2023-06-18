@@ -1,5 +1,6 @@
 package com.unife.ecommerce.model.mo;
 
+//Oggetto che mappa la vetrina
 public class Vetrina {
     private Long idVetrina;
     private String nomeVetrina;

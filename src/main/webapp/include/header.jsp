@@ -34,7 +34,11 @@
         btnSearch.addEventListener("click",searchByString);
     }
 </script>
-
+<!--Si discriminano le funzionalità della navbar in base alla tipologia di utente:
+    1) Pubblico: può navigare tra i prodotti e registrarsi e fare logon
+    2) Registrato: può fare logon, navigare tra i prodotti, vedere il carrello e gli ordini
+    3) Admin: può fare logon, navigare tra i prodotti, vedere gli utenti, inseririe nuove marche e prodotti,
+    e vedere gli ordini di tutti gli altri utenti-->
 <header class="clearfix"><!-- Defining the header section of the page -->
 
     <h1 class="logo"><!-- Defining the logo element -->

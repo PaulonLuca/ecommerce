@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.sql.Date;
 
+//Oggetto che mappa il pagamento
 public class Pagamento {
     private Long idPag;
     private Date dataPag;

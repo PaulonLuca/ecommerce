@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.util.ArrayList;
 
+//Oggetto che mappa la tipologia di pagamento
 public class TipoPagamento {
     private Long idTipoPag;
     private String nomeTipoPag;

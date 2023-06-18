@@ -3,6 +3,11 @@
 <%@ page session="false" %>
 <%@ page errorPage="../errorPage.jsp"%>
 <%
+    //jsp che rappresnta l'home page.
+    //Permette la navigazione/visualizzazione dei prodotti, cliccando un un prodotto
+    //viene aperta la pagina view di catalogManagement con tutte le informazioni relative al prodotto, se invece
+    //l'utente è un admin si visualizza infoProdotto in modalità di modifica.
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
@@ -98,25 +103,10 @@
 
 <div style="clear: both;"></div>
 
-<!--nav aria-label="Navigation" style="margin: 0 auto; width: fit-content;">
-    <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="javascript:viewPage(0)">Previous</a></li>
-        <%--for (int i=0; i< numPagine; i++) {--%>
-            <li class="page-item"><a class="page-link" href="javascript:viewPage(<%--=i--%>)"> <%--=i+1--%></a></li>
-        <%--}--%>
-        <li class="page-item"><a class="page-link" href="javascript:viewPage(<%--=numPagine-1--%>)">Next</a></li>
-    </ul>
-</nav-->
-
 <form name="selectionForm" action="Dispatcher" method="post">
     <input type="hidden" name="controllerAction" value="CatalogManagement.view"/>
     <input type="hidden" name="selectedProduct" value=""/>
 </form>
-
-<!--form name="paginationForm" action="Dispatcher" method="post">
-    <input type="hidden" name="controllerAction" value="HomeManagement.view"/>
-    <input type="hidden" name="paginationIndex" value="0"/>
-</form-->
 
 <form name="searchForm" action="Dispatcher" method="post">
     <input type="hidden" name="controllerAction" value="HomeManagement.view"/>

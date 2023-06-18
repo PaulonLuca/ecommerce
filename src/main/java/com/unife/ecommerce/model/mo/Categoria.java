@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.util.ArrayList;
 
+//Oggetto che mappa la categoria
 public class Categoria {
     private Long idCat;
     private String nomeCat;

@@ -1,6 +1,7 @@
 package com.unife.ecommerce.model.mo;
 
-//reppresenta la coppia prodotto-quantità, serve per tradurre la relzione n,m tra ordine e prodotto
+//Reppresenta la coppia prodotto-quantità, serve per tradurre la relazione n,m tra ordine e prodotto. Gestisce
+//la composizione dell'ordine
 public class ProdottoQty {
     private Prodotto prod;
     private int qty;

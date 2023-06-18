@@ -1,5 +1,6 @@
 package com.unife.ecommerce.model.mo;
 
+//Oggetto che mappa la spedizione
 public class Spedizione {
     private Long idSped;
     private String nomeSped;

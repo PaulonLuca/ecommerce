@@ -4,6 +4,11 @@
 <%@ page errorPage="../errorPage.jsp"%>
 
 <%
+    //jsp per la visualizzazione degli ordini
+    //Se utente normale: vengo visualizzati tutti gli ordini e lo stato in cui si trovano
+    //Se utente admin: vengono visualizzati gli ordini di tutti gli utenti e viene aggiunta una colonna
+    //per modificare lo stato dell'ordine attraverso un menù e tendina
+
     ArrayList<Stato> stati =(ArrayList<Stato>) request.getAttribute("stati");
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");

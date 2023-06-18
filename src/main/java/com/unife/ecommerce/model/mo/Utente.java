@@ -2,6 +2,7 @@ package com.unife.ecommerce.model.mo;
 
 import java.util.ArrayList;
 
+//Oggetto che mappa l'utente
 public class Utente {
     private Long idUtente;
     private String nome;
