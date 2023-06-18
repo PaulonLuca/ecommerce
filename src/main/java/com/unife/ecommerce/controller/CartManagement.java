@@ -15,6 +15,10 @@ import static com.unife.ecommerce.controller.HomeManagement.*;
 
 public class CartManagement {
 
+    //In ogni pagina qualora si provi ad accedere da utente non loggatto o amministratore viene
+    //fatta la redirect verso l'index page che riporta l'utente sull'home page
+
+    //Viene recuperato l'id carrello dai cookies e viene caricato il contenuto della tabella del db
     public static void view(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
@@ -86,6 +90,9 @@ public class CartManagement {
         }
     }
 
+    //Si aggiunge il prodotto al carrello nella quantità specificata dopo l'aggiunta si viene reindirizzati
+    //nuovamente verso la pagina che visualizza le caratteristiche del prodotto.
+    //Con il click su add si aggiorna il valore di quantità sovrascrivendolo ma senza incrementarlo.
     public static void add(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
@@ -166,6 +173,8 @@ public class CartManagement {
         }
     }
 
+    //Si rimuove il prodotto dal carrello ponendo a 0 la quantità ad esso associata nella
+    //composizione del carrello
     public static void remove(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;

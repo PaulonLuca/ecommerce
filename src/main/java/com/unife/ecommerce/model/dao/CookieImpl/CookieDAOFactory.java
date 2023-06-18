@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
+//Factory per gestire le trasazioni sui cookies. Ritorna i model DAO che hanno metodi
+//per lavorare sui cookies.
 public class CookieDAOFactory extends DAOFactory {
 
     private Map factoryParameters;

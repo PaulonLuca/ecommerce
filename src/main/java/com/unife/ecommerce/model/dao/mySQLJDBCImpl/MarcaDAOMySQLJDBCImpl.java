@@ -2,9 +2,7 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.MarcaDAO;
 import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
-import com.unife.ecommerce.model.mo.Categoria;
 import com.unife.ecommerce.model.mo.Marca;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +18,7 @@ public class MarcaDAOMySQLJDBCImpl implements MarcaDAO {
         this.conn = conn;
     }
 
+    //Caricamento di tutte le merche dal db
     @Override
     public ArrayList<Marca> findAllMarche() {
         PreparedStatement ps;
@@ -41,6 +40,7 @@ public class MarcaDAOMySQLJDBCImpl implements MarcaDAO {
         return marche;
     }
 
+    //Caricamento della marca avente l'id specificato dal db
     @Override
     public Marca findMarcaById(Long idMarca) {
         PreparedStatement ps;
@@ -64,6 +64,8 @@ public class MarcaDAOMySQLJDBCImpl implements MarcaDAO {
         return marca;
     }
 
+    //Inserimento di una nuova marca nel db, si recupera il contatore della marca dalla tabella counter e si
+    //verifica se vengono inseriti anche dei duplicati
     @Override
     public Marca create(String nome) throws DuplicatedObjectException {
         Marca marca = null;
@@ -78,7 +80,7 @@ public class MarcaDAOMySQLJDBCImpl implements MarcaDAO {
             resultSet.close();
             //se già presenta viene lanciata un'eccezione
             if (exist) {
-                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di un contatto già esistente.");
+                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di una marca già esistente.");
             }
 
             //recupera il valore a cui è arrivato l'id_marca dalla tabella di utilità dopo averlo incrementato di 1
@@ -112,6 +114,7 @@ public class MarcaDAOMySQLJDBCImpl implements MarcaDAO {
         return marca;
     }
 
+    //Lettura dei campi relativi al record marca per crearene l'oggetto
     static Marca read(ResultSet rs)
     {
         Marca marca = new Marca();

@@ -4,10 +4,10 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
-
 import com.unife.ecommerce.model.dao.*;
 import com.unife.ecommerce.services.config.Configuration;
 
+//Gestione della transazione sul database e ritorna i DAO che operano sul db mysql
 public class MySQLJDBCDAOFactory extends DAOFactory {
 
     private Map factoryParameters;

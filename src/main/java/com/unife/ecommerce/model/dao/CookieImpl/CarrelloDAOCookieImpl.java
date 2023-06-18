@@ -7,6 +7,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+//Classe per gestire i metodi del carrello che utilizza come storage su cui lavorare i cookies.
+//Alcuni metodi non vengono implementati poichè non hanno senso.
 public class CarrelloDAOCookieImpl implements CarrelloDAO {
 
     HttpServletRequest request;
@@ -75,7 +77,7 @@ public class CarrelloDAOCookieImpl implements CarrelloDAO {
         return encodedCarrello;
     }
 
-    //Dalla stringa con le informazioni dell'utente si crea l'oggetto utente
+    //Dalla stringa con le informazioni del carrello si crea l'oggetto carrello
     private Carrello decode(String encodedCarrello) {
         Carrello carrello = new Carrello();
         String[] values = encodedCarrello.split("#");

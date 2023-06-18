@@ -2,7 +2,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.TipoPagamentoDAO;
 import com.unife.ecommerce.model.mo.TipoPagamento;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ public class TipoPagamentoDAOMySQLJDBCImpl implements TipoPagamentoDAO {
         this.conn = conn;
     }
 
+    //Caricamento di tutte la tipologie  di pagamenti dal db
     @Override
     public ArrayList<TipoPagamento> findAllTipiPag() {
         PreparedStatement ps;
@@ -39,6 +39,7 @@ public class TipoPagamentoDAOMySQLJDBCImpl implements TipoPagamentoDAO {
         return tipi;
     }
 
+    //Caricamento della tipologia di pagamento specificato come id
     @Override
     public TipoPagamento findTipoPagById(Long idPag) {
         PreparedStatement ps;
@@ -63,6 +64,7 @@ public class TipoPagamentoDAOMySQLJDBCImpl implements TipoPagamentoDAO {
         return tipo;
     }
 
+    //Lettura dei record relativi alla tipologia di pagamento per crearne l'oggetto
     static TipoPagamento read(ResultSet rs)
     {
         TipoPagamento tipo = new TipoPagamento();

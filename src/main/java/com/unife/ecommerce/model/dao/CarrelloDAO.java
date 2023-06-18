@@ -2,18 +2,17 @@ package com.unife.ecommerce.model.dao;
 
 import com.unife.ecommerce.model.mo.Carrello;
 import com.unife.ecommerce.model.mo.Utente;
-
 import java.sql.SQLException;
 
 public interface CarrelloDAO {
 
-    //Creazione carrello sui cookies e sul db
+    //Creazione id carrello sui cookies e sul db
     public Carrello create(Long idCart, Utente utente) throws SQLException;
 
-    //eliminazione carrello dai cookies
+    //eliminazione id carrello dai cookies
     public void destroy();
 
-    //lettura carrello dai cookies
+    //lettura id carrello dai cookies
     public Carrello getCookieCart();
 
     //aggiunta di un elemento nel carrello del db

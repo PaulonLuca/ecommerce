@@ -3,7 +3,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 import com.unife.ecommerce.model.dao.UserDAO;
 import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Utente;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +18,8 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
         this.conn = conn;
     }
 
+    //Inseriemento di un nuovo utente nel db. Si utilizza la taballa counter per recuperare il punto
+    //a cui è arrivato l'id utente
     @Override
     public Utente create(Long idUtente, String nome, String cognome, String email, String username, String psw, String tel, String citta, String via, String civico, String cap, boolean isAdmin, boolean isLocked, boolean deleted) throws DuplicatedObjectException{
         PreparedStatement ps;
@@ -33,9 +34,9 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
             ResultSet resultSet = ps.executeQuery();
             boolean exist = resultSet.next();
             resultSet.close();
-            //se già presenta viene lanciata un'eccezione  <-----da gestire
+            //se già presenta viene lanciata un'eccezione
             if (exist) {
-                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di un contatto già esistente.");
+                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di un utente già esistente.");
             }
 
             //recupera il valore a cui è arrivato l'id_utente dalla tabella di utilità dopo averlo incrementato di 1
@@ -105,6 +106,7 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    //Caricamento dell'utente dal db avente l'id specificato
     @Override
     public Utente findByUserId(Long idUtente) {
         PreparedStatement ps;
@@ -127,6 +129,7 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
         return utente;
     }
 
+    //Caricamento dell'utente dal db avente lo username specificato
     @Override
     public Utente findByUsername(String username) {
         PreparedStatement ps;
@@ -174,6 +177,8 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
         return utenti;
     }
 
+    //In modalitò amministratore è possibile specificare quele campo tra is_admine e is_locked
+    //è possibile modificare specificandone il nuovo valore
     @Override
     public void updateField(Long idUtente, String field, boolean value) {
         PreparedStatement ps;
@@ -190,6 +195,7 @@ public class UserDAOMySQLJDBCImpl implements UserDAO {
         }
     }
 
+    //Lettura dei campi relativi al record utente per creare l'oggetto utente
     static Utente read(ResultSet rs) {
 
         Utente user = new Utente();

@@ -2,7 +2,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.SpedizioneDAO;
 import com.unife.ecommerce.model.mo.Spedizione;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ public class SpedizioneDAOMySQLJDBCImpl implements SpedizioneDAO {
         this.conn = conn;
     }
 
+    //Creazicamento du tutte le metodologie di spedizione
     @Override
     public ArrayList<Spedizione> finaAllSpedizioni() {
         PreparedStatement ps;
@@ -39,6 +39,7 @@ public class SpedizioneDAOMySQLJDBCImpl implements SpedizioneDAO {
         return metodiSpedizione;
     }
 
+    //Caricamento della metodologia di spedizione specificata dall'id
     @Override
     public Spedizione findSpedizioneById(Long idSped) {
         PreparedStatement ps;
@@ -63,6 +64,7 @@ public class SpedizioneDAOMySQLJDBCImpl implements SpedizioneDAO {
         return spedizione;
     }
 
+    //Lettura di tutti i campi relativi al record spedizione per creare l'oggetto
     static Spedizione read(ResultSet rs)
     {
         Spedizione sped = new Spedizione();

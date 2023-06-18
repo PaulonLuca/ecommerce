@@ -4,7 +4,6 @@ import com.unife.ecommerce.model.dao.ProdottoDAO;
 import com.unife.ecommerce.model.mo.Categoria;
 import com.unife.ecommerce.model.mo.Marca;
 import com.unife.ecommerce.model.mo.Prodotto;
-
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +20,8 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         this.conn = conn;
     }
 
+    //Inserimento di un nuovo prodotto nel db. Si utilizza il contatore relativo all'id per capire
+    //per capire a che punto si è arrivati. Si inseriscono anche i fornitori.
     @Override
     public Prodotto create(Long idProd, String nomeProd, String descr, int qtyDisp, double prezzo, String photoPath, boolean isLocked, Marca marca, Categoria cat, boolean deleted, ArrayList<Long> fornitori) {
 
@@ -82,6 +83,8 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prodotto;
     }
 
+    //Aggiornamento delle informazioni reletive al prodotto, si modificano solo i campi
+    //che sono stati toccati
     @Override
     public void update(Prodotto oldProd,Prodotto newProd) {
         PreparedStatement ps;
@@ -142,14 +145,15 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
 
     }
 
+    //Modifica della vetrina
+    //Se prodotto era in vetrina viene rimosso
+    //Se non era in vetrina viene aggiunto
     @Override
     public void updateVetrina(Prodotto prod,boolean newInVetrina) {
         PreparedStatement ps;
         Long idVetrina=1L;
         try
         {
-            //Se prodotto era in vetrina viene rimosso
-            //Se non era in vetrina viene aggiunto
             String sql="";
             if(newInVetrina)
                 sql="INSERT INTO In_evidenza VALUES (?,?)";
@@ -172,6 +176,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return null;
     }
 
+    //Caricamento del prodotto avente l'id passato
     @Override
     public Prodotto findProdottoById(Long idProd,String fotoPath) {
         PreparedStatement ps;
@@ -201,6 +206,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prod;
     }
 
+    //Caicamento di tutti i prodotti dal db ma con qty>0 e non bloccati
     @Override
     public ArrayList<Prodotto> findAllProdotti( String fotoPath,String idCat,String idMarca,String searchString) {
         PreparedStatement ps;
@@ -255,6 +261,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prodotti;
     }
 
+    //Caricamento di tutti i prodotti dal db anche bloccati o con qty=0
     @Override
     public ArrayList<Prodotto> findAllProdottiAdmin(String fotoPath, String idCat, String idMarca, String searchString) {
         PreparedStatement ps;
@@ -309,6 +316,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prodotti;
     }
 
+    //Caricamento di tutti i prodotti che sono presenti in vetrina
     @Override
     public ArrayList<Prodotto> findProdottiVetrina(Long idVetrina,String fotoPath) {
         PreparedStatement ps;
@@ -339,6 +347,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return prodottiVetrina;
     }
 
+    //Aggiornamento quantità disponibile prodotto
     //Se il prodotto ha una disponobilità >= alla richiesta questa viene decrementata
     //altimenti non si decrementa
     @Override
@@ -367,6 +376,8 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         }
     }
 
+    //Si verifica la quantità disonibile di un cetro prodotto, si verifica se è
+    //possibile decrementarla della quantità specificata
     @Override
     public boolean checkQtyDisp(Long idProd, int qty) {
         PreparedStatement ps;
@@ -399,6 +410,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         }
     }
 
+    //Verifica se il prodotto specificato è in verina
     @Override
     public boolean isInVetrina(Long idProd) {
         PreparedStatement ps;
@@ -430,7 +442,13 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         }
     }
 
-
+    //Funzione di utilità per caricare la foto relative al prodotto.
+    //Se il prodotto esiste già è presente la cartella con tutte le foto.
+    //Se non esisteva ma è stato inserito non è permesso il caricamento delle immagini
+    //ma si caricano due immagini di default.
+    //Si può creare una cartella con il'id del prodotto in /uploadedImages manualmente
+    //caricando le immagini.
+    //La libreria per fare il load della foto è stata deprecata.
     static File[] loadFotoProdotto(Prodotto prod, String fotoPath){
         Long idProd=prod.getIdProd();
         fotoPath+="/"+idProd.toString()+"/";
@@ -452,6 +470,7 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
         return fileList;
     }
 
+    //Lettura dei campi del record prodotto necessari alla creazione dell'oggetto
     static Prodotto read(ResultSet rs) {
 
         Prodotto prod = new Prodotto();

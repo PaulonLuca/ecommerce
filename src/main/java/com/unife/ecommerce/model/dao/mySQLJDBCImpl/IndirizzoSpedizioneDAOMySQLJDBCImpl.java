@@ -3,7 +3,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 import com.unife.ecommerce.model.dao.IndirizzoSpedizioneDAO;
 import com.unife.ecommerce.model.mo.IndirizzoSpedizione;
 import com.unife.ecommerce.model.mo.Utente;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +18,7 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
         this.conn = conn;
     }
 
+    //Caricmento di tutti gli indirizzi spedizione dal db
     @Override
     public ArrayList<IndirizzoSpedizione> findAllIndirizziSped(Utente utente) {
         PreparedStatement ps;
@@ -42,6 +42,8 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
         return indirizzi;
     }
 
+    //Inserimento di un nuovo indirizzo spedizione nel db, si recupera il contatore relativo all'id
+    //dalla tabella counter.
     @Override
     public IndirizzoSpedizione create(String citta, String via, String civico, String cap, Utente utente) {
         IndirizzoSpedizione indSped = null;
@@ -84,6 +86,7 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
         return indSped;
     }
 
+    //Caricamento dell'indirizzo avente l'id passato
     @Override
     public IndirizzoSpedizione findIndirizzoById(Long idInd) {
         PreparedStatement ps;
@@ -108,6 +111,7 @@ public class IndirizzoSpedizioneDAOMySQLJDBCImpl implements IndirizzoSpedizioneD
         return ind;
     }
 
+    //Lettura dei record dell'indirizzo spedizione per la creazione dell'oggetto
     static IndirizzoSpedizione read(ResultSet rs)
     {
         IndirizzoSpedizione indSped = new IndirizzoSpedizione();

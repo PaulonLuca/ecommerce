@@ -7,10 +7,6 @@ import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +15,10 @@ import static com.unife.ecommerce.controller.HomeManagement.*;
 
 public class CatalogManagement {
 
+    //Permette la visualizzazione delle caratteristiche del prodotto in due modalità
+    //User: si visualizza l'immagine ed una tabella con tutte le caratteristiche
+    //Admin: si visualizza una pagina con i campi del prodotto all'interno di form,
+    // si può operare in modalità modifica
     public static void view(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
@@ -122,6 +122,8 @@ public class CatalogManagement {
 
     }
 
+    //Funzionalità richiamata dalla navbar in modalità amministratore per visualizzare
+    //la pagina di inserimento prodotto in modalità d'inserimento
     public static void viewInfoProdotto(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory=null;
@@ -182,6 +184,12 @@ public class CatalogManagement {
     }
 
     //Inserimento/aggiornamento del nuovo prodotto nel db
+    //In modalità inserimento:
+    //Si recuperano i campi inseriti nella form di creazione nuovo prodotto, si utilizza il metodo
+    //create del prodottoDAO per creare un nuovo prodotto
+    //In modalità modifica:
+    //Si recuperano i campi della form, si modifica il prodotto solo se alcuni campi sono stati modificati,
+    //si può aggiungere o togliere il prodotto dalla vetrina
     public static void add(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory=null;
@@ -328,6 +336,8 @@ public class CatalogManagement {
         }
     }
 
+    //Si richiama al click della funzionalità in modalità amministratore attraverso la navbar.
+    //Viene visualizzata la form per inserire una nuova marca oppure una nuova categoria
     public static void viewInsertCatMarca(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory sessionDAOFactory= null;
         Utente loggedUser;
@@ -379,6 +389,8 @@ public class CatalogManagement {
         }
     }
 
+    //Recupera la categoria dalla form di inserimento e ne crea una nuova nel db.
+    //Viene verificato se il nome era già esistente evitandone quindi il doppio inserimento.
     public static void addCategoria(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory=null;
@@ -457,6 +469,8 @@ public class CatalogManagement {
         }
     }
 
+    //Recupera la marca dalla form di inserimento e ne crea una nuova nel db.
+    //Viene verificato se il nome era già esistente evitandone quindi il doppio inserimento.
     public static void addMarca(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory sessionDAOFactory= null;
         DAOFactory daoFactory=null;
@@ -536,24 +550,4 @@ public class CatalogManagement {
             } catch (Throwable t) { }
         }
     }
-
-    //Completare il copia incolla delle foto del prodotto
-    //Care form per inserire Marca, Fornitori, Categoria
-
-    /*private static void uploadFotoProdotto(Long idProdotto, String fotoPathProd,String fotoPathDefault)
-    {
-        try
-        {
-            File dir=new File(fotoPathProd+"/"+idProdotto+"/");
-            dir.mkdir();
-            Path source=Paths.get(fotoPathDefault);
-            Path dest= Paths.get(fotoPathProd+"/"+idProdotto);
-            File f=new File(fotoPathDefault);
-            File[] fileList=f.listFiles();
-            for(int i=0;i<fileList.length;i++)
-                Files.copy(source,dest, StandardCopyOption.REPLACE_EXISTING);
-        }catch (IOException ex){}
-
-
-    }*/
 }

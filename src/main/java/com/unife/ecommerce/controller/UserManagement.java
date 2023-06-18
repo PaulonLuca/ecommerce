@@ -7,7 +7,6 @@ import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +15,9 @@ import static com.unife.ecommerce.controller.HomeManagement.*;
 
 public class UserManagement {
 
+    //Alla registrazione dell'utente si recuperano tutti i campi della form di registrazione, viene fatto
+    //l'inserimento nella form, qualora l'utente esista già ( sono presenti stesso username o email)
+    //viene impedita la resitrazione.
     public static void add(HttpServletRequest request, HttpServletResponse response) {
         DAOFactory daoFactory = null;
         String applicationMessage = "Registrazione avvenuta con successo";
@@ -70,6 +72,9 @@ public class UserManagement {
         }
     }
 
+    //Funzionalità richiamata dalla navbar in modalità amministratore, permette di visualizzare
+    //tutti gli utenti registrati (tranne quello corrente). Vengono caricati anche gli ordini
+    //per avere il dettaglio del singolo utente.
     public static void view(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
@@ -146,6 +151,9 @@ public class UserManagement {
         }
     }
 
+    //Funzionalità che permette di modificare lo stato dell'ordine relativo a quell'utente.
+    //Si recupera il nuovo valore dello stato e l'ordine selezionato. Si procede poi
+    //ad aggiornare lo stato con il nuovo valore.
     public static void update(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;

@@ -4,7 +4,6 @@ import com.unife.ecommerce.model.dao.CarrelloDAO;
 import com.unife.ecommerce.model.mo.Carrello;
 import com.unife.ecommerce.model.mo.ProdottoQty;
 import com.unife.ecommerce.model.mo.Utente;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +19,8 @@ public class CarrelloDAOMySQLJDBCImpl implements CarrelloDAO {
         this.conn = conn;
     }
 
+    //Creazione di un nuovo carrello nel database. Si recupera il punto a cui è errivato il contatore della
+    //tabella di utilità counter e si inserisce il nuovo carrello nel db.
     @Override
     public Carrello create(Long idCart, Utente utente) throws SQLException {
         Carrello carrello=null;
@@ -62,7 +63,9 @@ public class CarrelloDAOMySQLJDBCImpl implements CarrelloDAO {
     @Override
     public Carrello getCookieCart() {throw new UnsupportedOperationException("Not supported yet.");}
 
-    //Inserimento prodotto nel carrello
+    //Inserimento prodotto nel carrello.
+    //Se non presente: inserimento del record in contenuto_carrello
+    //Se già presente: si aggiorna in record in contenuto carrello
     @Override
     public void add(Long idCart, Long idProd, int qty) {
         PreparedStatement ps;
@@ -103,7 +106,9 @@ public class CarrelloDAOMySQLJDBCImpl implements CarrelloDAO {
         }
     }
 
-    //eliminazione prodotto dal carrello
+    //Eliminazione prodotto dal carrello.
+    //Si pone a 0 la quantità dal prodotto nel carrello, si è deciso per tale approccio
+    //poichè si possono avere informazioni sul tracciamento dell'utente.
     @Override
     public void delete(Long idCart, Long idProd) {
         PreparedStatement ps;
@@ -120,6 +125,7 @@ public class CarrelloDAOMySQLJDBCImpl implements CarrelloDAO {
         }
     }
 
+    //Si recuperano tutti i prodotti che sono stati inseriti nel carrello avente l'id passato
     @Override
     public Carrello loadCarrello(Long idCart,String fotoPath) {
         PreparedStatement ps;

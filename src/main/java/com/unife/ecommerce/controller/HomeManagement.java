@@ -6,7 +6,6 @@ import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +14,11 @@ import java.util.logging.Logger;
 
 public class HomeManagement {
 
-    static int numProdottiPagina=6;
-
+    //Visualizza i prodotti della home page.
+    //Se amministratore: non si recupera il carrello e non si riempie con i prodotti, ma vengono visualizzati
+    //anche i prodotti bloccati e con qty=0
+    //Se utente normale: si recupera id carrello, si caricano i prodotti e si visualizzano solo prodotti
+    //non bloccati e con qty>0
     public static void view(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
@@ -94,6 +96,11 @@ public class HomeManagement {
         }
     }
 
+    //Gestione del logon dell'utente:
+    //Va a buon fine: si visualizza il nome utente nella navbar
+    //Errore nelle credenziali: si visualizza un alert in cui si avvisa l'utente di tale errore
+    //Utente locked: se l'utente che prova ad effettuare il logon è bloccato questo non
+    //riesce ad effettuare il logon
     public static void logon(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
@@ -203,6 +210,8 @@ public class HomeManagement {
 
     }
 
+    //Eliminazione del cookie utente dai cookies e anche di quello relativo al carrello
+    //se l'utente non è amministratore
     public static void logout(HttpServletRequest request, HttpServletResponse response) {
 
         DAOFactory sessionDAOFactory= null;
@@ -260,12 +269,15 @@ public class HomeManagement {
         }
     }
 
+    //Funzionalità richiamata navbar da soli utenti non loggati, viene data la possibilità
+    //di registrarsi all'ecommerce
     public static void registrationView(HttpServletRequest request, HttpServletResponse response){
         request.setAttribute("loggedOn",false);
         request.setAttribute("loggedUser", null);
         request.setAttribute("viewUrl", "userManagement/registrazione");
     }
 
+    //Funzione di utilità per recuperare la sessionDAOFactory
     protected static DAOFactory getSessionDAOFactory(HttpServletRequest request, HttpServletResponse response){
         Map sessionFactoryParameters=new HashMap<String,Object>();
         sessionFactoryParameters.put("request",request);
@@ -274,6 +286,7 @@ public class HomeManagement {
         return  sessionDAOFactory;
     }
 
+    //Funzione di utilità per caricare la lista di tutti i prodotti dal db
     protected static ArrayList<Prodotto> loadProdotti( HttpServletRequest request){
         DAOFactory daoFactory=null;
         Logger logger = LogService.getApplicationLogger();
@@ -307,27 +320,10 @@ public class HomeManagement {
                 if(daoFactory!=null) daoFactory.closeTransaction();
             } catch (Throwable t) { }
         }
-        //Paginazione prodotti
-        /*int paginationIndex=1;
-        if(request.getAttribute("paginationIndex") !=null)
-            paginationIndex=Integer.parseInt((String)request.getAttribute("paginationIndex"));
-
-        ArrayList<Prodotto> prodottiPagina=new ArrayList<>();
-        int limit=0;
-        if(numProdottiPagina>(prodotti.size()- numProdottiPagina *paginationIndex))
-            limit=prodotti.size()- numProdottiPagina *paginationIndex;
-        else
-            limit=numProdottiPagina * paginationIndex;
-
-        for(int i=(paginationIndex-1)*numProdottiPagina;i<limit ;i++)
-            prodottiPagina.add(prodotti.get(i));
-
-
-
-        int numPagine=(Math.round(prodotti.size()/numProdottiPagina))+1;
-        request.setAttribute("numPagine", numPagine);*/
     }
 
+    //Funziona di utilità per caricare tutti i prodotti del db, in questo caso però si considerano
+    //anche prodotti bloccati e con qty>0
     protected static ArrayList<Prodotto> loadProdottiAdmin( HttpServletRequest request){
         DAOFactory daoFactory=null;
         Logger logger = LogService.getApplicationLogger();
@@ -361,6 +357,7 @@ public class HomeManagement {
         }
     }
 
+    //Funzione di utilità per caricare nel carosello i prodotti che sono in vetrina
     protected static ArrayList<Prodotto> loadProdottiVetrina(HttpServletRequest request){
         DAOFactory daoFactory=null;
         Logger logger = LogService.getApplicationLogger();
@@ -391,6 +388,7 @@ public class HomeManagement {
 
     }
 
+    //Funzione di utilità per caricare le marche dal db in una lista
     protected static ArrayList<Marca> loadMarche(){
         DAOFactory daoFactory=null;
         Logger logger = LogService.getApplicationLogger();
@@ -417,6 +415,7 @@ public class HomeManagement {
         }
     }
 
+    //Funzione di utilità per caricare le categorie dal db in una lista
     protected static ArrayList<Categoria> loadCategorie(){
         DAOFactory daoFactory=null;
         Logger logger = LogService.getApplicationLogger();

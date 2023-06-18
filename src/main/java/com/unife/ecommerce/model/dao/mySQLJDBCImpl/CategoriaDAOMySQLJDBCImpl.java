@@ -3,9 +3,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 import com.unife.ecommerce.model.dao.CategoriaDAO;
 import com.unife.ecommerce.model.dao.exception.DuplicatedObjectException;
 import com.unife.ecommerce.model.mo.Categoria;
-import com.unife.ecommerce.model.mo.IndirizzoSpedizione;
-import com.unife.ecommerce.model.mo.Marca;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +18,7 @@ public class CategoriaDAOMySQLJDBCImpl implements CategoriaDAO {
         this.conn = conn;
     }
 
+    //Caricamento di tutte le categorie disponibili dal db
     @Override
     public ArrayList<Categoria> findAllCategorie() {
         PreparedStatement ps;
@@ -42,6 +40,7 @@ public class CategoriaDAOMySQLJDBCImpl implements CategoriaDAO {
         return categorie;
     }
 
+    //Caricamento della categoria evente l'id specificato dal db. La categotia viene inserita anche nel catalogo
     @Override
     public Categoria findCategoriaById(Long idCat) {
         PreparedStatement ps;
@@ -65,11 +64,12 @@ public class CategoriaDAOMySQLJDBCImpl implements CategoriaDAO {
         return cat;
     }
 
+    //Inserimento della nuova categoria nel db
     @Override
     public Categoria create(String nome)  throws DuplicatedObjectException {
         Categoria categoria = null;
         try {
-            //verifica se la marca è già presente nel database
+            //verifica se la categoria è già presente nel database
             String sql = " SELECT id_cat FROM Categoria WHERE nome_cat=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             int i = 1;
@@ -79,7 +79,7 @@ public class CategoriaDAOMySQLJDBCImpl implements CategoriaDAO {
             resultSet.close();
             //se già presenta viene lanciata un'eccezione
             if (exist) {
-                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di un contatto già esistente.");
+                throw new DuplicatedObjectException("ContactDAOJDBCImpl.create: Tentativo di inserimento di una categoria già esistente.");
             }
 
             //recupera il valore a cui è arrivato l'id_cat dalla tabella di utilità dopo averlo incrementato di 1
@@ -121,6 +121,7 @@ public class CategoriaDAOMySQLJDBCImpl implements CategoriaDAO {
         return categoria;
     }
 
+    //Lettura dei record relativi alla categotia per creare l'oggetto
     static Categoria read(ResultSet rs)
     {
         Categoria cat = new Categoria();

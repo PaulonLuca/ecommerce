@@ -2,7 +2,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.StatoDAO;
 import com.unife.ecommerce.model.mo.Stato;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ public class StatoDAOMySQLJDBCImpl implements StatoDAO {
         this.conn = conn;
     }
 
+    //Caricamento dello stato in base alla descrizione
     @Override
     public Stato findStatoByDescr(String descr) {
         PreparedStatement ps;
@@ -42,6 +42,7 @@ public class StatoDAOMySQLJDBCImpl implements StatoDAO {
         return stato;
     }
 
+    //Caricamento di tutti gli stati dal db
     @Override
     public ArrayList<Stato> findAll() {
 
@@ -65,6 +66,7 @@ public class StatoDAOMySQLJDBCImpl implements StatoDAO {
         return stati;
     }
 
+    //Lettura dei record relativi allo stato per creare l'oggetto
     static Stato read(ResultSet rs)
     {
         Stato stato = new Stato();

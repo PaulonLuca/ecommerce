@@ -2,7 +2,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.OrdineDAO;
 import com.unife.ecommerce.model.mo.*;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -16,6 +15,8 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
     }
 
 
+    //Inserimento di un nuovo ordine nel database. Si recupera il contatore relativo all'id ordine
+    //dalla tabella counter, si inserisce l'ordine nel db.
     @Override
     public Ordine create(Date dataOrd, Pagamento pag, Spedizione sped, Stato stato, Utente utente, IndirizzoSpedizione ind, boolean deleted , ArrayList<ProdottoQty> composizione) {
         Ordine ordine = null;
@@ -73,6 +74,7 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
         return ordine;
     }
 
+    //Recupera tutti gli ordini di un utente il cui id viene passato dal db
     @Override
     public ArrayList<Ordine> findAllOrdiniByUserId(Long idUtente) {
         PreparedStatement ps;
@@ -168,6 +170,8 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
         }
     }
 
+    //Fuznione di utilità che dato l'id di un ordine carica la lista di tutti gli oggetti ordine
+    //che lo compongono
     private ArrayList<ProdottoQty> loadComposizione(Long idOrdine)
     {
         PreparedStatement ps;
@@ -198,6 +202,7 @@ public class OrdineDAOMySQLJDBCImpl implements OrdineDAO {
         return composizione;
     }
 
+    //Lettura dei record relativi al campo ordine per creare l'oggetto ordine
     static Ordine read(ResultSet rs)
     {
         Ordine ordine = new Ordine();

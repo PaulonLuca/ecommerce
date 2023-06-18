@@ -3,7 +3,6 @@ package com.unife.ecommerce.services.logservice;
 
 import java.io.IOException;
 import java.util.logging.*;
-
 import com.unife.ecommerce.services.config.Configuration;
 
 public class LogService {

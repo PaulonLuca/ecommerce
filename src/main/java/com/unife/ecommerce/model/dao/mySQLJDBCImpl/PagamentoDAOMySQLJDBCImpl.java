@@ -3,7 +3,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 import com.unife.ecommerce.model.dao.PagamentoDAO;
 import com.unife.ecommerce.model.mo.Pagamento;
 import com.unife.ecommerce.model.mo.TipoPagamento;
-
 import java.sql.*;
 
 public class PagamentoDAOMySQLJDBCImpl implements PagamentoDAO {
@@ -15,6 +14,7 @@ public class PagamentoDAOMySQLJDBCImpl implements PagamentoDAO {
         this.conn = conn;
     }
 
+    //Creazione di un nuovo pagamento completo avente i campi relativi alla carta di credito/debito
     @Override
     public Pagamento createFull(Date data, double totale, String numCarta, String mese, String anno, String cvv, TipoPagamento tipo, boolean deleted) {
         Pagamento pag = null;
@@ -61,6 +61,7 @@ public class PagamentoDAOMySQLJDBCImpl implements PagamentoDAO {
         return pag;
     }
 
+    //Creazione di un pagamento semplice avente solo alcuni campi (non quelli relativi alla carta di credito/debito)
     @Override
     public Pagamento createSimple(Date data, double totale, TipoPagamento tipo, boolean deleted) {
         Pagamento pag = null;
@@ -99,6 +100,7 @@ public class PagamentoDAOMySQLJDBCImpl implements PagamentoDAO {
         return pag;
     }
 
+    //Lettura dei campi relativi al pagamento necessari per creare l'oggetto
     static Pagamento read(ResultSet rs)
     {
         Pagamento pag = new Pagamento();

@@ -2,7 +2,6 @@ package com.unife.ecommerce.model.dao.mySQLJDBCImpl;
 
 import com.unife.ecommerce.model.dao.FornitoreDAO;
 import com.unife.ecommerce.model.mo.Fornitore;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ public class FornitoreDAOMySQLJDBCImpl implements FornitoreDAO {
         this.conn = conn;
     }
 
+    //Caricamento di tutti i fornitori relativi al prodotto
     @Override
     public ArrayList<Fornitore> findAllFornitoriForProduct(Long idProd) {
         PreparedStatement ps;
@@ -48,6 +48,7 @@ public class FornitoreDAOMySQLJDBCImpl implements FornitoreDAO {
         return fornitori;
     }
 
+    //Caricamento di tutti i fornitori presenti nel db
     @Override
     public ArrayList<Fornitore> findAll() {
         PreparedStatement ps;
@@ -73,6 +74,7 @@ public class FornitoreDAOMySQLJDBCImpl implements FornitoreDAO {
         return fornitori;
     }
 
+    //Lettura dei campi del record fornitore per crare poi l'oggetto
     static Fornitore read(ResultSet rs) {
 
         Fornitore forn = new Fornitore();

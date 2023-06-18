@@ -6,7 +6,6 @@ import com.unife.ecommerce.services.config.Configuration;
 import com.unife.ecommerce.services.logservice.LogService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +16,10 @@ import static com.unife.ecommerce.controller.HomeManagement.*;
 
 public class OrderManagement {
 
+    //Dopo ever riempito il carrello con i prodotti di interesse al click sul pulsante ordina
+    //viene visualizzata la form in cui è possibile completare i campi relativi all'ordine:
+    //indirizzo (nuovo o già esistente), tipologia di pagemento ( con eventuale nuova carta),
+    //tipologia di spedizione
     public static void viewInfoOrder(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
@@ -107,7 +110,8 @@ public class OrderManagement {
     }
 
     //Visualizza lo storico degli ordini dell'utente loggato oppure visualizza gli ordini
-    //di tutti gli utenti se l'utente è un amministratore
+    //di tutti gli utenti se l'utente è un amministratore. In modalità amministratore
+    //la pagine presentata è interattiva ed è possibile modificare lo stato dell'ordine.
     public static void view(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;
@@ -194,7 +198,15 @@ public class OrderManagement {
 
     }
 
-    //Inserimento di un'ordine nel db e creazione nuovo carrello vuoto sui cookies
+    //Inserimento di un'ordine nel db e creazione nuovo carrello vuoto sui cookies.
+    //Al completamento dei campi della form relativa all'ordine quando si preme su conferma:
+    //1) Si verifica che tutti i prodotti che si vogliono ordinare in quella quantità siano
+    //effettivamente disponibili.
+    //2) Se tutti i prodotti sono ok, si recuperano i campi inseriti nella form e si affettuano gli
+    //inserimenti nelle verie tabelle di: indirizzo spedizione, spedizione, pagemento e ordine.
+    //3) Se alcuni prodotti non sono più disponibili si rimuovono dal
+    //carrello e si visualizza l'elenco dei prodotti nel carrello senza tali prodotti.
+    //4) Si crea un nuovo carrello vuoto aggiornando il cookie relativo al carrello
     public static void add(HttpServletRequest request, HttpServletResponse response) {
         //Recupera tutti i campi della form e chiama per ogni DAO il metodo di inserimento nel db
         Logger logger = LogService.getApplicationLogger();
@@ -387,6 +399,9 @@ public class OrderManagement {
     }
 
     //Modifica stato dell'ordine
+    //Nella visualizzazione di tutti gli ordini nella modalità amministratore viene data la possibilità
+    //di modificare lo stato in cui si trova l'ordine attraverso una tendina. Si recupera quindi il nuovo valore
+    //e si aggiorna a tale valore il nuovo stato dell'ordine.
     public static void updateOrderState(HttpServletRequest request, HttpServletResponse response) {
         Logger logger = LogService.getApplicationLogger();
         DAOFactory sessionDAOFactory=null;

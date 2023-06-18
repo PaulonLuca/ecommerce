@@ -16,6 +16,10 @@ import com.unife.ecommerce.services.logservice.LogService;
 @WebServlet(name = "Dispatcher", urlPatterns = {"/Dispatcher"})
 public class Dispatcher extends HttpServlet {
 
+    //Dispatcher che smista le richieste ai vari metodi del controller.
+    //Viene fatto lo split sul controller action per identificare prima la classe controller da invocare
+    //e poi sul metodo per trovare la corretta funzione da chiamare.
+    //Si recupera poi il view url ritornato dal controller per passare il comando alla jsp con i dati necessari.
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

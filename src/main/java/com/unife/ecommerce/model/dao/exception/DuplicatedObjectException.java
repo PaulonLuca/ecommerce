@@ -1,5 +1,6 @@
 package com.unife.ecommerce.model.dao.exception;
 
+//Eccezione lanciata quando si prova ad inserire un oggetto duplicato: utente, marca, categoria
 public class DuplicatedObjectException extends Exception {
 
     /**

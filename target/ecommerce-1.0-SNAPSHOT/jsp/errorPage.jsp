@@ -1,4 +1,3 @@
-<%@ page import="com.unife.ecommerce.model.mo.Utente" %>
 <%@ page session="false" %>
 <%@ page isErrorPage="true"%>
 

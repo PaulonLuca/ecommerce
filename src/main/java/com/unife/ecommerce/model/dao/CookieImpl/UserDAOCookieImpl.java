@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.ArrayList;
 
+//Classe per gestire i metodi dell'utente, utilizza come storage su cui lavorare i cookies.
+//Alcuni metodi non vengono implementati poichè non hanno senso.
 public class UserDAOCookieImpl implements UserDAO {
 
     HttpServletRequest request;
