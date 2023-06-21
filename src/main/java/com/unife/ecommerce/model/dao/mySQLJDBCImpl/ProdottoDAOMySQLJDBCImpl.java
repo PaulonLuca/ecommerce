@@ -109,6 +109,12 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
             if(oldProd.isLocked()!=newProd.isLocked())
                 sqlArray.add("is_locked=? ");
 
+            if(oldProd.getCat().getIdCat()!=newProd.getCat().getIdCat())
+                sqlArray.add("id_cat=? ");
+
+            if(oldProd.getMarca().getIdMarca()!=newProd.getMarca().getIdMarca())
+                sqlArray.add("id_marca=? ");
+
             if(sqlArray.size()==1)
                 sql+=sqlArray.get(0);
             else
@@ -135,6 +141,10 @@ public class ProdottoDAOMySQLJDBCImpl implements ProdottoDAO {
                 ps.setDouble(i++,newProd.getPrezzo());
             if(oldProd.isLocked()!=newProd.isLocked())
                 ps.setBoolean(i++,newProd.isLocked());
+            if(oldProd.getCat().getIdCat()!=newProd.getCat().getIdCat())
+                ps.setLong(i++,newProd.getCat().getIdCat());
+            if(oldProd.getMarca().getIdMarca()!=newProd.getMarca().getIdMarca())
+                ps.setLong(i++,newProd.getMarca().getIdMarca());
             ps.setLong(i++,newProd.getIdProd());
 
             ps.executeUpdate();

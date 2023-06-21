@@ -3,6 +3,10 @@
 <%@ page errorPage="../errorPage.jsp"%>
 
 <%
+    //jsp per la registrazione dell'utente
+    //Viene fatta una validazione sui campi della form prima del submit.
+    //L'indirizzo che viene richiesto è quello di residenza legato all'utente.
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");

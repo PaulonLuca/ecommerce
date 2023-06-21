@@ -78,7 +78,7 @@
                 for(int i=0; i<carrello.getComposizione().size();i++) {
                     totale+=carrello.getComposizione().get(i).getProd().getPrezzo()*carrello.getComposizione().get(i).getQty();
             }%>
-            &euro; <%=totale%>
+            &euro; <%=String.format("%.2f", totale)%>
         </h2>
         <div style="text-align: center;">
             <input type="button"  class="btn btn-primary" id="btnConfirm" nome="btnConfirm" value="Ordina" onclick="javascript:confirmOrder()" style="margin-top: 30px; width: 300px;">

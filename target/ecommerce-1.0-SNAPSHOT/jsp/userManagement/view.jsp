@@ -4,6 +4,13 @@
 <%@ page errorPage="../errorPage.jsp"%>
 
 <%
+    //jsp per la visualizzazione degli utenti in modalità admin.
+    //Viene visualizzata una jsp divisa in due sezioni:
+    //1) Utenti non admin: è possibile bloccare/sbloccare l'utente con l'apposito pulsante, è possibile
+    //rendere l'utente un admin. Al successivo logon quindi riceverà le autorizzazioni di un utente admin.
+    //2) Utente admin: si visualizzano gli utenti admin, tranne quello loggato.
+    //Le operazioni di modifica usano dei metodi javascipt che richiamno la funzione updateField in backend.
+
     ArrayList<Utente> utentiRegistrati =(ArrayList<Utente>) request.getAttribute("utentiRegistrati");
     ArrayList<Utente> utentiAdmin =(ArrayList<Utente>) request.getAttribute("utentiAdmin");
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");

@@ -3,6 +3,14 @@
 <%@ page session="false" %>
 <%@ page errorPage="../errorPage.jsp"%>
 <%
+    //jsp per completare l'ordine
+    //Viene presentata una jsp divisa in 3 sezioni:
+    //1) Inserimento/selezione indirizzo di spedizione: è possibile usare un indirizzo esistente oppure
+    //inserirne uno nuovo
+    //2) Selezione della metodologia di spedizione
+    //3) Inserimento informazioni pagamento: è possibile selezionare il  metodo di pagamento, in base alla
+    //tipologia è possibile inserire o meno i campi relativi alla carta
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");
@@ -61,43 +69,43 @@
 
         function validateForm() {
 
-            if( isNaN(document.orderForm.cap.value) ) {
+            if( isNaN(document.orderForm.cap.value && document.querySelector("#cap").disabled==false) ) {
                 alert( "Il cap deve contenere solo valori numerici" );
                 document.orderForm.cap.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.numeroCarta.value) ) {
+            if( isNaN(document.orderForm.numeroCarta.value) && document.querySelector("#numeroCarta").disabled==false) {
                 alert( "Il numero dalla carta deve contenere solo valori numerici" );
                 document.orderForm.numeroCarta.focus() ;
                 return false;
             }
 
-            if( document.orderForm.numeroCarta.value.length!=16 ) {
+            if( document.orderForm.numeroCarta.value.length!=16 && document.querySelector("#numeroCarta").disabled==false) {
                 alert( "Il numero dalla carta deve contenere 16 valori numerici" );
                 document.orderForm.numeroCarta.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.mese.value) ) {
+            if( isNaN(document.orderForm.mese.value && document.querySelector("#mese").disabled==false) ) {
                 alert( "Il mese deve contenere solo valori numerici" );
                 document.orderForm.mese.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.anno.value) ) {
+            if( isNaN(document.orderForm.anno.value && document.querySelector("#anno").disabled==false) ) {
                 alert( "L'anno deve contenere solo valori numerici" );
                 document.orderForm.anno.focus() ;
                 return false;
             }
 
-            if( document.orderForm.anno.value>=2000 ) {
+            if( document.orderForm.anno.value<=2000 && document.querySelector("#anno").disabled==false) {
                 alert( "Anno inserito non valido" );
                 document.orderForm.anno.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.cvv.value) ) {
+            if( isNaN(document.orderForm.cvv.value && document.querySelector("#cvv").disabled==false) ) {
                 alert( "Il cvv deve contenere solo valori numerici" );
                 document.orderForm.cvv.focus() ;
                 return false;

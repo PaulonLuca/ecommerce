@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td><label for="descrizione">Descrizione</label></td>
-                    <td><textarea  id="descrizione"  name="descrizione" maxlength="50"  required rows="8" cols="40"> <%=!insertMode? prodotto.getDescr(): ""%></textarea></td>
+                    <td><textarea  id="descrizione"  name="descrizione"  required rows="8" cols="40"> <%=!insertMode? prodotto.getDescr(): ""%></textarea></td>
                 </tr>
                 <tr>
                     <td><label for="qty_disp">Quantit&agrave; disponibile</label></td>

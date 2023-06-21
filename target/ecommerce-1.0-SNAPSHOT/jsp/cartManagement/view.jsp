@@ -4,6 +4,9 @@
 <%@ page errorPage="../errorPage.jsp"%>
 
 <%
+    //jsp per visualizzare il contenuto del carrello.
+    //Viene visualizzata una tabella in cui per ogni riga si visualizza il prodotto, la quantità, il prezzo
+    //Si predispone il totale carrello e si può procedere al completamento dell'ordine.
 
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
@@ -75,7 +78,7 @@
                 for(int i=0; i<carrello.getComposizione().size();i++) {
                     totale+=carrello.getComposizione().get(i).getProd().getPrezzo()*carrello.getComposizione().get(i).getQty();
             }%>
-            &euro; <%=totale%>
+            &euro; <%=String.format("%.2f", totale)%>
         </h2>
         <div style="text-align: center;">
             <input type="button"  class="btn btn-primary" id="btnConfirm" nome="btnConfirm" value="Ordina" onclick="javascript:confirmOrder()" style="margin-top: 30px; width: 300px;">

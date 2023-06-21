@@ -3,6 +3,13 @@
 <%@ page session="false" %>
 <%@ page errorPage="../errorPage.jsp"%>
 <%
+    //jsp per gestire l'inserimento o la modifica del prodotto
+    //Se in modalità modifica: vengono precompilati i campi del prodotto selezionato dalla home page
+    //e confermando la modifica questi vegono modificati anche nel db
+    //Se in modalità inserimento: viene presentata una form vuota in cui è possibile compilare i campi
+    //e creare il nuovo prodotto nel db.
+    //Per ogni campo vengono fatti dei controlli lato client prima di sottomettere la form al server.
+
     boolean insertMode=(Boolean) request.getAttribute("insertMode");
     Prodotto prodotto = (Prodotto) request.getAttribute("prodotto");
     boolean inVetrina=(Boolean) request.getAttribute("inVetrina");
@@ -61,7 +68,7 @@
                 </tr>
                 <tr>
                     <td><label for="descrizione">Descrizione</label></td>
-                    <td><textarea  id="descrizione"  name="descrizione" maxlength="50"  required rows="8" cols="40"> <%=!insertMode? prodotto.getDescr(): ""%></textarea></td>
+                    <td><textarea  id="descrizione"  name="descrizione"  required rows="8" cols="40"> <%=!insertMode? prodotto.getDescr(): ""%></textarea></td>
                 </tr>
                 <tr>
                     <td><label for="qty_disp">Quantit&agrave; disponibile</label></td>

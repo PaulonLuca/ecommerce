@@ -3,6 +3,13 @@
 <%@ page session="false" %>
 <%@ page errorPage="../errorPage.jsp"%>
 <%
+    //jsp per inserire una nuova marca o una nuova categoria
+    //Inserimento marca: si inserisce il nome della nuova marca e si clicca su inserisci. Se questa non
+    //è presente nel db viene inserita, altimenti si notifica il valore duplicato senza inserimento.
+    //Inserimento categoria: si inserisce il nome della nuova categotia e si clicca su inserisci. Se questa non
+    //è presente nel db viene inserita, altimenti si notifica il valore duplicato senza inserimento.
+    //Viene validata la form verificando che i campi non siano vuoti.
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");

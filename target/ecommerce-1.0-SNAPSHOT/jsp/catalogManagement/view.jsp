@@ -3,6 +3,12 @@
 <%@ page session="false" %>
 <%@ page errorPage="../errorPage.jsp"%>
 <%
+    //jsp per la visualizzazione delle informazioni del prodotto se l'utente non è admin.
+    //Viene visualizzato un carosello con le foto del prodotto, a sinistra una form per gestire la
+    //quantità disponibile e l'aggiunta al carrello, in basso una tabelle con tutte le informazioni del prodotto.
+    //Viene gestita la submit della form verificando che non vi siano valori numerici fuori dai range, vuoti
+    //o lettere.
+
     boolean isAdmin =(Boolean) request.getAttribute("isAdmin");
     boolean loggedOn = (Boolean) request.getAttribute("loggedOn");
     Utente loggedUser = (Utente) request.getAttribute("loggedUser");

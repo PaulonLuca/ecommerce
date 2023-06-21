@@ -291,7 +291,8 @@ public class CatalogManagement {
                 //Modifica prodotto esistente solo se alcuni campi sono stati modificati
                 if(!oldProd.getNomeProd().equals(newProd.getNomeProd()) || !oldProd.getDescr().equals(newProd.getDescr()) ||
                         oldProd.getQtyDisp()!=newProd.getQtyDisp() || oldProd.getPrezzo()!=newProd.getPrezzo() ||
-                        oldProd.isLocked()!=newProd.isLocked())
+                        oldProd.isLocked()!=newProd.isLocked() || oldProd.getMarca().getIdMarca()!=newProd.getMarca().getIdMarca()
+                        || oldProd.getCat().getIdCat()!=newProd.getCat().getIdCat())
                     prodottoDAO.update(oldProd,newProd);
 
                 //Aggiunge o rimuove il prodotto dalla vetrina

@@ -69,43 +69,43 @@
 
         function validateForm() {
 
-            if( isNaN(document.orderForm.cap.value) ) {
+            if( isNaN(document.orderForm.cap.value && document.querySelector("#cap").disabled==false) ) {
                 alert( "Il cap deve contenere solo valori numerici" );
                 document.orderForm.cap.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.numeroCarta.value) ) {
+            if( isNaN(document.orderForm.numeroCarta.value) && document.querySelector("#numeroCarta").disabled==false) {
                 alert( "Il numero dalla carta deve contenere solo valori numerici" );
                 document.orderForm.numeroCarta.focus() ;
                 return false;
             }
 
-            if( document.orderForm.numeroCarta.value.length!=16 ) {
+            if( document.orderForm.numeroCarta.value.length!=16 && document.querySelector("#numeroCarta").disabled==false) {
                 alert( "Il numero dalla carta deve contenere 16 valori numerici" );
                 document.orderForm.numeroCarta.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.mese.value) ) {
+            if( isNaN(document.orderForm.mese.value && document.querySelector("#mese").disabled==false) ) {
                 alert( "Il mese deve contenere solo valori numerici" );
                 document.orderForm.mese.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.anno.value) ) {
+            if( isNaN(document.orderForm.anno.value && document.querySelector("#anno").disabled==false) ) {
                 alert( "L'anno deve contenere solo valori numerici" );
                 document.orderForm.anno.focus() ;
                 return false;
             }
 
-            if( document.orderForm.anno.value>=2000 ) {
+            if( document.orderForm.anno.value<=2000 && document.querySelector("#anno").disabled==false) {
                 alert( "Anno inserito non valido" );
                 document.orderForm.anno.focus() ;
                 return false;
             }
 
-            if( isNaN(document.orderForm.cvv.value) ) {
+            if( isNaN(document.orderForm.cvv.value && document.querySelector("#cvv").disabled==false) ) {
                 alert( "Il cvv deve contenere solo valori numerici" );
                 document.orderForm.cvv.focus() ;
                 return false;
