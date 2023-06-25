@@ -76,7 +76,7 @@
                     <%
                         ArrayList<ProdottoQty> composizione=ordini.get(i).getProdQty();
                         for(int j=0;j<composizione.size();j++) {%>
-                            <%=composizione.get(j).getProd().getNomeProd()%>
+                            <%=composizione.get(j).getProd().getNomeProd()+"\nQty:"+composizione.get(j).getQty()%><br/>
                         <%}%>
                 </th>
                 <th><%=ordini.get(i).getPag().getTipoPag().getNomeTipoPag()%></th>
